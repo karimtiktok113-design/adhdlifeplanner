@@ -1944,6 +1944,81 @@
         font-size: 44px;
       }
     }
+
+    /* CHART INTERACTIVE STYLES & TOOLTIPS */
+    .chart-tooltip {
+      position: fixed;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.25), 0 8px 10px -6px rgba(0,0,0,0.2);
+      border-radius: var(--radius-card);
+      padding: 10px 14px;
+      font-size: 12.5px;
+      z-index: 10000;
+      max-width: 280px;
+      line-height: 1.4;
+    }
+    .chart-tooltip.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .chart-bar {
+      cursor: pointer;
+      transition: fill 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+    }
+    .chart-bar:hover {
+      filter: brightness(1.2) drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+      opacity: 0.95;
+    }
+    .donut-slice {
+      cursor: pointer;
+      transition: stroke-width 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, filter 0.25s ease;
+    }
+    .donut-slice:hover {
+      stroke-width: 30px !important;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+      opacity: 1 !important;
+    }
+    .donut-slice.dimmed {
+      opacity: 0.35 !important;
+    }
+    .chart-dot {
+      cursor: pointer;
+      transition: r 0.2s ease, filter 0.2s ease;
+    }
+    .chart-dot:hover {
+      r: 7 !important;
+      filter: drop-shadow(0 0 6px var(--accent));
+    }
+    .chart-grid-line {
+      stroke: var(--border-color);
+      stroke-dasharray: 4 4;
+      stroke-opacity: 0.6;
+    }
+    .chart-axis-text {
+      fill: var(--text-muted);
+      font-size: 11px;
+      font-weight: 600;
+      font-family: inherit;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+    .legend-item:hover {
+      background: var(--bg-subtle);
+      transform: translateX(2px);
+    }
   </style>
 </head>
 
@@ -2219,6 +2294,9 @@
           <button class="btn header-overwhelmed-btn btn-sm" id="btnOverwhelmed" onclick="openOverwhelmedModal()" title="Calm emergency reset when feeling overwhelmed">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             <span>I'm Overwhelmed</span>
+          </button>
+          <button class="btn btn-secondary btn-sm" id="btnHeaderDemoData" onclick="openLoadDemoModal()" title="Load rich ADHD demo dataset" style="border-color: var(--accent); color: var(--accent); font-weight: 600;">
+            <span>✨ Demo Data</span>
           </button>
           <div class="header-xp-pill" onclick="navigateTo('rewards')" title="Your Dopamine XP & Level">
             <span class="xp-gem-icon">⚡</span>
@@ -3369,34 +3447,86 @@
           <div class="view-header">
             <div class="view-title-group">
               <h1 class="view-title">Analytics & Behavioral Trends</h1>
-              <p class="view-subtitle">Real metrics computed exclusively from your stored planner logs. Zero fake data.</p>
+              <p class="view-subtitle">Interactive metrics computed dynamically from your real planner logs. Hover over bars, slices, and points to explore details.</p>
             </div>
-            <div class="view-actions">
+            <div class="view-actions" style="display: flex; gap: 8px; align-items: center;">
+              <button class="btn btn-secondary btn-sm" onclick="openLoadDemoModal()" style="border-color: var(--accent); color: var(--accent); font-weight: 600;">
+                <span>✨ Load Demo Data</span>
+              </button>
               <select id="analyticsDateRange" class="form-select" style="width: 150px;" onchange="renderAnalyticsView()">
                 <option value="7">Last 7 Days</option>
-                <option value="30" selected>Last 30 Days</option>
+                <option value="14" selected>Last 14 Days</option>
+                <option value="30">Last 30 Days</option>
                 <option value="all">All Time</option>
               </select>
+            </div>
+          </div>
+
+          <!-- REAL-TIME PERIOD KPIS -->
+          <div class="grid-4" style="margin-bottom: var(--space-lg);">
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span>Tasks Completed</span>
+                <div class="kpi-icon-box"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/></svg></div>
+              </div>
+              <div class="kpi-value" id="analyticsKpiCompleted">0</div>
+              <div class="kpi-subtext" id="analyticsKpiCompletedSub">0 completed / day avg</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span>Deep Focus Logged</span>
+                <div class="kpi-icon-box"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+              </div>
+              <div class="kpi-value" id="analyticsKpiFocus">0h 0m</div>
+              <div class="kpi-subtext" id="analyticsKpiFocusSub">0m / day avg</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span>Avg Mood & Energy</span>
+                <div class="kpi-icon-box"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/></svg></div>
+              </div>
+              <div class="kpi-value" id="analyticsKpiMood">--</div>
+              <div class="kpi-subtext" id="analyticsKpiMoodSub">Energy: --/5</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span>Habit Consistency</span>
+                <div class="kpi-icon-box"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div>
+              </div>
+              <div class="kpi-value" id="analyticsKpiHabits">0%</div>
+              <div class="kpi-subtext" id="analyticsKpiHabitsSub">active habits tracked</div>
             </div>
           </div>
 
           <!-- REAL SVG CHARTS GRID -->
           <div class="grid-2">
             <div class="card">
-              <h2 class="card-title">Task Completion History</h2>
-              <div id="chartTaskCompletion" style="height: 240px; width: 100%; margin-top: var(--space-md);"></div>
+              <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                <h2 class="card-title">Task Completion History</h2>
+                <span style="font-size: 11px; color: var(--text-muted);">Hover bars for details</span>
+              </div>
+              <div id="chartTaskCompletion" style="height: 250px; width: 100%; margin-top: var(--space-md); position: relative;"></div>
             </div>
             <div class="card">
-              <h2 class="card-title">Tasks by Category (Donut)</h2>
-              <div id="chartTaskCategory" style="height: 240px; width: 100%; margin-top: var(--space-md);"></div>
+              <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                <h2 class="card-title">Tasks by Category</h2>
+                <span style="font-size: 11px; color: var(--text-muted);">Interactive donut & legend</span>
+              </div>
+              <div id="chartTaskCategory" style="height: 250px; width: 100%; margin-top: var(--space-md); position: relative;"></div>
             </div>
             <div class="card">
-              <h2 class="card-title">Daily Focus Minutes</h2>
-              <div id="chartFocusMinutes" style="height: 240px; width: 100%; margin-top: var(--space-md);"></div>
+              <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                <h2 class="card-title">Daily Focus Minutes</h2>
+                <span style="font-size: 11px; color: var(--text-muted);">Goal target: 60 min/day</span>
+              </div>
+              <div id="chartFocusMinutes" style="height: 250px; width: 100%; margin-top: var(--space-md); position: relative;"></div>
             </div>
             <div class="card">
-              <h2 class="card-title">Mood & Energy Correlation</h2>
-              <div id="chartMoodEnergy" style="height: 240px; width: 100%; margin-top: var(--space-md);"></div>
+              <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                <h2 class="card-title">Mood & Energy Correlation</h2>
+                <span style="font-size: 11px; color: var(--text-muted);">Hover points for reflections</span>
+              </div>
+              <div id="chartMoodEnergy" style="height: 250px; width: 100%; margin-top: var(--space-md); position: relative;"></div>
             </div>
           </div>
         </section>
@@ -3578,6 +3708,12 @@
                 <input type="checkbox" id="settingsSound" checked onchange="saveSettings()" />
                 <span>Enable Offline Audio Chimes (Web Audio API)</span>
               </label>
+            </div>
+
+            <div style="border-top: 1px solid var(--border-color); padding-top: var(--space-md); margin-top: var(--space-lg);">
+              <h3 style="color: var(--accent); font-size: 15px; font-weight: 700; margin-bottom: 6px;">✨ Explore with Demo Data</h3>
+              <p style="font-size: 13px; color: var(--text-muted); margin-bottom: var(--space-md);">Load a comprehensive, realistic ADHD productivity dataset (28+ tasks, 14 days of focus sessions, mood logs, habit streaks, projects, and goals) to preview full charts and features.</p>
+              <button class="btn btn-secondary btn-sm" onclick="openLoadDemoModal()" style="border-color: var(--accent); color: var(--accent); font-weight: 600;">✨ Load ADHD Demo Dataset</button>
             </div>
 
             <div style="border-top: 1px solid var(--danger-soft); padding-top: var(--space-md); margin-top: var(--space-lg);">
@@ -3912,6 +4048,44 @@
     </div>
   </div>
 
+  <!-- 8. LOAD DEMO DATA MODAL -->
+  <div class="modal-backdrop" id="modalDemoData">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">✨ Load ADHD Demo Dataset</h3>
+        <button class="modal-close-btn" onclick="closeModal('modalDemoData')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="text-align: center; margin-bottom: var(--space-md);">
+          <div style="font-size: 38px; margin-bottom: 6px;">🚀</div>
+          <h4 style="font-size: 16px; font-weight: 700; margin-bottom: 6px;">Experience the Planner at Full Momentum</h4>
+          <p style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.6;">
+            Populate your workspace with a realistic, high-functioning ADHD system spanning the past 14-30 days. Perfect for exploring interactive charts, habit streaks, and workflow modules.
+          </p>
+        </div>
+        <div class="card" style="background: var(--bg-subtle); padding: 14px 18px; border-left: 4px solid var(--accent); margin-bottom: var(--space-md);">
+          <ul style="font-size: 13px; line-height: 1.8; color: var(--text-primary); margin-left: 18px;">
+            <li><strong>28 Realistic Tasks:</strong> 14 completed across recent dates, Top 3 for today, low-energy & deep-work tags.</li>
+            <li><strong>22 Focus Sessions:</strong> 14-day history with 15-60m sprints driving interactive analytics.</li>
+            <li><strong>14-Day Wellness Logs:</strong> Daily mood, energy ratings, and sleep tracker logs.</li>
+            <li><strong>Habit Streaks:</strong> 6 ADHD-friendly habits with active streaks and 14-day dot matrix.</li>
+            <li><strong>Projects & Goals:</strong> Milestones, Wheel of Life balance scores, and parked distractions.</li>
+          </ul>
+        </div>
+        <p style="font-size: 12px; color: var(--text-muted); text-align: center;">
+          Note: If you have custom tasks, consider downloading a JSON backup first from the Backup tab.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modalDemoData')">Cancel</button>
+        <button class="btn btn-primary" onclick="loadDemoData(true)">✨ Load Demo Data</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING INTERACTIVE CHART TOOLTIP -->
+  <div id="analyticsChartTooltip" class="chart-tooltip"></div>
+
   <!-- TOAST CONTAINER -->
   <div class="toast-container" id="toastContainer"></div>
 
@@ -3929,6 +4103,12 @@
       const month = String(d.getMonth() + 1).padStart(2, '0');
       const day = String(d.getDate()).padStart(2, '0');
       return `${year}-${month}-${day}`;
+    }
+
+    function getDateOffset(days) {
+      const d = new Date();
+      d.setDate(d.getDate() + days);
+      return getLocalDateString(d);
     }
 
     const TODAY_STR = getLocalDateString();
@@ -4254,6 +4434,846 @@
       };
     }
 
+    // Comprehensive Dynamic ADHD Demo Dataset
+    function generateRichDemoData() {
+      const d0 = getDateOffset(0);
+      const d1 = getDateOffset(-1);
+      const d2 = getDateOffset(-2);
+      const d3 = getDateOffset(-3);
+      const d4 = getDateOffset(-4);
+      const d5 = getDateOffset(-5);
+      const d6 = getDateOffset(-6);
+      const d7 = getDateOffset(-7);
+      const d8 = getDateOffset(-8);
+      const d9 = getDateOffset(-9);
+      const d10 = getDateOffset(-10);
+      const d11 = getDateOffset(-11);
+      const d12 = getDateOffset(-12);
+      const d13 = getDateOffset(-13);
+      const d14 = getDateOffset(-14);
+
+      return {
+        version: SCHEMA_VERSION,
+        profile: {
+          name: "Alex",
+          avatar: "A",
+          xp: 420,
+          level: 4,
+          levelName: "Hyperfocus Architect"
+        },
+        settings: {
+          theme: "ivory-gold",
+          mode: "light",
+          fontSize: "comfortable",
+          density: "comfortable",
+          radius: "smooth",
+          reducedMotion: false,
+          weekStart: "monday",
+          defaultFocusTime: 25,
+          dailyFocusGoal: 60,
+          dailyWaterGoal: 2500,
+          gamification: true,
+          soundEnabled: true
+        },
+        todayPlanner: {
+          date: d0,
+          mainIntention: "Ship the launch deck and protect a 30-minute calm walking break before hyperfocus",
+          notes: "Single-task during the 10:00 AM window. Drink a full glass of water every 60 minutes."
+        },
+        dashboardWidgets: {
+          top3: true,
+          schedule: true,
+          habits: true,
+          goals: true,
+          kpiTasks: true,
+          kpiFocus: true,
+          kpiHabits: true,
+          kpiWater: true,
+          kpiMood: true
+        },
+        tasks: [
+          // TODAY'S TOP 3 & ACTIVE TASKS
+          {
+            id: "task-d-1",
+            title: "Review and approve final product release architecture",
+            description: "Go through documentation, verify database migrations, and confirm offline storage.",
+            priority: "Critical",
+            status: "In Progress",
+            energy: "High",
+            dueDate: d0,
+            dueTime: "11:00",
+            duration: 45,
+            category: "Work",
+            projectId: "proj-1",
+            recurrence: "none",
+            isTop3: true,
+            subtasks: [
+              { id: "sub-1", text: "Verify local JSON backup integrity", completed: true },
+              { id: "sub-2", text: "Test theme switching and persistence", completed: true },
+              { id: "sub-3", text: "Audit SVG charts responsiveness", completed: false }
+            ],
+            createdAt: d0
+          },
+          {
+            id: "task-d-2",
+            title: "Drink tall glass of water & take morning vitamins",
+            description: "Physical hydration foundation to support cognitive endurance.",
+            priority: "Medium",
+            status: "Completed",
+            energy: "Very Low",
+            dueDate: d0,
+            dueTime: "08:30",
+            duration: 5,
+            category: "Health",
+            projectId: "",
+            recurrence: "daily",
+            isTop3: true,
+            subtasks: [],
+            createdAt: d0,
+            completedAt: d0
+          },
+          {
+            id: "task-d-3",
+            title: "Reply to dental clinic confirming Thursday appointment",
+            description: "Quick 2-minute text message confirmation.",
+            priority: "Medium",
+            status: "Not Started",
+            energy: "Low",
+            dueDate: d0,
+            dueTime: "14:00",
+            duration: 5,
+            category: "Personal",
+            projectId: "",
+            recurrence: "none",
+            isTop3: true,
+            subtasks: [],
+            createdAt: d0
+          },
+          {
+            id: "task-d-4",
+            title: "Refactor navigation event delegator for smoother transitions",
+            description: "Optimize DOM queries for sub-millisecond tab switching.",
+            priority: "High",
+            status: "Not Started",
+            energy: "High",
+            dueDate: d0,
+            dueTime: "15:30",
+            duration: 40,
+            category: "Work",
+            projectId: "proj-1",
+            recurrence: "none",
+            isTop3: false,
+            subtasks: [],
+            createdAt: d0
+          },
+          {
+            id: "task-d-5",
+            title: "Wipe down monitor and clear physical desk clutter",
+            description: "Visual reset to eliminate distracting periphery objects.",
+            priority: "Low",
+            status: "Not Started",
+            energy: "Very Low",
+            dueDate: d0,
+            dueTime: "17:00",
+            duration: 5,
+            category: "Home",
+            projectId: "proj-2",
+            recurrence: "daily",
+            isTop3: false,
+            subtasks: [],
+            createdAt: d0
+          },
+          {
+            id: "task-d-6",
+            title: "Review monthly credit card transactions for rogue subscriptions",
+            description: "Check banking app and cancel any unused services.",
+            priority: "Medium",
+            status: "Not Started",
+            energy: "Medium",
+            dueDate: getDateOffset(2),
+            dueTime: "16:00",
+            duration: 20,
+            category: "Finance",
+            projectId: "",
+            recurrence: "monthly",
+            isTop3: false,
+            subtasks: [],
+            createdAt: d1
+          },
+          {
+            id: "task-d-7",
+            title: "Study Chapter 5 on Executive Function scaffolding",
+            description: "Take margin notes on friction reduction techniques.",
+            priority: "Low",
+            status: "Not Started",
+            energy: "Medium",
+            dueDate: getDateOffset(3),
+            dueTime: "19:00",
+            duration: 30,
+            category: "Learning",
+            projectId: "",
+            recurrence: "none",
+            isTop3: false,
+            subtasks: [],
+            createdAt: d2
+          },
+          {
+            id: "task-d-8",
+            title: "Submit travel insurance reimbursement claim",
+            description: "Upload airport taxi receipt and flight delay confirmation.",
+            priority: "High",
+            status: "Not Started",
+            energy: "Low",
+            dueDate: d2,
+            dueTime: "12:00",
+            duration: 15,
+            category: "Finance",
+            projectId: "",
+            recurrence: "none",
+            isTop3: false,
+            subtasks: [],
+            createdAt: d4
+          },
+          {
+            id: "task-d-9",
+            title: "Batch unsubscribe from promotional marketing emails",
+            description: "Search 'unsubscribe' in inbox and clear notifications.",
+            priority: "Low",
+            status: "Not Started",
+            energy: "Very Low",
+            dueDate: getDateOffset(4),
+            dueTime: "18:00",
+            duration: 15,
+            category: "Personal",
+            projectId: "",
+            recurrence: "none",
+            isTop3: false,
+            subtasks: [],
+            createdAt: d3
+          },
+          {
+            id: "task-d-10",
+            title: "Research quiet low-profile tactile keyboard switches",
+            description: "Compare sound dampening tests on YouTube.",
+            priority: "Low",
+            status: "Not Started",
+            energy: "Low",
+            dueDate: getDateOffset(5),
+            dueTime: "20:00",
+            duration: 25,
+            category: "Creative",
+            projectId: "proj-2",
+            recurrence: "none",
+            isTop3: false,
+            subtasks: [],
+            createdAt: d1
+          },
+          {
+            id: "task-d-11",
+            title: "Practice 15 minutes of calm acoustic guitar fingerpicking",
+            description: "Tactile dopamine break without screens.",
+            priority: "Low",
+            status: "Not Started",
+            energy: "Medium",
+            dueDate: d0,
+            dueTime: "17:30",
+            duration: 15,
+            category: "Creative",
+            projectId: "",
+            recurrence: "none",
+            isTop3: false,
+            subtasks: [],
+            createdAt: d0
+          },
+          {
+            id: "task-d-12",
+            title: "Prep healthy lunch meal containers for the next 2 days",
+            description: "Roast veggies and portion quinoa bowls.",
+            priority: "Medium",
+            status: "Not Started",
+            energy: "Medium",
+            dueDate: d0,
+            dueTime: "18:30",
+            duration: 25,
+            category: "Health",
+            projectId: "",
+            recurrence: "none",
+            isTop3: false,
+            subtasks: [],
+            createdAt: d0
+          },
+          {
+            id: "task-d-13",
+            title: "Stretch hamstrings, hip flexors and shoulders",
+            description: "Post-desk mobility routine.",
+            priority: "Low",
+            status: "Not Started",
+            energy: "Very Low",
+            dueDate: d0,
+            dueTime: "21:00",
+            duration: 10,
+            category: "Health",
+            projectId: "",
+            recurrence: "daily",
+            isTop3: false,
+            subtasks: [],
+            createdAt: d0
+          },
+          {
+            id: "task-d-14",
+            title: "Setup automatic monthly savings transfer",
+            description: "Automate 10% transfer into emergency cushion account.",
+            priority: "High",
+            status: "Not Started",
+            energy: "Low",
+            dueDate: getDateOffset(6),
+            dueTime: "10:00",
+            duration: 10,
+            category: "Finance",
+            projectId: "",
+            recurrence: "monthly",
+            isTop3: false,
+            subtasks: [],
+            createdAt: d2
+          },
+
+          // 14 COMPLETED TASKS DISTRIBUTED OVER LAST 14 DAYS
+          {
+            id: "task-dc-1",
+            title: "Quarterly product roadmap synthesis & slide outline",
+            description: "Synthesized executive priorities into a 5-pillar structure.",
+            priority: "High",
+            status: "Completed",
+            energy: "High",
+            dueDate: d1,
+            duration: 50,
+            category: "Work",
+            projectId: "proj-1",
+            createdAt: d2,
+            completedAt: d1
+          },
+          {
+            id: "task-dc-2",
+            title: "Morning 30-minute brisk walk in sunlight",
+            description: "Reset circadian rhythm and boosted energy.",
+            priority: "Medium",
+            status: "Completed",
+            energy: "Low",
+            dueDate: d1,
+            duration: 30,
+            category: "Health",
+            createdAt: d1,
+            completedAt: d1
+          },
+          {
+            id: "task-dc-3",
+            title: "Code review: Refactored timeblocking timeline math",
+            description: "Fixed coordinate alignment for half-hour blocks.",
+            priority: "High",
+            status: "Completed",
+            energy: "High",
+            dueDate: d2,
+            duration: 40,
+            category: "Work",
+            projectId: "proj-1",
+            createdAt: d3,
+            completedAt: d2
+          },
+          {
+            id: "task-dc-4",
+            title: "Deep clean kitchen counters and run dishwasher",
+            description: "Cleared all sink dishes and wiped cooktop.",
+            priority: "Medium",
+            status: "Completed",
+            energy: "Very Low",
+            dueDate: d2,
+            duration: 20,
+            category: "Home",
+            createdAt: d2,
+            completedAt: d2
+          },
+          {
+            id: "task-dc-5",
+            title: "Architect reactive local state synchronization pipeline",
+            description: "Ensured atomic updates between tasks, projects, and charts.",
+            priority: "Critical",
+            status: "Completed",
+            energy: "High",
+            dueDate: d3,
+            duration: 60,
+            category: "Work",
+            projectId: "proj-1",
+            createdAt: d4,
+            completedAt: d3
+          },
+          {
+            id: "task-dc-6",
+            title: "Pick up prescription refill from pharmacy",
+            description: "Secured monthly ADHD medication on schedule.",
+            priority: "High",
+            status: "Completed",
+            energy: "Low",
+            dueDate: d4,
+            duration: 20,
+            category: "Health",
+            createdAt: d5,
+            completedAt: d4
+          },
+          {
+            id: "task-dc-7",
+            title: "Organize desk cables with under-desk raceway tray",
+            description: "Eliminated hanging wires for a distraction-free field of view.",
+            priority: "Low",
+            status: "Completed",
+            energy: "Very Low",
+            dueDate: d5,
+            duration: 25,
+            category: "Home",
+            projectId: "proj-2",
+            createdAt: d6,
+            completedAt: d5
+          },
+          {
+            id: "task-dc-8",
+            title: "Draft design system color palette & contrast ratios",
+            description: "Validated AAA accessibility across all 12 themes.",
+            priority: "High",
+            status: "Completed",
+            energy: "High",
+            dueDate: d6,
+            duration: 45,
+            category: "Work",
+            projectId: "proj-1",
+            createdAt: d7,
+            completedAt: d6
+          },
+          {
+            id: "task-dc-9",
+            title: "Weekly budget audit and categorize recent receipts",
+            description: "Logged grocery and subscription expenses into planner.",
+            priority: "Medium",
+            status: "Completed",
+            energy: "Medium",
+            dueDate: d7,
+            duration: 30,
+            category: "Finance",
+            createdAt: d8,
+            completedAt: d7
+          },
+          {
+            id: "task-dc-10",
+            title: "Mindfulness forest walk with ambient headphones",
+            description: "Unplugged from screens and walked 5,200 steps.",
+            priority: "Low",
+            status: "Completed",
+            energy: "Low",
+            dueDate: d8,
+            duration: 35,
+            category: "Health",
+            createdAt: d8,
+            completedAt: d8
+          },
+          {
+            id: "task-dc-11",
+            title: "Setup offline Web Audio API chimes synthesizer",
+            description: "Engineered pleasant dual-frequency bells without external mp3s.",
+            priority: "High",
+            status: "Completed",
+            energy: "High",
+            dueDate: d9,
+            duration: 50,
+            category: "Work",
+            projectId: "proj-1",
+            createdAt: d10,
+            completedAt: d9
+          },
+          {
+            id: "task-dc-12",
+            title: "Batch reply to pending personal family messages",
+            description: "Sent warm replies to group chat and shared weekend photos.",
+            priority: "Medium",
+            status: "Completed",
+            energy: "Low",
+            dueDate: d10,
+            duration: 20,
+            category: "Personal",
+            createdAt: d11,
+            completedAt: d10
+          },
+          {
+            id: "task-dc-13",
+            title: "Order ergonomic vertical mouse to relieve forearm strain",
+            description: "Chose wireless rechargeable model with thumb rest.",
+            priority: "Low",
+            status: "Completed",
+            energy: "Very Low",
+            dueDate: d11,
+            duration: 15,
+            category: "Shopping",
+            createdAt: d12,
+            completedAt: d11
+          },
+          {
+            id: "task-dc-14",
+            title: "Read Chapter 4 on working memory offloading techniques",
+            description: "Extracted actionable brain dump rituals.",
+            priority: "Medium",
+            status: "Completed",
+            energy: "Medium",
+            dueDate: d12,
+            duration: 35,
+            category: "Learning",
+            createdAt: d13,
+            completedAt: d12
+          }
+        ],
+        timeBlocks: [
+          { id: "tb-1", title: "Morning Kickstart & Sunlight", startTime: "08:30", endTime: "09:30", date: d0, category: "Health", color: "var(--success)" },
+          { id: "tb-2", title: "Deep Focus: Release Architecture", startTime: "10:00", endTime: "11:30", date: d0, category: "Work", color: "var(--accent)" },
+          { id: "tb-3", title: "Nourishing Lunch & Walk", startTime: "12:30", endTime: "13:30", date: d0, category: "Personal", color: "var(--info)" },
+          { id: "tb-4", title: "Refactoring & Admin Wrap-up", startTime: "15:00", endTime: "16:30", date: d0, category: "Work", color: "var(--warning)" }
+        ],
+        brainDump: [
+          { id: "bd-1", text: "Look into noise-canceling headphones replacement cushions", category: "Shopping", date: d0, converted: false },
+          { id: "bd-2", text: "Idea: Automatic dopamine XP sound effects on streak milestones", category: "Idea", date: d0, converted: false },
+          { id: "bd-3", text: "Check dental cleaning insurance pre-authorization rules", category: "Reminder", date: d1, converted: false },
+          { id: "bd-4", text: "Download PDF user manual for standing desk controller", category: "Task", date: d2, converted: true },
+          { id: "bd-5", text: "Schedule winter car tire inspection next week", category: "Reminder", date: d3, converted: false },
+          { id: "bd-6", text: "Explore ceramic travel coffee mugs with leakproof lids", category: "Shopping", date: d4, converted: false }
+        ],
+        distractions: [
+          { id: "dist-1", text: "Check price of electric standing desk converter", category: "Urge", date: d0, converted: false },
+          { id: "dist-2", text: "Look up Wikipedia article on dopamine receptor density", category: "Research", date: d0, converted: false },
+          { id: "dist-3", text: "Suddenly felt urge to organize spice cabinet", category: "Chore", date: d1, converted: true },
+          { id: "dist-4", text: "Idea for a retro pixel-art habit timer app", category: "Idea", date: d2, converted: true },
+          { id: "dist-5", text: "Wondering if sourdough starter needs feeding today", category: "Random", date: d3, converted: false },
+          { id: "dist-6", text: "Check flight ticket prices for holiday trip", category: "Urge", date: d4, converted: true },
+          { id: "dist-7", text: "Check whether mechanical switch lube makes a big difference", category: "Research", date: d5, converted: false },
+          { id: "dist-8", text: "Clean lint trap in dryer", category: "Chore", date: d6, converted: true }
+        ],
+        focusSessions: [
+          { id: "fs-1", taskId: "task-d-1", taskTitle: "Review release architecture", durationMinutes: 45, plannedMinutes: 45, date: d0, timestamp: Date.now() - 3600000 },
+          { id: "fs-2", taskId: "task-d-2", taskTitle: "Morning alignment sprint", durationMinutes: 25, plannedMinutes: 25, date: d0, timestamp: Date.now() - 14400000 },
+          { id: "fs-3", taskId: "task-dc-1", taskTitle: "Roadmap synthesis", durationMinutes: 50, plannedMinutes: 50, date: d1, timestamp: Date.now() - 86400000 },
+          { id: "fs-4", taskId: "task-dc-2", taskTitle: "Walking & planning", durationMinutes: 25, plannedMinutes: 25, date: d1, timestamp: Date.now() - 95000000 },
+          { id: "fs-5", taskId: "task-dc-3", taskTitle: "Timeblocking code review", durationMinutes: 45, plannedMinutes: 45, date: d2, timestamp: Date.now() - 172800000 },
+          { id: "fs-6", taskId: "task-dc-5", taskTitle: "State sync architecture", durationMinutes: 60, plannedMinutes: 60, date: d3, timestamp: Date.now() - 259200000 },
+          { id: "fs-7", taskId: "task-dc-5", taskTitle: "State sync tests", durationMinutes: 30, plannedMinutes: 30, date: d3, timestamp: Date.now() - 265000000 },
+          { id: "fs-8", taskId: "task-dc-6", taskTitle: "Pharmacy & logistics", durationMinutes: 25, plannedMinutes: 25, date: d4, timestamp: Date.now() - 345600000 },
+          { id: "fs-9", taskId: "task-dc-7", taskTitle: "Desk makeover setup", durationMinutes: 50, plannedMinutes: 50, date: d5, timestamp: Date.now() - 432000000 },
+          { id: "fs-10", taskId: "task-dc-7", taskTitle: "Cable routing", durationMinutes: 25, plannedMinutes: 25, date: d5, timestamp: Date.now() - 440000000 },
+          { id: "fs-11", taskId: "task-dc-8", taskTitle: "Design tokens document", durationMinutes: 30, plannedMinutes: 30, date: d6, timestamp: Date.now() - 518400000 },
+          { id: "fs-12", taskId: "task-dc-9", taskTitle: "Budget audit sprint", durationMinutes: 45, plannedMinutes: 45, date: d7, timestamp: Date.now() - 604800000 },
+          { id: "fs-13", taskId: "task-dc-9", taskTitle: "Receipt categorization", durationMinutes: 25, plannedMinutes: 25, date: d7, timestamp: Date.now() - 612000000 },
+          { id: "fs-14", taskId: "task-dc-10", taskTitle: "Mindfulness outdoors", durationMinutes: 25, plannedMinutes: 25, date: d8, timestamp: Date.now() - 691200000 },
+          { id: "fs-15", taskId: "task-dc-11", taskTitle: "Web Audio synthesizer", durationMinutes: 50, plannedMinutes: 50, date: d9, timestamp: Date.now() - 777600000 },
+          { id: "fs-16", taskId: "task-dc-11", taskTitle: "Audio frequencies tuning", durationMinutes: 35, plannedMinutes: 35, date: d9, timestamp: Date.now() - 785000000 },
+          { id: "fs-17", taskId: "task-dc-12", taskTitle: "Personal messages batch", durationMinutes: 20, plannedMinutes: 20, date: d10, timestamp: Date.now() - 864000000 },
+          { id: "fs-18", taskId: "task-dc-13", taskTitle: "Ergonomics research", durationMinutes: 40, plannedMinutes: 40, date: d11, timestamp: Date.now() - 950400000 },
+          { id: "fs-19", taskId: "task-dc-14", taskTitle: "Executive function reading", durationMinutes: 30, plannedMinutes: 30, date: d12, timestamp: Date.now() - 1036800000 },
+          { id: "fs-20", taskId: "task-dc-14", taskTitle: "Notes extraction", durationMinutes: 25, plannedMinutes: 25, date: d12, timestamp: Date.now() - 1045000000 },
+          { id: "fs-21", taskId: "task-d-1", taskTitle: "Initial prototype draft", durationMinutes: 45, plannedMinutes: 45, date: d13, timestamp: Date.now() - 1123200000 },
+          { id: "fs-22", taskId: "task-d-4", taskTitle: "CSS styling foundation", durationMinutes: 25, plannedMinutes: 25, date: d14, timestamp: Date.now() - 1209600000 }
+        ],
+        habits: [
+          {
+            id: "hab-1",
+            name: "Morning Sunlight & Hydration",
+            category: "Health",
+            icon: "☀️",
+            targetDays: 7,
+            streak: 12,
+            bestStreak: 16,
+            history: { [d0]: true, [d1]: true, [d2]: true, [d3]: true, [d4]: true, [d5]: true, [d6]: true, [d7]: true, [d8]: true, [d9]: true, [d10]: true, [d11]: true, [d12]: false, [d13]: true, [d14]: true }
+          },
+          {
+            id: "hab-2",
+            name: "Take ADHD Medication on Schedule",
+            category: "Health",
+            icon: "💊",
+            targetDays: 7,
+            streak: 14,
+            bestStreak: 28,
+            history: { [d0]: true, [d1]: true, [d2]: true, [d3]: true, [d4]: true, [d5]: true, [d6]: true, [d7]: true, [d8]: true, [d9]: true, [d10]: true, [d11]: true, [d12]: true, [d13]: true, [d14]: true }
+          },
+          {
+            id: "hab-3",
+            name: "25-Minute Single-Task Deep Work",
+            category: "Focus",
+            icon: "🎯",
+            targetDays: 5,
+            streak: 8,
+            bestStreak: 12,
+            history: { [d0]: true, [d1]: true, [d2]: true, [d3]: true, [d4]: true, [d5]: true, [d6]: true, [d7]: true, [d8]: false, [d9]: true, [d10]: false, [d11]: true, [d12]: true, [d13]: true, [d14]: false }
+          },
+          {
+            id: "hab-4",
+            name: "Take Outdoor Walking Break",
+            category: "Health",
+            icon: "🌿",
+            targetDays: 5,
+            streak: 6,
+            bestStreak: 10,
+            history: { [d0]: true, [d1]: true, [d2]: true, [d3]: true, [d4]: true, [d5]: true, [d6]: false, [d7]: true, [d8]: true, [d9]: true, [d10]: false, [d11]: true, [d12]: false, [d13]: true, [d14]: true }
+          },
+          {
+            id: "hab-5",
+            name: "Evening Screen Shutdown by 10:30 PM",
+            category: "Sleep",
+            icon: "🌙",
+            targetDays: 6,
+            streak: 5,
+            bestStreak: 9,
+            history: { [d0]: false, [d1]: true, [d2]: true, [d3]: true, [d4]: true, [d5]: true, [d6]: false, [d7]: true, [d8]: true, [d9]: true, [d10]: false, [d11]: true, [d12]: true, [d13]: false, [d14]: true }
+          },
+          {
+            id: "hab-6",
+            name: "Daily Mind-Clear Brain Dump",
+            category: "Focus",
+            icon: "🧠",
+            targetDays: 7,
+            streak: 7,
+            bestStreak: 14,
+            history: { [d0]: true, [d1]: true, [d2]: true, [d3]: true, [d4]: true, [d5]: true, [d6]: true, [d7]: true, [d8]: false, [d9]: true, [d10]: true, [d11]: false, [d12]: true, [d13]: true, [d14]: true }
+          }
+        ],
+        routines: [
+          {
+            id: "rt-1",
+            name: "Morning Low-Friction Kickstart",
+            icon: "🌅",
+            color: "var(--accent)",
+            steps: [
+              { id: "rts-1", text: "Drink 500ml water from bedside glass", duration: 1, completed: true },
+              { id: "rts-2", text: "Open window blinds and get natural sunlight", duration: 2, completed: true },
+              { id: "rts-3", text: "Take medication & vitamins with a light snack", duration: 5, completed: true },
+              { id: "rts-4", text: "Review Today Planner and select Top 3 priorities", duration: 5, completed: true }
+            ]
+          },
+          {
+            id: "rt-2",
+            name: "Evening Shutdown & Mind Release",
+            icon: "🌙",
+            color: "var(--info)",
+            steps: [
+              { id: "rts-5", text: "Complete 2-minute Daily Evening Review", duration: 2, completed: false },
+              { id: "rts-6", text: "Write tomorrow's 3 priority tasks onto paper", duration: 3, completed: false },
+              { id: "rts-7", text: "Put smartphone onto charging pad across the room", duration: 1, completed: false }
+            ]
+          }
+        ],
+        selfCare: {
+          [d0]: { water: true, sleep: true, meals: true, meds: true, vitamins: true, movement: false, outdoors: true, relaxation: true, screenbreak: true, social: false },
+          [d1]: { water: true, sleep: true, meals: true, meds: true, vitamins: true, movement: true, outdoors: true, relaxation: true, screenbreak: true, social: true },
+          [d2]: { water: true, sleep: false, meals: true, meds: true, vitamins: true, movement: false, outdoors: false, relaxation: true, screenbreak: false, social: false }
+        },
+        sleepLogs: {
+          [d0]: { bedtime: "23:15", wakeTime: "07:15", duration: 480, quality: 4, energy: 4, notes: "Fell asleep in 15 mins. No middle-of-night wakeups." },
+          [d1]: { bedtime: "23:00", wakeTime: "07:30", duration: 510, quality: 5, energy: 5, notes: "Deep restorative 8.5 hours. Woke up feeling energized." },
+          [d2]: { bedtime: "00:15", wakeTime: "07:00", duration: 405, quality: 3, energy: 3, notes: "Stayed up a bit late reading. Slight afternoon dip." },
+          [d3]: { bedtime: "23:30", wakeTime: "07:15", duration: 465, quality: 4, energy: 4, notes: "Consistent sleep rhythm." },
+          [d4]: { bedtime: "23:45", wakeTime: "07:30", duration: 465, quality: 3, energy: 3, notes: "Took a while to fall asleep due to racing thoughts." },
+          [d5]: { bedtime: "23:00", wakeTime: "07:15", duration: 495, quality: 4, energy: 4, notes: "Room temp was cooler, slept noticeably better." },
+          [d6]: { bedtime: "22:45", wakeTime: "07:00", duration: 495, quality: 5, energy: 5, notes: "Put phone away early, fell asleep immediately." },
+          [d7]: { bedtime: "23:30", wakeTime: "07:30", duration: 480, quality: 4, energy: 4, notes: "Good calm sleep." },
+          [d8]: { bedtime: "23:15", wakeTime: "07:15", duration: 480, quality: 4, energy: 4, notes: "Solid restful night." },
+          [d9]: { bedtime: "23:00", wakeTime: "07:00", duration: 480, quality: 5, energy: 5, notes: "Exhausted from outdoor exercise, slept very deeply." },
+          [d10]: { bedtime: "00:30", wakeTime: "07:00", duration: 390, quality: 2, energy: 2, notes: "Suboptimal sleep, felt groggy upon waking." },
+          [d11]: { bedtime: "23:30", wakeTime: "07:30", duration: 480, quality: 4, energy: 4, notes: "Recovered from yesterday's sleep debt." },
+          [d12]: { bedtime: "23:15", wakeTime: "07:15", duration: 480, quality: 4, energy: 4, notes: "Consistent and predictable." },
+          [d13]: { bedtime: "23:00", wakeTime: "07:00", duration: 480, quality: 4, energy: 4, notes: "Calm evening routine helped smooth transition." },
+          [d14]: { bedtime: "23:30", wakeTime: "07:30", duration: 480, quality: 4, energy: 4, notes: "Woke refreshed." }
+        },
+        moodLogs: {
+          [d0]: { mood: 4, energy: 4, focus: 4, stress: 2, notes: "Calm, aligned morning. Focused on single-tasking without feeling scattered." },
+          [d1]: { mood: 5, energy: 4, focus: 5, stress: 1, notes: "High dopamine flow state! Made huge progress on product roadmap." },
+          [d2]: { mood: 3, energy: 3, focus: 3, stress: 3, notes: "Afternoon 3pm slump. A 20-minute eyes-closed reset helped stabilize focus." },
+          [d3]: { mood: 4, energy: 5, focus: 4, stress: 2, notes: "High physical energy today. State sync architecture felt engaging and fun." },
+          [d4]: { mood: 3, energy: 2, focus: 3, stress: 4, notes: "Restless morning. Walking outside before opening the laptop helped calm the mind." },
+          [d5]: { mood: 4, energy: 4, focus: 4, stress: 2, notes: "Organized physical workspace, which noticeably reduced sensory overload." },
+          [d6]: { mood: 5, energy: 4, focus: 5, stress: 1, notes: "Design tokens document flowed smoothly. Great clarity throughout." },
+          [d7]: { mood: 3, energy: 3, focus: 3, stress: 2, notes: "Sunday evening weekly review gave calm peace of mind for the week ahead." },
+          [d8]: { mood: 4, energy: 4, focus: 4, stress: 2, notes: "Walked 5,200 steps outdoors. Deep restorative feeling all afternoon." },
+          [d9]: { mood: 4, energy: 4, focus: 5, stress: 2, notes: "Audio synthesizer sounds worked like a charm. Productive flow." },
+          [d10]: { mood: 2, energy: 2, focus: 2, stress: 4, notes: "Executive dysfunction morning. Dialed down goals to small 5-min wins." },
+          [d11]: { mood: 4, energy: 3, focus: 4, stress: 2, notes: "Ordered ergonomic equipment. Motivation and agency returned." },
+          [d12]: { mood: 4, energy: 4, focus: 4, stress: 2, notes: "Enjoyed learning chapter on working memory offloading." },
+          [d13]: { mood: 3, energy: 3, focus: 3, stress: 3, notes: "Steady baseline day. Managed task list with ease." },
+          [d14]: { mood: 4, energy: 4, focus: 4, stress: 2, notes: "Good momentum day." }
+        },
+        waterLogs: {
+          [d0]: 2000,
+          [d1]: 2500,
+          [d2]: 2250,
+          [d3]: 2750,
+          [d4]: 2000,
+          [d5]: 2500,
+          [d6]: 2500,
+          [d7]: 2250,
+          [d8]: 2750,
+          [d9]: 2500,
+          [d10]: 1750,
+          [d11]: 2250,
+          [d12]: 2500,
+          [d13]: 2250,
+          [d14]: 2000
+        },
+        movementLogs: [
+          { id: "mov-1", activity: "Outdoor Brisk Walk", duration: 30, steps: 4100, date: d0, notes: "Sunny morning walk, boosted early dopamine." },
+          { id: "mov-2", activity: "Mobility & Hamstring Stretching", duration: 15, steps: 600, date: d1, notes: "Relieved lower back stiffness from desk work." },
+          { id: "mov-3", activity: "Park Jog & Interval Walk", duration: 35, steps: 5200, date: d8, notes: "Great endorphin release." }
+        ],
+        meals: {
+          [d0]: {
+            breakfast: "Greek yogurt with blueberries, hemp seeds, raw honey & walnuts",
+            lunch: "Warm grilled chicken quinoa bowl with avocado and olive oil",
+            dinner: "Pan-seared wild salmon, roasted sweet potato wedges & asparagus",
+            snacks: "Handful of roasted almonds & crisp green apple"
+          }
+        },
+        projects: [
+          {
+            id: "proj-1",
+            name: "ADHD Life Planner Pro System",
+            description: "Self-contained single-file offline digital productivity operating system.",
+            category: "Work",
+            priority: "High",
+            deadline: getDateOffset(18),
+            status: "In Progress",
+            progress: 82,
+            color: "var(--accent)"
+          },
+          {
+            id: "proj-2",
+            name: "Ergonomic Workspace Redesign",
+            description: "Low-distraction monitor positioning, cable tray, and warm 3000K lighting.",
+            category: "Home",
+            priority: "Medium",
+            deadline: getDateOffset(25),
+            status: "In Progress",
+            progress: 60,
+            color: "var(--info)"
+          }
+        ],
+        goals: [
+          {
+            id: "goal-1",
+            title: "Establish Consistent Circadian Sleep Routine",
+            area: "Health",
+            type: "quarterly",
+            why: "Consistent deep sleep dramatically reduces executive dysfunction and afternoon brain fog.",
+            deadline: getDateOffset(45),
+            progress: 75,
+            status: "In Progress",
+            milestones: [
+              { id: "gm-1", text: "Bedtime before 11:30 PM for 14 straight days", completed: true },
+              { id: "gm-2", text: "Morning natural sunlight within 20 mins of waking", completed: true },
+              { id: "gm-3", text: "Zero caffeine intake after 1:00 PM", completed: false }
+            ]
+          },
+          {
+            id: "goal-2",
+            title: "Ship ADHD Life Planner Pro v2.0",
+            area: "Career",
+            type: "quarterly",
+            why: "Empower thousands of neurodivergent brains with calm, friction-free life management.",
+            deadline: getDateOffset(20),
+            progress: 85,
+            status: "In Progress",
+            milestones: [
+              { id: "gm-4", text: "Interactive SVG charts with real-time sync", completed: true },
+              { id: "gm-5", text: "Comprehensive demo data hydration", completed: true },
+              { id: "gm-6", text: "Release documentation and keyboard shortcuts guide", completed: false }
+            ]
+          }
+        ],
+        lifeAreas: [
+          { id: "la-work", name: "Career & Work", score: 8 },
+          { id: "la-health", name: "Physical Health", score: 7 },
+          { id: "la-mind", name: "Mental Wellbeing", score: 8 },
+          { id: "la-finance", name: "Financial Security", score: 7 },
+          { id: "la-relationships", name: "Relationships & Family", score: 8 },
+          { id: "la-home", name: "Home Environment", score: 7 },
+          { id: "la-growth", name: "Personal Growth", score: 9 },
+          { id: "la-fun", name: "Play & Creativity", score: 6 }
+        ],
+        notes: [
+          {
+            id: "note-1",
+            title: "ADHD Focus Rules That Actually Work in Practice",
+            content: "1. Body doubling (work in presence of someone or ambient video).\n2. 5-minute start rule: tell yourself you can stop after 5 mins.\n3. Keep desk 100% free of random paper stacks.\n4. Park intrusive thoughts into the Distraction Lot immediately to protect working memory.\n5. Match energy to task: do low-energy admin when brain is quiet.",
+            category: "Productivity",
+            pinned: true,
+            createdAt: d0
+          },
+          {
+            id: "note-2",
+            title: "Neurodivergent Dopamine Menu",
+            content: "• Appetizers (5 mins): Drink ice water, 4-7-8 breathing round, stretch forearms, listen to 1 high-energy song.\n• Entrees (20-40 mins): Brisk outdoor walk, playing an acoustic guitar song, cooking a fresh meal.\n• Desserts (Guilt-Free Treats): Watching an episode of a documentary, reading a fantasy novel.",
+            category: "Wellness",
+            pinned: true,
+            createdAt: d1
+          }
+        ],
+        finance: {
+          monthlyBudget: 3600,
+          expenses: [
+            { id: "exp-1", description: "Organic Whole Foods Market", amount: 92.40, category: "Groceries", date: d0, notes: "Weekly fresh groceries" },
+            { id: "exp-2", description: "Pharmacy Medication Copay", amount: 30.00, category: "Health", date: d1, notes: "Monthly prescription" },
+            { id: "exp-3", description: "Ergonomic Vertical Mouse", amount: 48.50, category: "Office", date: d2, notes: "Workspace health equipment" },
+            { id: "exp-4", description: "Gym & Sauna Membership", amount: 65.00, category: "Health", date: d4, notes: "Monthly membership" },
+            { id: "exp-5", description: "Quiet Cafe Study Session", amount: 6.25, category: "Personal", date: d6, notes: "Americano & sparkling water" }
+          ]
+        },
+        shopping: [
+          { id: "shop-1", name: "Electrolyte powder packets", category: "Health", store: "Pharmacy", qty: "1 box", price: 19.50, checked: false },
+          { id: "shop-2", name: "3000K warm LED desk bulb", category: "Home", store: "Hardware", qty: "2 bulbs", price: 14.00, checked: true },
+          { id: "shop-3", name: "Extra virgin olive oil", category: "Groceries", store: "Supermarket", qty: "1 bottle", price: 16.00, checked: false }
+        ],
+        waitingFor: [
+          { id: "wf-1", item: "Custom ergonomic chair armrests", contact: "Support Desk", requestDate: d2, expectedDate: getDateOffset(5), followUpDate: getDateOffset(6), status: "Waiting", notes: "Tracking code active" }
+        ],
+        someday: [
+          { id: "sd-1", text: "Learn classical acoustic guitar fingerstyle arrangements", category: "Hobbies", date: d1 },
+          { id: "sd-2", text: "Backpack through Olympic National Park temperate rainforest", category: "Travel", date: d3 }
+        ],
+        decisionHelper: {
+          question: "Which workspace upgrade should take priority this month?",
+          options: [
+            { name: "High-CRI 3000K Workspace Lamp", effort: 2, cost: 3, importance: 5, risk: 1, score: 82 },
+            { name: "Under-Desk Walking Treadmill", effort: 4, cost: 5, importance: 4, risk: 3, score: 64 }
+          ]
+        },
+        rewardsShop: [
+          { id: "rew-1", title: "Watch 1 episode of favorite documentary", costXP: 80, claimed: false },
+          { id: "rew-2", title: "Buy specialized single-origin coffee beans", costXP: 150, claimed: false },
+          { id: "rew-3", title: "Afternoon off for guilt-free hobby time", costXP: 300, claimed: false }
+        ],
+        reviews: {
+          daily: {
+            [d1]: {
+              accomplish: "Delivered product roadmap synthesis slides ahead of schedule",
+              well: "Working with a 25-minute Pomodoro timer kept focus locked in without wandering",
+              difficult: "Mid-afternoon energy drop around 3pm",
+              tomorrow: "Finalize release architecture and run all validation tests"
+            }
+          },
+          weekly: {
+            [d0]: {
+              wins: "Logged over 12 hours of deep focus across the week; 14 completed tasks.",
+              adjust: "Need to safeguard an earlier dinner to keep bedtime consistently before 11:30 PM."
+            }
+          },
+          monthly: {
+            [d0]: {
+              wins: "Maintained habit streaks above 80% and completed 2 major milestones for ADHD Planner.",
+              intention: "Focus on single-tasking in the mornings and taking outdoor breaks."
+            }
+          }
+        }
+      };
+    }
+
     // Master in-memory app state
     let appData = null;
 
@@ -4365,13 +5385,12 @@
 
     function escapeHtml(str) {
       if (typeof str !== 'string') return '';
-      return str.replace(/[&<>'"]/g, tag => ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        "'": '&#39;',
-        '"': '&quot;'
-      }[tag] || tag));
+      return str
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
     }
 
     // MODAL HELPERS
@@ -6957,172 +7976,575 @@
       `;
     }
 
-    // 17. REACTIVE NATIVE SVG CHARTS ENGINE
-    function renderAnalyticsView() {
-      renderTaskCompletionChart();
-      renderCategoryDonutChart();
-      renderFocusMinutesChart();
-      renderMoodEnergyChart();
+    // 17. REACTIVE INTERACTIVE NATIVE SVG CHARTS ENGINE
+    function escapeJsString(str) {
+      if (!str) return '';
+      return String(str)
+        .replaceAll('\\', '\\\\')
+        .replaceAll('`', '\\`')
+        .replaceAll('$', '\\$');
     }
 
-    function renderTaskCompletionChart() {
+    function showChartTooltip(e, htmlContent) {
+      const tip = document.getElementById('analyticsChartTooltip');
+      if (!tip) return;
+      tip.innerHTML = htmlContent;
+      tip.classList.add('visible');
+
+      const x = e.clientX + 14;
+      const y = e.clientY + 14;
+      const maxW = window.innerWidth - 290;
+      const finalX = x > maxW ? e.clientX - 270 : x;
+      const finalY = Math.min(y, window.innerHeight - 130);
+
+      tip.style.left = `${finalX}px`;
+      tip.style.top = `${finalY}px`;
+    }
+
+    function hideChartTooltip() {
+      const tip = document.getElementById('analyticsChartTooltip');
+      if (tip) tip.classList.remove('visible');
+    }
+
+    function renderAnalyticsView() {
+      const rangeEl = document.getElementById('analyticsDateRange');
+      const rangeVal = rangeEl ? rangeEl.value : '14';
+      let dayCount = 14;
+      if (rangeVal === '7') dayCount = 7;
+      else if (rangeVal === '14') dayCount = 14;
+      else if (rangeVal === '30') dayCount = 30;
+      else if (rangeVal === 'all') dayCount = 45;
+
+      const dateList = [];
+      for (let i = dayCount - 1; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const dateStr = getLocalDateString(d);
+        const dayName = d.toLocaleDateString([], { weekday: 'short' });
+        const monthDay = d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+        dateList.push({
+          dateStr,
+          dayName,
+          monthDay,
+          label: `${dayName}, ${monthDay}`,
+          dateObj: d
+        });
+      }
+
+      updateAnalyticsPeriodKpis(dateList);
+      renderTaskCompletionChart(dateList);
+      renderCategoryDonutChart();
+      renderFocusMinutesChart(dateList);
+      renderMoodEnergyChart(dateList);
+    }
+
+    function updateAnalyticsPeriodKpis(dateList) {
+      const dateSet = new Set(dateList.map(d => d.dateStr));
+
+      // 1. Tasks Completed
+      const completedTasks = appData.tasks.filter(t => t.status === 'Completed' && dateSet.has(t.completedAt));
+      const compCount = completedTasks.length;
+      const compDailyAvg = (compCount / dateList.length).toFixed(1);
+      const elComp = document.getElementById('analyticsKpiCompleted');
+      const elCompSub = document.getElementById('analyticsKpiCompletedSub');
+      if (elComp) elComp.textContent = compCount;
+      if (elCompSub) elCompSub.textContent = `${compDailyAvg} / day avg in ${dateList.length}d`;
+
+      // 2. Focus Time
+      const focusSessions = appData.focusSessions.filter(s => dateSet.has(s.date));
+      const totalFocusMins = focusSessions.reduce((sum, s) => sum + (s.durationMinutes || 0), 0);
+      const focusHrs = Math.floor(totalFocusMins / 60);
+      const focusMinsRem = totalFocusMins % 60;
+      const avgFocusDay = Math.round(totalFocusMins / dateList.length);
+      const elFocus = document.getElementById('analyticsKpiFocus');
+      const elFocusSub = document.getElementById('analyticsKpiFocusSub');
+      if (elFocus) elFocus.textContent = `${focusHrs}h ${focusMinsRem}m`;
+      if (elFocusSub) elFocusSub.textContent = `${avgFocusDay}m / day avg (${focusSessions.length} sessions)`;
+
+      // 3. Avg Mood & Energy
+      let moodSum = 0;
+      let energySum = 0;
+      let moodCount = 0;
+      dateList.forEach(d => {
+        const mLog = appData.moodLogs && appData.moodLogs[d.dateStr];
+        if (mLog && typeof mLog.mood === 'number') {
+          moodSum += mLog.mood;
+          energySum += (typeof mLog.energy === 'number' ? mLog.energy : 3);
+          moodCount++;
+        }
+      });
+      const elMood = document.getElementById('analyticsKpiMood');
+      const elMoodSub = document.getElementById('analyticsKpiMoodSub');
+      if (elMood) {
+        if (moodCount > 0) {
+          const avgMood = (moodSum / moodCount).toFixed(1);
+          const avgEnergy = (energySum / moodCount).toFixed(1);
+          let emoji = "🙂";
+          if (avgMood >= 4.5) emoji = "🤩";
+          else if (avgMood >= 3.8) emoji = "😊";
+          else if (avgMood >= 2.8) emoji = "😐";
+          else if (avgMood >= 2.0) emoji = "😕";
+          else emoji = "😭";
+          elMood.textContent = `${avgMood} ${emoji}`;
+          if (elMoodSub) elMoodSub.textContent = `Energy: ${avgEnergy}/5 (${moodCount} logs)`;
+        } else {
+          elMood.textContent = "--";
+          if (elMoodSub) elMoodSub.textContent = "No logs in period";
+        }
+      }
+
+      // 4. Habit Consistency
+      let totalHabitSlots = 0;
+      let completedHabitSlots = 0;
+      const habits = appData.habits || [];
+      if (habits.length > 0) {
+        habits.forEach(h => {
+          dateList.forEach(d => {
+            totalHabitSlots++;
+            if (h.history && h.history[d.dateStr]) {
+              completedHabitSlots++;
+            }
+          });
+        });
+      }
+      const elHabits = document.getElementById('analyticsKpiHabits');
+      const elHabitsSub = document.getElementById('analyticsKpiHabitsSub');
+      if (elHabits) {
+        const pct = totalHabitSlots > 0 ? Math.round((completedHabitSlots / totalHabitSlots) * 100) : 0;
+        elHabits.textContent = `${pct}%`;
+        if (elHabitsSub) elHabitsSub.textContent = `${completedHabitSlots}/${totalHabitSlots} checks (${habits.length} habits)`;
+      }
+    }
+
+    function renderTaskCompletionChart(dateList) {
       const container = document.getElementById('chartTaskCompletion');
       if (!container) return;
-      const days = [];
-      const counts = [];
-      for (let i = 6; i >= 0; i--) {
-        const d = new Date(); d.setDate(d.getDate() - i);
-        const str = getLocalDateString(d);
-        days.push(d.toLocaleDateString([], { weekday: 'short' }));
-        counts.push(appData.tasks.filter(t => t.status === 'Completed' && t.completedAt === str).length);
-      }
 
-      const max = Math.max(4, ...counts);
-      const width = 460;
-      const height = 180;
-      const barWidth = 36;
-      const gap = (width - (7 * barWidth)) / 8;
+      const dailyData = dateList.map(d => {
+        const tasksOnDate = appData.tasks.filter(t => t.status === 'Completed' && (t.completedAt === d.dateStr || (!t.completedAt && t.createdAt === d.dateStr)));
+        return {
+          ...d,
+          count: tasksOnDate.length,
+          tasks: tasksOnDate
+        };
+      });
 
-      let svg = `<svg width="100%" height="100%" viewBox="0 0 ${width} ${height}">`;
-      for (let i = 0; i < 7; i++) {
-        const h = (counts[i] / max) * 120;
-        const x = gap + i * (barWidth + gap);
-        const y = height - 30 - h;
-        svg += `
-          <rect x="${x}" y="${y}" width="${barWidth}" height="${h}" rx="6" fill="var(--accent)" />
-          <text x="${x + barWidth/2}" y="${y - 6}" font-size="11" font-weight="700" fill="var(--text-primary)" text-anchor="middle">${counts[i]}</text>
-          <text x="${x + barWidth/2}" y="${height - 10}" font-size="11" font-weight="600" fill="var(--text-muted)" text-anchor="middle">${days[i]}</text>
+      const maxVal = Math.max(4, ...dailyData.map(d => d.count));
+      const width = 480;
+      const height = 210;
+      const padLeft = 32;
+      const padRight = 14;
+      const padBottom = 26;
+      const padTop = 18;
+      const chartW = width - padLeft - padRight;
+      const chartH = height - padTop - padBottom;
+
+      const barCount = dailyData.length;
+      const barWidth = Math.max(8, Math.min(32, (chartW / barCount) * 0.65));
+      const step = chartW / barCount;
+
+      let gridLines = '';
+      const gridLevels = [0, Math.round(maxVal / 2), maxVal];
+      gridLevels.forEach(lvl => {
+        const y = padTop + chartH - (lvl / maxVal) * chartH;
+        gridLines += `
+          <line x1="${padLeft}" y1="${y}" x2="${width - padRight}" y2="${y}" class="chart-grid-line" />
+          <text x="${padLeft - 6}" y="${y + 3}" text-anchor="end" class="chart-axis-text">${lvl}</text>
         `;
-      }
-      svg += `</svg>`;
-      container.innerHTML = svg;
+      });
+
+      let barsHtml = '';
+      dailyData.forEach((d, i) => {
+        const barH = (d.count / maxVal) * chartH;
+        const x = padLeft + i * step + (step - barWidth) / 2;
+        const y = padTop + chartH - barH;
+
+        const taskListStr = d.tasks.slice(0, 3).map(t => `• ${escapeHtml(t.title)}`).join('<br>');
+        const moreStr = d.tasks.length > 3 ? `<br><em style="color:var(--text-muted);">+${d.tasks.length - 3} more...</em>` : '';
+        const tipContent = `
+          <div style="font-weight:700; color:var(--accent); margin-bottom:4px;">📅 ${d.label}</div>
+          <div style="font-size:13.5px; font-weight:700; margin-bottom:4px;">✅ ${d.count} Task${d.count === 1 ? '' : 's'} Completed</div>
+          <div style="font-size:11.5px; color:var(--text-secondary); border-top:1px solid var(--border-color); padding-top:4px; margin-top:4px; line-height:1.4;">
+            ${taskListStr ? taskListStr + moreStr : 'No tasks logged completed'}
+          </div>
+        `;
+
+        const isToday = d.dateStr === TODAY_STR;
+        const barFill = 'var(--accent)';
+        const barOpacity = d.count > 0 ? (isToday ? '1' : '0.85') : '0.2';
+        const showLabel = barCount <= 14 || (i % 2 === 0);
+
+        barsHtml += `
+          <g>
+            <rect class="chart-bar" x="${x}" y="${d.count > 0 ? y : (padTop + chartH - 4)}" width="${barWidth}" height="${d.count > 0 ? barH : 4}"
+              rx="4" fill="${barFill}" opacity="${barOpacity}"
+              onmouseenter="showChartTooltip(event, \`${escapeJsString(tipContent)}\`)"
+              onmousemove="showChartTooltip(event, \`${escapeJsString(tipContent)}\`)"
+              onmouseleave="hideChartTooltip()" />
+            ${d.count > 0 && barCount <= 14 ? `
+              <text x="${x + barWidth/2}" y="${y - 5}" font-size="10" font-weight="700" fill="var(--text-primary)" text-anchor="middle">${d.count}</text>
+            ` : ''}
+            ${showLabel ? `
+              <text x="${x + barWidth/2}" y="${height - 8}" class="chart-axis-text" text-anchor="middle">
+                ${barCount <= 7 ? d.dayName : d.monthDay.split(' ')[1]}
+              </text>
+            ` : ''}
+          </g>
+        `;
+      });
+
+      container.innerHTML = `
+        <svg width="100%" height="100%" viewBox="0 0 ${width} ${height}">
+          ${gridLines}
+          ${barsHtml}
+        </svg>
+      `;
     }
 
     function renderCategoryDonutChart() {
       const container = document.getElementById('chartTaskCategory');
       if (!container) return;
+
       const cats = {};
+      const completedCats = {};
       appData.tasks.forEach(t => {
         const c = t.category || "General";
         cats[c] = (cats[c] || 0) + 1;
+        if (t.status === 'Completed') {
+          completedCats[c] = (completedCats[c] || 0) + 1;
+        }
       });
-      const entries = Object.entries(cats);
+
+      const entries = Object.entries(cats).sort((a, b) => b[1] - a[1]);
       if (entries.length === 0) {
-        container.innerHTML = `<div class="empty-state" style="padding: 20px;"><p class="empty-state-desc">No category data yet.</p></div>`;
+        container.innerHTML = `<div class="empty-state" style="padding: 20px;"><p class="empty-state-desc">No category data yet. Add or load tasks to explore categories.</p></div>`;
         return;
       }
 
       const total = appData.tasks.length;
-      const colors = ["var(--accent)", "var(--info)", "var(--success)", "var(--warning)", "#8B5CF6", "#EC4899"];
+      const colors = ["#B48A3C", "#38BDF8", "#10B981", "#F59E0B", "#8B5CF6", "#EC4899", "#6366F1", "#14B8A6"];
       let acc = 0;
-      const circumference = 2 * Math.PI * 55;
+      const radius = 54;
+      const circumference = 2 * Math.PI * radius;
 
-      let slices = '';
-      let legend = '<div style="display:flex; flex-direction:column; gap:6px; font-size:12px; margin-left:16px;">';
+      let slicesHtml = '';
+      let legendHtml = '<div style="display:flex; flex-direction:column; gap:6px; font-size:12px; max-height:210px; overflow-y:auto; padding-right:6px;">';
 
       entries.forEach(([cat, count], idx) => {
         const pct = count / total;
         const strokeLength = pct * circumference;
         const color = colors[idx % colors.length];
-        slices += `
-          <circle cx="90" cy="90" r="55" fill="none" stroke="${color}" stroke-width="24"
-            stroke-dasharray="${strokeLength} ${circumference}"
-            stroke-dashoffset="${-acc}" transform="rotate(-90 90 90)" />
-        `;
+        const offset = acc;
         acc += strokeLength;
-        legend += `
-          <div style="display:flex; align-items:center; gap:6px;">
-            <div style="width:10px; height:10px; border-radius:3px; background:${color};"></div>
-            <span><strong>${cat}:</strong> ${count} (${Math.round(pct*100)}%)</span>
+
+        const done = completedCats[cat] || 0;
+        const pending = count - done;
+        const pctFormatted = Math.round(pct * 100);
+
+        const tipContent = `
+          <div style="display:flex; align-items:center; gap:6px; font-weight:700; margin-bottom:4px;">
+            <span style="display:inline-block; width:10px; height:10px; border-radius:3px; background:${color};"></span>
+            <span>${escapeHtml(cat)}</span>
+          </div>
+          <div style="font-size:13.5px; font-weight:700;">${count} Tasks (${pctFormatted}%)</div>
+          <div style="font-size:11.5px; color:var(--text-secondary); border-top:1px solid var(--border-color); padding-top:4px; margin-top:4px;">
+            ${done} completed • ${pending} pending
+          </div>
+        `;
+
+        slicesHtml += `
+          <circle id="donut-slice-${idx}" class="donut-slice" cx="85" cy="85" r="${radius}" fill="none"
+            stroke="${color}" stroke-width="22"
+            stroke-dasharray="${strokeLength} ${circumference}"
+            stroke-dashoffset="${-offset}"
+            transform="rotate(-90 85 85)"
+            onmouseenter="donutHighlightSlice('${idx}', '${escapeHtml(cat)}', '${count}', '${pctFormatted}%', event, \`${escapeJsString(tipContent)}\`)"
+            onmousemove="showChartTooltip(event, \`${escapeJsString(tipContent)}\`)"
+            onmouseleave="donutResetSlice('${total}')" />
+        `;
+
+        legendHtml += `
+          <div class="legend-item" id="donut-legend-${idx}"
+            onmouseenter="donutHighlightSlice('${idx}', '${escapeHtml(cat)}', '${count}', '${pctFormatted}%', event, \`${escapeJsString(tipContent)}\`)"
+            onmouseleave="donutResetSlice('${total}')">
+            <div style="width:10px; height:10px; border-radius:3px; background:${color}; flex-shrink:0;"></div>
+            <span style="flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><strong>${escapeHtml(cat)}</strong></span>
+            <span style="color:var(--text-muted); font-size:11px;">${count} (${pctFormatted}%)</span>
           </div>
         `;
       });
-      legend += '</div>';
+      legendHtml += '</div>';
 
       container.innerHTML = `
-        <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-          <svg width="180" height="180" viewBox="0 0 180 180">${slices}</svg>
-          ${legend}
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 100%;">
+          <div style="position: relative; width: 170px; height: 170px; flex-shrink: 0;">
+            <svg width="170" height="170" viewBox="0 0 170 170">
+              ${slicesHtml}
+              <text id="donutCenterVal" x="85" y="80" text-anchor="middle" font-size="20" font-weight="800" fill="var(--text-primary)">${total}</text>
+              <text id="donutCenterTitle" x="85" y="98" text-anchor="middle" font-size="11" font-weight="600" fill="var(--text-muted)">Total Tasks</text>
+            </svg>
+          </div>
+          <div style="flex: 1; min-width: 0;">
+            ${legendHtml}
+          </div>
         </div>
       `;
     }
 
-    function renderFocusMinutesChart() {
+    function donutHighlightSlice(idx, title, val, pct, e, tipHtml) {
+      const valEl = document.getElementById('donutCenterVal');
+      const titleEl = document.getElementById('donutCenterTitle');
+      if (valEl) valEl.textContent = val;
+      if (titleEl) titleEl.textContent = `${title} (${pct})`;
+
+      document.querySelectorAll('.donut-slice').forEach(s => {
+        if (s.id === `donut-slice-${idx}`) {
+          s.classList.remove('dimmed');
+        } else {
+          s.classList.add('dimmed');
+        }
+      });
+      if (e && tipHtml) {
+        showChartTooltip(e, tipHtml);
+      }
+    }
+
+    function donutResetSlice(total) {
+      const valEl = document.getElementById('donutCenterVal');
+      const titleEl = document.getElementById('donutCenterTitle');
+      if (valEl) valEl.textContent = total;
+      if (titleEl) titleEl.textContent = "Total Tasks";
+
+      document.querySelectorAll('.donut-slice').forEach(s => s.classList.remove('dimmed'));
+      hideChartTooltip();
+    }
+
+    function renderFocusMinutesChart(dateList) {
       const container = document.getElementById('chartFocusMinutes');
       if (!container) return;
-      const days = [];
-      const mins = [];
-      for (let i = 6; i >= 0; i--) {
-        const d = new Date(); d.setDate(d.getDate() - i);
-        const str = getLocalDateString(d);
-        days.push(d.toLocaleDateString([], { weekday: 'short' }));
-        const sessions = appData.focusSessions.filter(s => s.date === str);
-        mins.push(sessions.reduce((sum, s) => sum + (s.durationMinutes || 0), 0));
-      }
 
-      const max = Math.max(60, ...mins);
-      const width = 460;
-      const height = 180;
-      const barWidth = 36;
-      const gap = (width - (7 * barWidth)) / 8;
-
-      let svg = `<svg width="100%" height="100%" viewBox="0 0 ${width} ${height}">`;
-      for (let i = 0; i < 7; i++) {
-        const h = (mins[i] / max) * 120;
-        const x = gap + i * (barWidth + gap);
-        const y = height - 30 - h;
-        svg += `
-          <rect x="${x}" y="${y}" width="${barWidth}" height="${h}" rx="6" fill="var(--info)" />
-          <text x="${x + barWidth/2}" y="${y - 6}" font-size="11" font-weight="700" fill="var(--text-primary)" text-anchor="middle">${mins[i]}m</text>
-          <text x="${x + barWidth/2}" y="${height - 10}" font-size="11" font-weight="600" fill="var(--text-muted)" text-anchor="middle">${days[i]}</text>
-        `;
-      }
-      svg += `</svg>`;
-      container.innerHTML = svg;
-    }
-
-    function renderMoodEnergyChart() {
-      const container = document.getElementById('chartMoodEnergy');
-      if (!container) return;
-      const days = [];
-      const moodPts = [];
-      const energyPts = [];
-      for (let i = 6; i >= 0; i--) {
-        const d = new Date(); d.setDate(d.getDate() - i);
-        const str = getLocalDateString(d);
-        days.push(d.toLocaleDateString([], { weekday: 'short' }));
-        const log = appData.moodLogs[str] || { mood: 3, energy: 3 };
-        moodPts.push(log.mood || 3);
-        energyPts.push(log.energy || 3);
-      }
-
-      const width = 460;
-      const height = 180;
-      const stepX = width / 6;
-
-      const toCoord = (val, idx) => ({
-        x: idx * stepX,
-        y: height - 30 - ((val / 5) * 120)
+      const dailyData = dateList.map(d => {
+        const sessions = appData.focusSessions.filter(s => s.date === d.dateStr);
+        const mins = sessions.reduce((sum, s) => sum + (s.durationMinutes || 0), 0);
+        return {
+          ...d,
+          mins,
+          sessions,
+          topTask: sessions.length > 0 ? sessions[0].taskTitle : ''
+        };
       });
 
-      const moodCoords = moodPts.map(toCoord);
-      const energyCoords = energyPts.map(toCoord);
+      const maxVal = Math.max(75, ...dailyData.map(d => d.mins));
+      const goalMins = (appData.settings && appData.settings.dailyFocusGoal) || 60;
+      const width = 480;
+      const height = 210;
+      const padLeft = 36;
+      const padRight = 14;
+      const padBottom = 26;
+      const padTop = 18;
+      const chartW = width - padLeft - padRight;
+      const chartH = height - padTop - padBottom;
 
-      const toSvgPath = (pts) => pts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+      const barCount = dailyData.length;
+      const barWidth = Math.max(8, Math.min(32, (chartW / barCount) * 0.65));
+      const step = chartW / barCount;
 
-      let svg = `
+      const goalY = padTop + chartH - (goalMins / maxVal) * chartH;
+      const goalLine = `
+        <line x1="${padLeft}" y1="${goalY}" x2="${width - padRight}" y2="${goalY}" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.85" />
+        <text x="${width - padRight - 4}" y="${goalY - 4}" text-anchor="end" font-size="10" font-weight="700" fill="var(--accent)">Goal: ${goalMins}m</text>
+      `;
+
+      let gridLines = '';
+      const gridLevels = [0, 30, 60, Math.round(maxVal)];
+      gridLevels.forEach(lvl => {
+        const y = padTop + chartH - (lvl / maxVal) * chartH;
+        gridLines += `
+          <line x1="${padLeft}" y1="${y}" x2="${width - padRight}" y2="${y}" class="chart-grid-line" />
+          <text x="${padLeft - 6}" y="${y + 3}" text-anchor="end" class="chart-axis-text">${lvl}m</text>
+        `;
+      });
+
+      let barsHtml = '';
+      dailyData.forEach((d, i) => {
+        const barH = (d.mins / maxVal) * chartH;
+        const x = padLeft + i * step + (step - barWidth) / 2;
+        const y = padTop + chartH - barH;
+
+        const goalMet = d.mins >= goalMins;
+        const barColor = goalMet ? 'var(--accent)' : 'var(--info)';
+        const barOpacity = d.mins > 0 ? '0.9' : '0.2';
+
+        const sessionTitles = d.sessions.slice(0, 3).map(s => `• ${escapeHtml(s.taskTitle || 'Focus sprint')} (${s.durationMinutes}m)`).join('<br>');
+        const tipContent = `
+          <div style="font-weight:700; color:var(--info); margin-bottom:4px;">⏱️ ${d.label}</div>
+          <div style="font-size:13.5px; font-weight:700; margin-bottom:4px; color:${goalMet ? 'var(--accent)' : 'var(--text-primary)'}">
+            ${d.mins} Deep Focus Minutes ${goalMet ? '🎯 (Goal Met!)' : ''}
+          </div>
+          <div style="font-size:11.5px; color:var(--text-secondary); border-top:1px solid var(--border-color); padding-top:4px; margin-top:4px; line-height:1.4;">
+            ${d.sessions.length} session(s) logged<br>
+            ${sessionTitles || 'No focus logged on this day'}
+          </div>
+        `;
+
+        const showLabel = barCount <= 14 || (i % 2 === 0);
+
+        barsHtml += `
+          <g>
+            <rect class="chart-bar" x="${x}" y="${d.mins > 0 ? y : (padTop + chartH - 4)}" width="${barWidth}" height="${d.mins > 0 ? barH : 4}"
+              rx="4" fill="${barColor}" opacity="${barOpacity}"
+              onmouseenter="showChartTooltip(event, \`${escapeJsString(tipContent)}\`)"
+              onmousemove="showChartTooltip(event, \`${escapeJsString(tipContent)}\`)"
+              onmouseleave="hideChartTooltip()" />
+            ${d.mins > 0 && barCount <= 14 ? `
+              <text x="${x + barWidth/2}" y="${y - 5}" font-size="10" font-weight="700" fill="var(--text-primary)" text-anchor="middle">${d.mins}m</text>
+            ` : ''}
+            ${showLabel ? `
+              <text x="${x + barWidth/2}" y="${height - 8}" class="chart-axis-text" text-anchor="middle">
+                ${barCount <= 7 ? d.dayName : d.monthDay.split(' ')[1]}
+              </text>
+            ` : ''}
+          </g>
+        `;
+      });
+
+      container.innerHTML = `
         <svg width="100%" height="100%" viewBox="0 0 ${width} ${height}">
-          <path d="${toSvgPath(moodCoords)}" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" />
-          <path d="${toSvgPath(energyCoords)}" fill="none" stroke="var(--success)" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 4" />
-          ${moodCoords.map(p => `<circle cx="${p.x}" cy="${p.y}" r="4" fill="var(--accent)" />`).join('')}
-          ${energyCoords.map(p => `<circle cx="${p.x}" cy="${p.y}" r="4" fill="var(--success)" />`).join('')}
+          ${gridLines}
+          ${goalLine}
+          ${barsHtml}
         </svg>
-        <div style="display: flex; gap: 16px; justify-content: center; font-size: 12px; font-weight: 600; margin-top: 4px;">
-          <span style="color: var(--accent);">● Mood Rating</span>
-          <span style="color: var(--success);">-- Energy Level</span>
+      `;
+    }
+
+    function renderMoodEnergyChart(dateList) {
+      const container = document.getElementById('chartMoodEnergy');
+      if (!container) return;
+
+      const dailyData = dateList.map(d => {
+        const log = appData.moodLogs && appData.moodLogs[d.dateStr];
+        return {
+          ...d,
+          mood: log && typeof log.mood === 'number' ? log.mood : null,
+          energy: log && typeof log.energy === 'number' ? log.energy : null,
+          notes: log && log.notes ? log.notes : ''
+        };
+      });
+
+      const width = 480;
+      const height = 210;
+      const padLeft = 32;
+      const padRight = 14;
+      const padBottom = 32;
+      const padTop = 18;
+      const chartW = width - padLeft - padRight;
+      const chartH = height - padTop - padBottom;
+
+      const count = dailyData.length;
+      const step = chartW / Math.max(1, count - 1);
+
+      let gridLines = '';
+      const levels = [
+        { lvl: 5, label: "5" },
+        { lvl: 4, label: "4" },
+        { lvl: 3, label: "3" },
+        { lvl: 2, label: "2" },
+        { lvl: 1, label: "1" }
+      ];
+      levels.forEach(item => {
+        const y = padTop + chartH - ((item.lvl - 1) / 4) * chartH;
+        gridLines += `
+          <line x1="${padLeft}" y1="${y}" x2="${width - padRight}" y2="${y}" class="chart-grid-line" />
+          <text x="${padLeft - 6}" y="${y + 3}" text-anchor="end" class="chart-axis-text">${item.label}</text>
+        `;
+      });
+
+      const moodPts = [];
+      const energyPts = [];
+      dailyData.forEach((d, i) => {
+        const x = padLeft + i * step;
+        if (d.mood !== null) {
+          const y = padTop + chartH - ((d.mood - 1) / 4) * chartH;
+          moodPts.push({ x, y, data: d });
+        }
+        if (d.energy !== null) {
+          const y = padTop + chartH - ((d.energy - 1) / 4) * chartH;
+          energyPts.push({ x, y, data: d });
+        }
+      });
+
+      const toSvgPath = (pts) => pts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
+
+      let moodPath = moodPts.length > 1 ? `<path d="${toSvgPath(moodPts)}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" />` : '';
+      let energyPath = energyPts.length > 1 ? `<path d="${toSvgPath(energyPts)}" fill="none" stroke="var(--success)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="5 4" />` : '';
+
+      let dotsHtml = '';
+      dailyData.forEach((d, i) => {
+        const x = padLeft + i * step;
+        const mood = d.mood;
+        const energy = d.energy;
+        const showLabel = count <= 14 || (i % 2 === 0);
+
+        let moodEmoji = "😐";
+        if (mood >= 5) moodEmoji = "🤩";
+        else if (mood >= 4) moodEmoji = "😊";
+        else if (mood >= 3) moodEmoji = "😐";
+        else if (mood >= 2) moodEmoji = "😕";
+        else if (mood !== null) moodEmoji = "😭";
+
+        const tipContent = `
+          <div style="font-weight:700; color:var(--text-primary); margin-bottom:4px;">🧠 ${d.label}</div>
+          <div style="display:flex; gap:12px; margin-bottom:4px;">
+            <span style="color:var(--accent); font-weight:700;">Mood: ${mood !== null ? mood + '/5 ' + moodEmoji : 'None'}</span>
+            <span style="color:var(--success); font-weight:700;">Energy: ${energy !== null ? energy + '/5 ⚡' : 'None'}</span>
+          </div>
+          ${d.notes ? `<div style="font-size:11.5px; color:var(--text-secondary); font-style:italic; border-top:1px solid var(--border-color); padding-top:4px; margin-top:4px;">"${escapeHtml(d.notes)}"</div>` : ''}
+        `;
+
+        if (mood !== null) {
+          const y = padTop + chartH - ((mood - 1) / 4) * chartH;
+          dotsHtml += `
+            <circle class="chart-dot" cx="${x}" cy="${y}" r="4.5" fill="var(--accent)"
+              onmouseenter="showChartTooltip(event, \`${escapeJsString(tipContent)}\`)"
+              onmousemove="showChartTooltip(event, \`${escapeJsString(tipContent)}\`)"
+              onmouseleave="hideChartTooltip()" />
+          `;
+        }
+        if (energy !== null) {
+          const y = padTop + chartH - ((energy - 1) / 4) * chartH;
+          dotsHtml += `
+            <circle class="chart-dot" cx="${x}" cy="${y}" r="4" fill="var(--success)"
+              onmouseenter="showChartTooltip(event, \`${escapeJsString(tipContent)}\`)"
+              onmousemove="showChartTooltip(event, \`${escapeJsString(tipContent)}\`)"
+              onmouseleave="hideChartTooltip()" />
+          `;
+        }
+
+        if (showLabel) {
+          dotsHtml += `
+            <text x="${x}" y="${height - 10}" class="chart-axis-text" text-anchor="middle">
+              ${count <= 7 ? d.dayName : d.monthDay.split(' ')[1]}
+            </text>
+          `;
+        }
+      });
+
+      container.innerHTML = `
+        <svg width="100%" height="100%" viewBox="0 0 ${width} ${height}">
+          ${gridLines}
+          ${moodPath}
+          ${energyPath}
+          ${dotsHtml}
+        </svg>
+        <div style="display: flex; gap: 18px; justify-content: center; font-size: 11.5px; font-weight: 700; margin-top: -6px;">
+          <span style="color: var(--accent); display: flex; align-items: center; gap: 4px;">
+            <span style="display: inline-block; width: 10px; height: 3px; background: var(--accent); border-radius: 2px;"></span> Mood Rating (1-5)
+          </span>
+          <span style="color: var(--success); display: flex; align-items: center; gap: 4px;">
+            <span style="display: inline-block; width: 10px; height: 3px; background: var(--success); border-radius: 2px; border-top: 1px dashed var(--success);"></span> Energy Level (1-5)
+          </span>
         </div>
       `;
-      container.innerHTML = svg;
     }
 
     // 18. DATA BACKUP (JSON) & CSV EXPORT
@@ -7177,7 +8599,7 @@
     function exportTasksCSV() {
       let csv = "ID,Title,Description,Priority,Energy,Status,DueDate,Duration,Category\n";
       appData.tasks.forEach(t => {
-        csv += `"${t.id}","${(t.title||'').replace(/"/g, '""')}","${(t.description||'').replace(/"/g, '""')}","${t.priority}","${t.energy}","${t.status}","${t.dueDate||''}","${t.duration||0}","${t.category||''}"\n`;
+        csv += `"${t.id}","${(t.title||'').replaceAll('"', '""')}","${(t.description||'').replaceAll('"', '""')}","${t.priority}","${t.energy}","${t.status}","${t.dueDate||''}","${t.duration||0}","${t.category||''}"\n`;
       });
       downloadCsv(csv, `ADHD-Tasks-${TODAY_STR}.csv`);
       showToast("Tasks CSV exported", 'success');
@@ -7186,7 +8608,7 @@
     function exportHabitsCSV() {
       let csv = "ID,Name,Category,Streak,BestStreak\n";
       appData.habits.forEach(h => {
-        csv += `"${h.id}","${h.name.replace(/"/g, '""')}","${h.category}","${h.streak}","${h.bestStreak}"\n`;
+        csv += `"${h.id}","${h.name.replaceAll('"', '""')}","${h.category}","${h.streak}","${h.bestStreak}"\n`;
       });
       downloadCsv(csv, `ADHD-Habits-${TODAY_STR}.csv`);
       showToast("Habits CSV exported", 'success');
@@ -7195,7 +8617,7 @@
     function exportFocusCSV() {
       let csv = "Date,TaskTitle,DurationMinutes\n";
       appData.focusSessions.forEach(s => {
-        csv += `"${s.date}","${(s.taskTitle||'').replace(/"/g, '""')}","${s.durationMinutes}"\n`;
+        csv += `"${s.date}","${(s.taskTitle||'').replaceAll('"', '""')}","${s.durationMinutes}"\n`;
       });
       downloadCsv(csv, `ADHD-FocusSessions-${TODAY_STR}.csv`);
       showToast("Focus CSV exported", 'success');
@@ -7204,7 +8626,7 @@
     function exportMoodCSV() {
       let csv = "Date,Mood,Energy,Focus,Stress,Notes\n";
       Object.entries(appData.moodLogs).forEach(([date, m]) => {
-        csv += `"${date}","${m.mood}","${m.energy}","${m.focus}","${m.stress}","${(m.notes||'').replace(/"/g, '""')}"\n`;
+        csv += `"${date}","${m.mood}","${m.energy}","${m.focus}","${m.stress}","${(m.notes||'').replaceAll('"', '""')}"\n`;
       });
       downloadCsv(csv, `ADHD-MoodLogs-${TODAY_STR}.csv`);
       showToast("Mood CSV exported", 'success');
@@ -7222,7 +8644,7 @@
     function exportFinanceCSV() {
       let csv = "Date,Description,Amount,Category\n";
       appData.finance.expenses.forEach(e => {
-        csv += `"${e.date}","${e.description.replace(/"/g, '""')}","${e.amount}","${e.category}"\n`;
+        csv += `"${e.date}","${e.description.replaceAll('"', '""')}","${e.amount}","${e.category}"\n`;
       });
       downloadCsv(csv, `ADHD-Expenses-${TODAY_STR}.csv`);
       showToast("Finance CSV exported", 'success');
@@ -7231,7 +8653,7 @@
     function exportGoalsCSV() {
       let csv = "Title,Area,Progress,Why\n";
       appData.goals.forEach(g => {
-        csv += `"${g.title.replace(/"/g, '""')}","${g.area}","${g.progress}","${(g.why||'').replace(/"/g, '""')}"\n`;
+        csv += `"${g.title.replaceAll('"', '""')}","${g.area}","${g.progress}","${(g.why||'').replaceAll('"', '""')}"\n`;
       });
       downloadCsv(csv, `ADHD-Goals-${TODAY_STR}.csv`);
       showToast("Goals CSV exported", 'success');
@@ -7240,7 +8662,7 @@
     function exportProjectsCSV() {
       let csv = "Name,Category,Progress,Deadline\n";
       appData.projects.forEach(p => {
-        csv += `"${p.name.replace(/"/g, '""')}","${p.category}","${p.progress}","${p.deadline||''}"\n`;
+        csv += `"${p.name.replaceAll('"', '""')}","${p.category}","${p.progress}","${p.deadline||''}"\n`;
       });
       downloadCsv(csv, `ADHD-Projects-${TODAY_STR}.csv`);
       showToast("Projects CSV exported", 'success');
@@ -7598,6 +9020,21 @@
       renderDashboardView();
       updateLiveClock();
       showToast("Settings saved", 'success');
+    }
+
+    function openLoadDemoModal() {
+      openModal('modalDemoData');
+    }
+
+    function loadDemoData(confirmed) {
+      if (!confirmed) return;
+      appData = generateRichDemoData();
+      saveData();
+      closeModal('modalDemoData');
+      applyThemeSettings();
+      updateLiveClock();
+      renderCurrentView(currentView);
+      showToast("✨ ADHD Demo Dataset loaded! 28 tasks, 22 focus sessions & 14 days of trends active.", "success");
     }
 
     function openResetConfirmModal() {
