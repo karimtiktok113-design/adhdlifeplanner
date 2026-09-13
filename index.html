@@ -1913,25 +1913,73 @@
       }
     }
 
+    @media (max-width: 1024px) {
+      .app-header {
+        padding: 0 var(--space-md);
+      }
+      .header-center {
+        max-width: 220px;
+      }
+      .header-right {
+        gap: 6px;
+      }
+      .header-right .btn-sm {
+        padding: 6px 10px;
+        font-size: 12.5px;
+      }
+      .save-status-badge {
+        display: none;
+      }
+    }
+
     @media (max-width: 768px) {
       .workspace-content {
         padding: var(--space-md);
         padding-bottom: calc(var(--mobile-bottom-height) + var(--space-xl));
       }
       .app-header {
-        padding: 0 var(--space-md);
+        padding: 0 var(--space-sm);
+        height: 56px;
+      }
+      .header-left {
+        gap: 8px;
+        min-width: 0;
+      }
+      .header-datetime {
+        max-width: 130px;
+        overflow: hidden;
+      }
+      .header-greeting {
+        font-size: 13px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+      .header-clock-date {
+        font-size: 10px;
+        white-space: nowrap;
+      }
+      .header-right {
+        gap: 4px;
+        flex-shrink: 0;
+      }
+      .header-right .btn span {
+        display: none;
+      }
+      .header-right .btn {
+        padding: 7px;
+        min-width: 34px;
+        height: 34px;
+      }
+      .header-xp-pill {
+        padding: 4px 8px;
+        font-size: 11px;
       }
       .mobile-bottom-bar {
         display: flex;
       }
       .grid-2, .grid-3, .grid-4, .eisenhower-grid {
         grid-template-columns: 1fr;
-      }
-      .header-greeting {
-        font-size: 14px;
-      }
-      .header-clock-date {
-        font-size: 11px;
       }
       .view-title {
         font-size: 22px;
@@ -1943,6 +1991,41 @@
       .timer-display {
         font-size: 44px;
       }
+    }
+
+    /* STAR PRIORITY TOGGLE & COMPONENT STYLES */
+    .star-btn {
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 15px;
+      transition: color 0.15s ease, transform 0.15s ease;
+      background: none;
+      border: none;
+      padding: 2px 4px;
+    }
+    .star-btn:hover {
+      color: #F59E0B;
+      transform: scale(1.2);
+    }
+    .star-btn.active {
+      color: #F59E0B;
+    }
+    .project-task-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 10px;
+      background: var(--bg-subtle);
+      border-radius: var(--radius-btn);
+      font-size: 13px;
+      margin-bottom: 6px;
+      border: 1px solid var(--border-subtle);
+    }
+    .project-task-item.completed {
+      opacity: 0.65;
+    }
+    .project-task-item.completed .project-task-title {
+      text-decoration: line-through;
     }
 
     /* CHART INTERACTIVE STYLES & TOOLTIPS */
@@ -2294,9 +2377,6 @@
           <button class="btn header-overwhelmed-btn btn-sm" id="btnOverwhelmed" onclick="openOverwhelmedModal()" title="Calm emergency reset when feeling overwhelmed">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             <span>I'm Overwhelmed</span>
-          </button>
-          <button class="btn btn-secondary btn-sm" id="btnHeaderDemoData" onclick="openLoadDemoModal()" title="Load rich ADHD demo dataset" style="border-color: var(--accent); color: var(--accent); font-weight: 600;">
-            <span>✨ Demo Data</span>
           </button>
           <div class="header-xp-pill" onclick="navigateTo('rewards')" title="Your Dopamine XP & Level">
             <span class="xp-gem-icon">⚡</span>
@@ -2707,28 +2787,40 @@
             <div class="matrix-quadrant q-do-now">
               <div class="card-header">
                 <span style="font-weight: 700; color: var(--danger);">1. DO NOW (Urgent & Important)</span>
-                <span class="badge badge-priority-critical" id="matrixCountDoNow">0</span>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <button class="btn btn-ghost btn-sm" onclick="openTaskModal({priority: 'Critical', dueDate: TODAY_STR})">+ Add</button>
+                  <span class="badge badge-priority-critical" id="matrixCountDoNow">0</span>
+                </div>
               </div>
               <div class="matrix-items-list" id="matrixDoNowList"></div>
             </div>
             <div class="matrix-quadrant q-schedule">
               <div class="card-header">
                 <span style="font-weight: 700; color: var(--info);">2. SCHEDULE (Important, Not Urgent)</span>
-                <span class="badge badge-priority-medium" id="matrixCountSchedule">0</span>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <button class="btn btn-ghost btn-sm" onclick="openTaskModal({priority: 'High'})">+ Add</button>
+                  <span class="badge badge-priority-medium" id="matrixCountSchedule">0</span>
+                </div>
               </div>
               <div class="matrix-items-list" id="matrixScheduleList"></div>
             </div>
             <div class="matrix-quadrant q-delegate">
               <div class="card-header">
                 <span style="font-weight: 700; color: var(--warning);">3. DELEGATE (Urgent, Not Important)</span>
-                <span class="badge badge-priority-high" id="matrixCountDelegate">0</span>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <button class="btn btn-ghost btn-sm" onclick="openTaskModal({priority: 'Medium'})">+ Add</button>
+                  <span class="badge badge-priority-high" id="matrixCountDelegate">0</span>
+                </div>
               </div>
               <div class="matrix-items-list" id="matrixDelegateList"></div>
             </div>
             <div class="matrix-quadrant q-delete">
               <div class="card-header">
                 <span style="font-weight: 700; color: var(--text-muted);">4. ELIMINATE (Neither Urgent Nor Important)</span>
-                <span class="badge badge-priority-low" id="matrixCountDelete">0</span>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <button class="btn btn-ghost btn-sm" onclick="openTaskModal({priority: 'Low'})">+ Add</button>
+                  <span class="badge badge-priority-low" id="matrixCountDelete">0</span>
+                </div>
               </div>
               <div class="matrix-items-list" id="matrixDeleteList"></div>
             </div>
@@ -3061,7 +3153,10 @@
           <div class="view-header">
             <div class="view-title-group">
               <h1 class="view-title">Daily Self-Care Essentials</h1>
-              <p class="view-subtitle">Ten simple daily foundational checks to keep your brain and body grounded.</p>
+              <p class="view-subtitle">Simple daily foundational checks to keep your brain and body grounded.</p>
+            </div>
+            <div class="view-actions">
+              <button class="btn btn-primary btn-sm" onclick="openSelfCareModal()">+ Add Self-Care Check</button>
             </div>
           </div>
           <div class="card" style="max-width: 800px; margin: 0 auto;">
@@ -3852,6 +3947,12 @@
           <label class="form-label">Description & Notes</label>
           <textarea id="taskInputDesc" class="form-textarea" placeholder="Add helpful context, links, or instructions..."></textarea>
         </div>
+        <div class="form-group" style="margin-top: -6px; margin-bottom: var(--space-md);">
+          <label style="display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13.5px; color: var(--accent); cursor: pointer;">
+            <input type="checkbox" id="taskInputIsTop3" style="width: 17px; height: 17px; accent-color: var(--accent); cursor: pointer;" />
+            <span>⭐ Lock as Today's Top 3 Core Priority</span>
+          </label>
+        </div>
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Priority</label>
@@ -4083,6 +4184,257 @@
     </div>
   </div>
 
+  <!-- 9. TIME BLOCK MODAL (Add / Edit) -->
+  <div class="modal-backdrop" id="modalTimeBlock">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="timeBlockModalTitle">⏱️ Time Block</h3>
+        <button class="modal-close-btn" onclick="closeModal('modalTimeBlock')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="timeBlockInputId" value="" />
+        <div class="form-group">
+          <label class="form-label">Activity / Block Title *</label>
+          <input type="text" id="timeBlockInputTitle" class="form-input" placeholder="e.g. Deep Work: Quarterly Report Draft" required />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Date *</label>
+            <input type="date" id="timeBlockInputDate" class="form-input" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select id="timeBlockInputCategory" class="form-select">
+              <option value="Deep Work">🧠 Deep Work</option>
+              <option value="Quick Tasks">⚡ Quick Tasks</option>
+              <option value="Meetings">👥 Meetings / Sync</option>
+              <option value="Admin & Email">📨 Admin & Email</option>
+              <option value="Self-Care">🌿 Self-Care / Rest</option>
+              <option value="Personal">🏠 Personal & Home</option>
+              <option value="Learning">📚 Learning & Study</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Start Time *</label>
+            <input type="time" id="timeBlockInputStartTime" class="form-input" value="09:00" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">End Time *</label>
+            <input type="time" id="timeBlockInputEndTime" class="form-input" value="10:00" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Required Energy Level</label>
+          <select id="timeBlockInputEnergy" class="form-select">
+            <option value="High">🔥 High Energy</option>
+            <option value="Medium" selected>⚡ Medium Energy</option>
+            <option value="Low">🌱 Low Energy</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Notes / Hyperfocus Guardrail</label>
+          <textarea id="timeBlockInputNotes" class="form-textarea" rows="2" placeholder="Goal for this block, stopping trigger, or materials needed..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modalTimeBlock')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveTimeBlockModal()">Save Time Block</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. ROUTINE MODAL (Add / Edit) -->
+  <div class="modal-backdrop" id="modalRoutine">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <h3 class="modal-title" id="routineModalTitle">📋 Routine Setup</h3>
+        <button class="modal-close-btn" onclick="closeModal('modalRoutine')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="routineInputId" value="" />
+        <div class="form-row">
+          <div class="form-group" style="flex: 2;">
+            <label class="form-label">Routine Title *</label>
+            <input type="text" id="routineInputTitle" class="form-input" placeholder="e.g. Morning Launch Sequence" required />
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label class="form-label">Trigger / Target Time</label>
+            <input type="text" id="routineInputTime" class="form-input" placeholder="e.g. 07:30 AM or On Waking" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description / Anchor Cue</label>
+          <input type="text" id="routineInputDescription" class="form-input" placeholder="What cues this routine? e.g. Right after turning off alarm" />
+        </div>
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <label class="form-label" style="margin-bottom: 0;">Routine Steps & Micro-Actions</label>
+            <button type="button" class="btn btn-sm btn-secondary" onclick="addRoutineStepInputRow()">+ Add Step</button>
+          </div>
+          <div id="routineStepsContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 240px; overflow-y: auto; padding: 4px;"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modalRoutine')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveRoutineModal()">Save Routine</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11. DAILY SELF-CARE ITEM MODAL (Add / Edit) -->
+  <div class="modal-backdrop" id="modalSelfCareItem">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-header">
+        <h3 class="modal-title" id="selfCareModalTitle">🌿 Daily Self-Care Check</h3>
+        <button class="modal-close-btn" onclick="closeModal('modalSelfCareItem')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="selfCareInputKey" value="" />
+        <div class="form-group">
+          <label class="form-label">Check Item Title *</label>
+          <input type="text" id="selfCareInputLabel" class="form-input" placeholder="e.g. Take morning vitamins / meds" required />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select id="selfCareInputCategory" class="form-select">
+              <option value="Physical">Physical Health</option>
+              <option value="Mental">Mental Wellness</option>
+              <option value="Sensory">Sensory & Environment</option>
+              <option value="Social">Social Connection</option>
+              <option value="Rest">Rest & Recovery</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Icon / Emoji</label>
+            <input type="text" id="selfCareInputIcon" class="form-input" value="✨" maxlength="4" style="text-align: center; font-size: 18px;" />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modalSelfCareItem')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveSelfCareItemModal()">Save Item</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 12. GOAL & MILESTONES MODAL (Add / Edit) -->
+  <div class="modal-backdrop" id="modalGoal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <h3 class="modal-title" id="goalModalTitle">🎯 Goal & Milestones</h3>
+        <button class="modal-close-btn" onclick="closeModal('modalGoal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="goalInputId" value="" />
+        <div class="form-row">
+          <div class="form-group" style="flex: 2;">
+            <label class="form-label">Goal Title *</label>
+            <input type="text" id="goalInputTitle" class="form-input" placeholder="e.g. Build Consistent Sleep Schedule" required />
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label class="form-label">Life Area</label>
+            <select id="goalInputArea" class="form-select">
+              <option value="Career & Work">💼 Career & Work</option>
+              <option value="Health & Energy">🏃 Health & Energy</option>
+              <option value="Personal Growth">🌱 Personal Growth</option>
+              <option value="Finance & Budget">💰 Finance & Budget</option>
+              <option value="Relationships">❤️ Relationships</option>
+              <option value="Environment & Home">🏡 Environment & Home</option>
+              <option value="Creative & Hobbies">🎨 Creative & Hobbies</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Target Date</label>
+            <input type="date" id="goalInputTargetDate" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Current Progress Value</label>
+            <input type="number" id="goalInputCurrentValue" class="form-input" min="0" value="0" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Target Goal Value</label>
+            <input type="number" id="goalInputTargetValue" class="form-input" min="1" value="100" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Unit</label>
+            <input type="text" id="goalInputUnit" class="form-input" placeholder="%, days, pts" value="%" />
+          </div>
+        </div>
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <label class="form-label" style="margin-bottom: 0;">Key Milestones</label>
+            <button type="button" class="btn btn-sm btn-secondary" onclick="addGoalMilestoneInputRow()">+ Add Milestone</button>
+          </div>
+          <div id="goalMilestonesContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; padding: 4px;"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Why This Matters to You (ADHD Dopamine Anchor)</label>
+          <textarea id="goalInputNotes" class="form-textarea" rows="2" placeholder="Why is this meaningful? How will achieving it make life easier?"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modalGoal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveGoalModal()">Save Goal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 13. PROJECT MODAL (Add / Edit) -->
+  <div class="modal-backdrop" id="modalProject">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="projectModalTitle">🚀 Project Details</h3>
+        <button class="modal-close-btn" onclick="closeModal('modalProject')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="projectInputId" value="" />
+        <div class="form-group">
+          <label class="form-label">Project Name *</label>
+          <input type="text" id="projectInputTitle" class="form-input" placeholder="e.g. ADHD Life Planner Pro Release" required />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Life Area</label>
+            <select id="projectInputArea" class="form-select">
+              <option value="Work">💼 Work & Career</option>
+              <option value="Personal">🌱 Personal Growth</option>
+              <option value="Home">🏡 Home & Organization</option>
+              <option value="Health">🏃 Health & Wellness</option>
+              <option value="Finance">💰 Financial Goals</option>
+              <option value="Creative">🎨 Creative & Hobbies</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Due Date</label>
+            <input type="date" id="projectInputDueDate" class="form-input" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select id="projectInputStatus" class="form-select">
+            <option value="Active">🚀 Active</option>
+            <option value="Planning">📝 Planning</option>
+            <option value="On Hold">⏸️ On Hold</option>
+            <option value="Completed">✅ Completed</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Outcome / Description</label>
+          <textarea id="projectInputDescription" class="form-textarea" rows="3" placeholder="What does the finished outcome look like? Tasks assigned to this project will automatically sync progress."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modalProject')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveProjectModal()">Save Project</button>
+      </div>
+    </div>
+  </div>
+
   <!-- FLOATING INTERACTIVE CHART TOOLTIP -->
   <div id="analyticsChartTooltip" class="chart-tooltip"></div>
 
@@ -4292,6 +4644,18 @@
             social: false
           }
         },
+        selfCareItems: [
+          { key: "water", label: "Hydration (Drink water regularly)", category: "Physical", icon: "💧" },
+          { key: "sleep", label: "Adequate Restful Sleep (7+ hrs)", category: "Rest", icon: "💤" },
+          { key: "meals", label: "Balanced Nutritious Meals", category: "Physical", icon: "🥗" },
+          { key: "meds", label: "Prescribed ADHD Medication / Supplements", category: "Physical", icon: "💊" },
+          { key: "vitamins", label: "Morning Vitamins & Minerals", category: "Physical", icon: "☀️" },
+          { key: "movement", label: "Gentle Body Movement / Stretching", category: "Physical", icon: "🚶" },
+          { key: "outdoors", label: "Sunlight & Fresh Air Exposure", category: "Sensory", icon: "🌿" },
+          { key: "relaxation", label: "Unstructured Rest / Nervous System Reset", category: "Rest", icon: "🧘" },
+          { key: "screenbreak", label: "Screen Break & Sensory Low-Stim", category: "Sensory", icon: "📵" },
+          { key: "social", label: "Warm Social Connection / Check-in", category: "Social", icon: "💬" }
+        ],
         sleepLogs: {
           [TODAY_STR]: {
             bedtime: "23:30",
@@ -5067,6 +5431,18 @@
           [d1]: { water: true, sleep: true, meals: true, meds: true, vitamins: true, movement: true, outdoors: true, relaxation: true, screenbreak: true, social: true },
           [d2]: { water: true, sleep: false, meals: true, meds: true, vitamins: true, movement: false, outdoors: false, relaxation: true, screenbreak: false, social: false }
         },
+        selfCareItems: [
+          { key: "water", label: "Hydration (Drink water regularly)", category: "Physical", icon: "💧" },
+          { key: "sleep", label: "Adequate Restful Sleep (7+ hrs)", category: "Rest", icon: "💤" },
+          { key: "meals", label: "Balanced Nutritious Meals", category: "Physical", icon: "🥗" },
+          { key: "meds", label: "Prescribed ADHD Medication / Supplements", category: "Physical", icon: "💊" },
+          { key: "vitamins", label: "Morning Vitamins & Minerals", category: "Physical", icon: "☀️" },
+          { key: "movement", label: "Gentle Body Movement / Stretching", category: "Physical", icon: "🚶" },
+          { key: "outdoors", label: "Sunlight & Fresh Air Exposure", category: "Sensory", icon: "🌿" },
+          { key: "relaxation", label: "Unstructured Rest / Nervous System Reset", category: "Rest", icon: "🧘" },
+          { key: "screenbreak", label: "Screen Break & Sensory Low-Stim", category: "Sensory", icon: "📵" },
+          { key: "social", label: "Warm Social Connection / Check-in", category: "Social", icon: "💬" }
+        ],
         sleepLogs: {
           [d0]: { bedtime: "23:15", wakeTime: "07:15", duration: 480, quality: 4, energy: 4, notes: "Fell asleep in 15 mins. No middle-of-night wakeups." },
           [d1]: { bedtime: "23:00", wakeTime: "07:30", duration: 510, quality: 5, energy: 5, notes: "Deep restorative 8.5 hours. Woke up feeling energized." },
@@ -5285,6 +5661,9 @@
           const parsed = JSON.parse(saved);
           if (parsed && typeof parsed === 'object') {
             appData = Object.assign(getDefaultData(), parsed);
+            if (!appData.selfCareItems || !Array.isArray(appData.selfCareItems) || appData.selfCareItems.length === 0) {
+              appData.selfCareItems = getDefaultData().selfCareItems;
+            }
             return;
           }
         }
@@ -5803,12 +6182,21 @@
       const tbContainer = document.getElementById('todayTimeBlocksContainer');
       const blocks = appData.timeBlocks.filter(b => b.date === d);
       if (blocks.length === 0) {
-        tbContainer.innerHTML = `<div class="empty-state" style="padding: 16px;"><p class="empty-state-desc">No time blocks for this date.</p></div>`;
+        tbContainer.innerHTML = `<div class="empty-state" style="padding: 16px;"><p class="empty-state-desc">No time blocks for this date.</p><button class="btn btn-secondary btn-sm" onclick="openTimeBlockModal({date: selectedTodayDate})">+ Add Block</button></div>`;
       } else {
         tbContainer.innerHTML = blocks.map(b => `
-          <div class="timeblock-card" style="margin-bottom: 6px; border-left-color: ${b.color || 'var(--accent)'};">
-            <span>${escapeHtml(b.title)} (${b.startTime} - ${b.endTime})</span>
-            <button class="btn btn-ghost btn-sm" onclick="deleteTimeBlock('${b.id}')">&times;</button>
+          <div class="timeblock-card" style="margin-bottom: 8px; border-left-color: ${b.color || 'var(--accent)'}; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+            <div style="flex: 1; min-width: 0;">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <strong style="font-size: 13px; font-weight: 600;">${escapeHtml(b.title)}</strong>
+                ${b.category ? `<span class="badge" style="font-size: 10px; padding: 2px 6px;">${escapeHtml(b.category)}</span>` : ''}
+              </div>
+              <span style="font-size: 11px; color: var(--text-muted);">⏱️ ${b.startTime} - ${b.endTime}${b.energy ? ' • ⚡ ' + b.energy : ''}</span>
+            </div>
+            <div style="display: flex; gap: 4px; flex-shrink: 0;">
+              <button class="btn btn-ghost btn-sm btn-icon-only" title="Edit Time Block" onclick="editTimeBlock('${b.id}')">✏️</button>
+              <button class="btn btn-ghost btn-sm btn-icon-only" title="Delete Time Block" onclick="deleteTimeBlock('${b.id}')">&times;</button>
+            </div>
           </div>
         `).join('');
       }
@@ -5975,6 +6363,7 @@
             </div>
           </div>
           <div class="task-actions-row">
+            <button class="btn btn-ghost btn-sm btn-icon-only star-btn ${t.isTop3 ? 'active' : ''}" title="${t.isTop3 ? 'Remove from Top 3 Priorities' : 'Mark as Top 3 Priority'}" onclick="toggleTaskTop3('${t.id}')">${t.isTop3 ? '⭐' : '☆'}</button>
             <button class="btn btn-ghost btn-sm btn-icon-only" title="Focus on this" onclick="startFocusOnTask('${t.id}')">🎯</button>
             <button class="btn btn-ghost btn-sm btn-icon-only" title="Edit task" onclick="editTask('${t.id}')">✏️</button>
             <button class="btn btn-ghost btn-sm btn-icon-only" title="Delete task" onclick="deleteTask('${t.id}')">&times;</button>
@@ -6047,6 +6436,11 @@
       document.getElementById('taskInputCategory').value = initial.category || '';
       document.getElementById('taskInputRecurrence').value = initial.recurrence || 'none';
 
+      const top3El = document.getElementById('taskInputIsTop3');
+      if (top3El) {
+        top3El.checked = initial.isTop3 ? true : false;
+      }
+
       // Populate Project options
       const projSelect = document.getElementById('taskInputProject');
       projSelect.innerHTML = '<option value="">(None)</option>' + appData.projects.map(p => `
@@ -6086,6 +6480,8 @@
         return;
       }
       const editId = document.getElementById('taskEditId').value;
+      const isTop3 = document.getElementById('taskInputIsTop3') ? document.getElementById('taskInputIsTop3').checked : false;
+
       const taskData = {
         title,
         description: document.getElementById('taskInputDesc').value.trim(),
@@ -6098,6 +6494,7 @@
         category: document.getElementById('taskInputCategory').value.trim(),
         projectId: document.getElementById('taskInputProject').value,
         recurrence: document.getElementById('taskInputRecurrence').value,
+        isTop3: isTop3,
         subtasks: currentModalSubtasks
       };
 
@@ -6105,23 +6502,41 @@
         const idx = appData.tasks.findIndex(t => t.id === editId);
         if (idx !== -1) {
           appData.tasks[idx] = Object.assign(appData.tasks[idx], taskData);
+          if (taskData.projectId) updateProjectProgress(taskData.projectId);
           showToast("Task updated", 'success');
         }
       } else {
         const newTask = Object.assign({
           id: 'task-' + Date.now(),
-          isTop3: false,
           createdAt: TODAY_STR
         }, taskData);
         appData.tasks.push(newTask);
-        showToast("Task created", 'success');
+        if (taskData.projectId) updateProjectProgress(taskData.projectId);
+        showToast(isTop3 ? "⭐ Priority Task added to Today's Top 3!" : "Task created", 'success');
       }
 
       saveData();
       closeModal('modalTask');
       renderTasksView();
       renderDashboardView();
-      if (currentView === 'today') renderTodayView();
+      renderTodayView();
+      renderCurrentView(currentView);
+    }
+
+    function toggleTaskTop3(taskId) {
+      const task = appData.tasks.find(t => t.id === taskId);
+      if (!task) return;
+      task.isTop3 = !task.isTop3;
+      saveData();
+      renderTasksView();
+      renderDashboardView();
+      renderTodayView();
+      renderCurrentView(currentView);
+      if (task.isTop3) {
+        showToast("⭐ Added to Today's Top 3 Priorities!", "success");
+      } else {
+        showToast("Removed from Top 3 Priorities", "info");
+      }
     }
 
     function editTask(taskId) {
@@ -6131,11 +6546,15 @@
 
     function deleteTask(taskId) {
       openConfirmModal("Delete Task", "Are you sure you want to permanently delete this task?", () => {
+        const task = appData.tasks.find(t => t.id === taskId);
+        const pId = task ? task.projectId : null;
         appData.tasks = appData.tasks.filter(t => t.id !== taskId);
+        if (pId) updateProjectProgress(pId);
         saveData();
         renderTasksView();
         renderDashboardView();
-        if (currentView === 'today') renderTodayView();
+        renderTodayView();
+        renderCurrentView(currentView);
         showToast("Task deleted", 'info');
       });
     }
@@ -6344,13 +6763,26 @@
       document.getElementById('matrixCountDelete').textContent = q4.length;
 
       const renderQuadrantItems = (list) => {
-        if (list.length === 0) return `<div style="font-size: 12px; color: var(--text-muted); padding: 10px 0;">Empty quadrant</div>`;
-        return list.map(t => `
-          <div style="padding: 8px 10px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
-            <span style="font-size: 13px; font-weight: 600;">${escapeHtml(t.title)}</span>
-            <button class="btn btn-ghost btn-sm" onclick="toggleTaskComplete('${t.id}')">✓</button>
+        if (list.length === 0) return `<div style="font-size: 12px; color: var(--text-muted); padding: 12px 0; text-align: center;">Empty quadrant</div>`;
+        return list.map(t => {
+          const isDone = t.status === 'Completed';
+          return `
+          <div style="padding: 8px 10px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px;">
+            <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0;">
+              <div class="custom-checkbox ${isDone ? 'checked' : ''}" style="width: 18px; height: 18px; font-size: 11px; flex-shrink: 0;" onclick="toggleTaskComplete('${t.id}')">
+                ${isDone ? '✓' : ''}
+              </div>
+              <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; ${isDone ? 'text-decoration: line-through; opacity: 0.6;' : ''}" onclick="editTask('${t.id}')">${escapeHtml(t.title)}</span>
+              ${t.isTop3 ? '<span class="badge" style="background:var(--accent-soft);color:var(--accent);font-size:10px;padding:2px 6px;">TOP 3</span>' : ''}
+            </div>
+            <div style="display: flex; align-items: center; gap: 4px; flex-shrink: 0;">
+              <button class="btn btn-ghost btn-sm btn-icon-only star-btn ${t.isTop3 ? 'active' : ''}" title="${t.isTop3 ? 'Remove from Top 3' : 'Add to Top 3'}" onclick="toggleTaskTop3('${t.id}')">${t.isTop3 ? '⭐' : '☆'}</button>
+              <button class="btn btn-ghost btn-sm btn-icon-only" title="Edit Task" onclick="editTask('${t.id}')">✏️</button>
+              <button class="btn btn-ghost btn-sm btn-icon-only" title="Delete Task" onclick="deleteTask('${t.id}')">&times;</button>
+            </div>
           </div>
-        `).join('');
+        `;
+        }).join('');
       };
 
       if (doNow) doNow.innerHTML = renderQuadrantItems(q1);
@@ -6826,29 +7258,95 @@
     }
 
     function openTimeBlockModal(initial = {}) {
-      const title = prompt("Time Block Title:", initial.title || "Deep Work Block");
-      if (!title) return;
-      const start = prompt("Start Time (HH:MM):", initial.startTime || "09:00");
-      const end = prompt("End Time (HH:MM):", initial.endTime || "10:00");
-      appData.timeBlocks.push({
-        id: 'tb-' + Date.now(),
-        title,
-        startTime: start,
-        endTime: end,
-        date: TODAY_STR,
-        color: "var(--accent)"
-      });
+      document.getElementById('timeBlockModalTitle').textContent = initial.id ? 'Edit Time Block' : '⏱️ Add Time Block';
+      document.getElementById('timeBlockInputId').value = initial.id || '';
+      document.getElementById('timeBlockInputTitle').value = initial.title || '';
+      document.getElementById('timeBlockInputDate').value = initial.date || selectedTodayDate || TODAY_STR;
+      document.getElementById('timeBlockInputCategory').value = initial.category || 'Deep Work';
+      document.getElementById('timeBlockInputStartTime').value = initial.startTime || '09:00';
+      document.getElementById('timeBlockInputEndTime').value = initial.endTime || '10:00';
+      document.getElementById('timeBlockInputEnergy').value = initial.energy || 'Medium';
+      document.getElementById('timeBlockInputNotes').value = initial.notes || '';
+      openModal('modalTimeBlock');
+    }
+
+    function editTimeBlock(id) {
+      const tb = appData.timeBlocks.find(b => b.id === id);
+      if (tb) openTimeBlockModal(tb);
+    }
+
+    function saveTimeBlockModal() {
+      const title = document.getElementById('timeBlockInputTitle').value.trim();
+      if (!title) {
+        showToast("Please enter a title for this time block", "warning");
+        return;
+      }
+      const date = document.getElementById('timeBlockInputDate').value || TODAY_STR;
+      const start = document.getElementById('timeBlockInputStartTime').value || '09:00';
+      const end = document.getElementById('timeBlockInputEndTime').value || '10:00';
+      const category = document.getElementById('timeBlockInputCategory').value;
+      const energy = document.getElementById('timeBlockInputEnergy').value;
+      const notes = document.getElementById('timeBlockInputNotes').value.trim();
+      const editId = document.getElementById('timeBlockInputId').value;
+
+      const categoryColors = {
+        'Deep Work': 'var(--accent)',
+        'Quick Tasks': 'var(--warning)',
+        'Meetings': 'var(--info)',
+        'Admin & Email': 'var(--secondary)',
+        'Self-Care': 'var(--success)',
+        'Personal': 'var(--purple)',
+        'Learning': 'var(--teal)'
+      };
+
+      if (editId) {
+        const idx = appData.timeBlocks.findIndex(b => b.id === editId);
+        if (idx !== -1) {
+          appData.timeBlocks[idx] = Object.assign(appData.timeBlocks[idx], {
+            title,
+            date,
+            startTime: start,
+            endTime: end,
+            category,
+            energy,
+            notes,
+            color: categoryColors[category] || 'var(--accent)'
+          });
+          showToast("Time block updated!", "success");
+        }
+      } else {
+        appData.timeBlocks.push({
+          id: 'tb-' + Date.now(),
+          title,
+          date,
+          startTime: start,
+          endTime: end,
+          category,
+          energy,
+          notes,
+          color: categoryColors[category] || 'var(--accent)'
+        });
+        showToast("Time block scheduled!", "success");
+      }
+
       saveData();
+      closeModal('modalTimeBlock');
+      renderTodayView();
       renderTimeblockingView();
       renderDashboardView();
-      showToast("Time block added", 'success');
+      renderCurrentView(currentView);
     }
 
     function deleteTimeBlock(id) {
-      appData.timeBlocks = appData.timeBlocks.filter(b => b.id !== id);
-      saveData();
-      renderTimeblockingView();
-      renderDashboardView();
+      openConfirmModal("Delete Time Block", "Are you sure you want to remove this time block?", () => {
+        appData.timeBlocks = appData.timeBlocks.filter(b => b.id !== id);
+        saveData();
+        renderTodayView();
+        renderTimeblockingView();
+        renderDashboardView();
+        renderCurrentView(currentView);
+        showToast("Time block removed", "info");
+      });
     }
 
     function calculateTimeBlindness() {
@@ -7072,25 +7570,77 @@
       });
     }
 
+    // 11. ROUTINES ENGINE
+    let currentRoutineModalSteps = [];
+
+    function renderRoutineModalSteps() {
+      const container = document.getElementById('routineStepsContainer');
+      if (!container) return;
+      if (currentRoutineModalSteps.length === 0) {
+        container.innerHTML = `<div style="font-size: 12px; color: var(--text-muted); padding: 8px;">No steps added yet. Click "+ Add Step" above.</div>`;
+        return;
+      }
+      container.innerHTML = currentRoutineModalSteps.map((step, idx) => `
+        <div style="display: flex; align-items: center; gap: 8px; background: var(--bg-subtle); padding: 6px 10px; border-radius: 6px;">
+          <span style="font-size: 12px; font-weight: 700; color: var(--accent); min-width: 18px;">${idx + 1}.</span>
+          <input type="text" class="form-input" style="flex: 1; padding: 4px 8px; font-size: 13px;" value="${escapeHtml(step.text)}" placeholder="Step description..." onchange="currentRoutineModalSteps[${idx}].text = this.value" />
+          <div style="display: flex; align-items: center; gap: 4px;">
+            <input type="number" min="1" max="120" class="form-input" style="width: 55px; padding: 4px; font-size: 12px; text-align: center;" value="${step.duration || 2}" onchange="currentRoutineModalSteps[${idx}].duration = parseInt(this.value) || 2" />
+            <span style="font-size: 11px; color: var(--text-muted);">min</span>
+          </div>
+          <button type="button" class="btn btn-ghost btn-sm" style="color: var(--danger); padding: 2px 6px;" onclick="currentRoutineModalSteps.splice(${idx}, 1); renderRoutineModalSteps();">&times;</button>
+        </div>
+      `).join('');
+    }
+
+    function addRoutineStepInputRow() {
+      currentRoutineModalSteps.push({
+        id: 'rts-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4),
+        text: '',
+        duration: 2,
+        completed: false
+      });
+      renderRoutineModalSteps();
+    }
+
     function renderRoutinesView() {
       const container = document.getElementById('routinesGridContainer');
       if (!container) return;
+      if (!appData.routines || appData.routines.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state" style="grid-column: 1 / -1; padding: 32px;">
+            <div class="empty-state-icon">📋</div>
+            <h3 class="empty-state-title">No routines created yet</h3>
+            <p class="empty-state-desc">Routines reduce decision fatigue and automate your executive momentum.</p>
+            <button class="btn btn-primary" onclick="openRoutineModal()">+ Create First Routine</button>
+          </div>
+        `;
+        return;
+      }
       container.innerHTML = appData.routines.map(r => `
         <div class="card" style="border-left: 4px solid ${r.color || 'var(--accent)'};">
-          <div class="card-header">
-            <h3 class="card-title">${r.icon || '🌅'} ${escapeHtml(r.name)}</h3>
-            <button class="btn btn-ghost btn-sm" onclick="resetRoutine('${r.id}')">Reset</button>
+          <div class="card-header" style="align-items: flex-start;">
+            <div>
+              <h3 class="card-title">${r.icon || '🌅'} ${escapeHtml(r.name)}</h3>
+              ${r.time ? `<span style="font-size: 12px; color: var(--text-muted);">⏰ ${escapeHtml(r.time)}</span>` : ''}
+              ${r.description ? `<p style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">${escapeHtml(r.description)}</p>` : ''}
+            </div>
+            <div style="display: flex; gap: 4px; flex-shrink: 0;">
+              <button class="btn btn-ghost btn-sm btn-icon-only" title="Edit Routine" onclick="editRoutine('${r.id}')">✏️</button>
+              <button class="btn btn-ghost btn-sm btn-icon-only" title="Reset Checklist" onclick="resetRoutine('${r.id}')">🔄</button>
+              <button class="btn btn-ghost btn-sm btn-icon-only" title="Delete Routine" onclick="deleteRoutine('${r.id}')">&times;</button>
+            </div>
           </div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 12px;">
             ${(r.steps || []).map(step => `
               <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--bg-subtle); border-radius: 8px;">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <div class="custom-checkbox ${step.completed ? 'checked' : ''}" onclick="toggleRoutineStep('${r.id}', '${step.id}')">
+                <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0;">
+                  <div class="custom-checkbox ${step.completed ? 'checked' : ''}" style="flex-shrink: 0;" onclick="toggleRoutineStep('${r.id}', '${step.id}')">
                     ${step.completed ? '✓' : ''}
                   </div>
                   <span style="font-size: 13.5px; ${step.completed ? 'text-decoration: line-through; opacity: 0.6;' : ''}">${escapeHtml(step.text)}</span>
                 </div>
-                <span style="font-size: 12px; color: var(--text-muted);">${step.duration || 2}m</span>
+                <span style="font-size: 12px; color: var(--text-muted); flex-shrink: 0; margin-left: 8px;">${step.duration || 2}m</span>
               </div>
             `).join('')}
           </div>
@@ -7123,52 +7673,158 @@
       }
     }
 
-    function openRoutineModal() {
-      const name = prompt("Routine Name (e.g. Work Startup Routine):");
-      if (!name) return;
-      appData.routines.push({
-        id: 'rt-' + Date.now(),
-        name,
-        icon: "⚡",
-        color: "var(--accent)",
-        steps: [
-          { id: 's1', text: "Fill water bottle & clear workspace", duration: 2, completed: false },
-          { id: 's2', text: "Review Today's Top 3 priorities", duration: 3, completed: false }
-        ]
-      });
+    function openRoutineModal(initial = {}) {
+      document.getElementById('routineModalTitle').textContent = initial.id ? 'Edit Routine' : '📋 Create New Routine';
+      document.getElementById('routineInputId').value = initial.id || '';
+      document.getElementById('routineInputTitle').value = initial.name || '';
+      document.getElementById('routineInputTime').value = initial.time || '';
+      document.getElementById('routineInputDescription').value = initial.description || '';
+      currentRoutineModalSteps = initial.steps ? JSON.parse(JSON.stringify(initial.steps)) : [
+        { id: 'rts-1', text: 'Fill water bottle & clear workspace', duration: 2, completed: false },
+        { id: 'rts-2', text: "Review Today's Top 3 priorities", duration: 3, completed: false }
+      ];
+      renderRoutineModalSteps();
+      openModal('modalRoutine');
+    }
+
+    function editRoutine(routineId) {
+      const r = appData.routines.find(x => x.id === routineId);
+      if (r) openRoutineModal(r);
+    }
+
+    function saveRoutineModal() {
+      const title = document.getElementById('routineInputTitle').value.trim();
+      if (!title) {
+        showToast("Please enter a routine title", "warning");
+        return;
+      }
+      const editId = document.getElementById('routineInputId').value;
+      const time = document.getElementById('routineInputTime').value.trim();
+      const desc = document.getElementById('routineInputDescription').value.trim();
+      const steps = currentRoutineModalSteps.filter(s => s.text && s.text.trim().length > 0);
+
+      if (editId) {
+        const idx = appData.routines.findIndex(x => x.id === editId);
+        if (idx !== -1) {
+          appData.routines[idx] = Object.assign(appData.routines[idx], {
+            name: title,
+            time: time,
+            description: desc,
+            steps: steps.length > 0 ? steps : [{ id: 'rts-' + Date.now(), text: 'First routine action', duration: 2, completed: false }]
+          });
+          showToast("Routine updated!", "success");
+        }
+      } else {
+        appData.routines.push({
+          id: 'rt-' + Date.now(),
+          name: title,
+          icon: "⚡",
+          color: "var(--accent)",
+          time: time,
+          description: desc,
+          steps: steps.length > 0 ? steps : [{ id: 'rts-' + Date.now(), text: 'First routine action', duration: 2, completed: false }]
+        });
+        showToast("Routine created!", "success");
+      }
+
       saveData();
+      closeModal('modalRoutine');
       renderRoutinesView();
     }
 
+    function deleteRoutine(routineId) {
+      openConfirmModal("Delete Routine", "Are you sure you want to permanently delete this routine?", () => {
+        appData.routines = appData.routines.filter(x => x.id !== routineId);
+        saveData();
+        renderRoutinesView();
+        showToast("Routine removed", "info");
+      });
+    }
+
     // 12. WELLNESS TRACKERS: SELF-CARE, SLEEP, MOOD, WATER, MEALS
-    const SELF_CARE_ITEMS = [
-      { key: "water", label: "Drank sufficient water (1.5L+)", icon: "💧" },
-      { key: "sleep", label: "7+ Hours of restorative sleep", icon: "🌙" },
-      { key: "meals", label: "Ate nourishing, non-skipped meals", icon: "🥗" },
-      { key: "meds", label: "Took prescribed medication on schedule", icon: "💊" },
-      { key: "vitamins", label: "Took daily vitamins / supplements", icon: "🌿" },
-      { key: "movement", label: "20+ minutes of physical movement", icon: "🏃" },
-      { key: "outdoors", label: "Spent 10+ minutes in natural sunlight", icon: "☀️" },
-      { key: "relaxation", label: "Conscious nervous system pause (no phone)", icon: "🧘" },
-      { key: "screenbreak", label: "Took scheduled rest breaks from monitors", icon: "👓" },
-      { key: "social", label: "Connected with a friend or loved one", icon: "💬" }
-    ];
+    function openSelfCareModal(initial = {}) {
+      document.getElementById('selfCareModalTitle').textContent = initial.key ? 'Edit Self-Care Check' : '🌿 Add Self-Care Check';
+      document.getElementById('selfCareInputKey').value = initial.key || '';
+      document.getElementById('selfCareInputLabel').value = initial.label || '';
+      document.getElementById('selfCareInputCategory').value = initial.category || 'Physical';
+      document.getElementById('selfCareInputIcon').value = initial.icon || '✨';
+      openModal('modalSelfCareItem');
+    }
+
+    function saveSelfCareItemModal() {
+      const label = document.getElementById('selfCareInputLabel').value.trim();
+      if (!label) {
+        showToast("Please enter a self-care check title", "warning");
+        return;
+      }
+      const cat = document.getElementById('selfCareInputCategory').value;
+      const icon = document.getElementById('selfCareInputIcon').value.trim() || '✨';
+      const editKey = document.getElementById('selfCareInputKey').value;
+
+      if (!appData.selfCareItems || !Array.isArray(appData.selfCareItems)) {
+        appData.selfCareItems = getDefaultData().selfCareItems;
+      }
+
+      if (editKey) {
+        const idx = appData.selfCareItems.findIndex(x => x.key === editKey);
+        if (idx !== -1) {
+          appData.selfCareItems[idx] = Object.assign(appData.selfCareItems[idx], {
+            label,
+            category: cat,
+            icon
+          });
+          showToast("Self-care check updated!", "success");
+        }
+      } else {
+        const newKey = 'sc_' + Date.now();
+        appData.selfCareItems.push({
+          key: newKey,
+          label,
+          category: cat,
+          icon
+        });
+        showToast("New self-care check added!", "success");
+      }
+
+      saveData();
+      closeModal('modalSelfCareItem');
+      renderSelfCareView();
+    }
+
+    function deleteSelfCareItem(key) {
+      openConfirmModal("Delete Self-Care Check", "Are you sure you want to remove this self-care item?", () => {
+        if (!appData.selfCareItems) appData.selfCareItems = getDefaultData().selfCareItems;
+        appData.selfCareItems = appData.selfCareItems.filter(x => x.key !== key);
+        saveData();
+        renderSelfCareView();
+        showToast("Self-care item removed", "info");
+      });
+    }
 
     function renderSelfCareView() {
       const container = document.getElementById('selfCareChecklistContainer');
       if (!container) return;
+      if (!appData.selfCareItems || !Array.isArray(appData.selfCareItems) || appData.selfCareItems.length === 0) {
+        appData.selfCareItems = getDefaultData().selfCareItems;
+      }
       const todayLogs = (appData.selfCare && appData.selfCare[TODAY_STR]) || {};
 
-      container.innerHTML = SELF_CARE_ITEMS.map(item => {
+      container.innerHTML = appData.selfCareItems.map(item => {
         const isChecked = !!todayLogs[item.key];
         return `
-          <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-btn); cursor: pointer;" onclick="toggleSelfCareItem('${item.key}')">
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <span style="font-size: 20px;">${item.icon}</span>
-              <span style="font-size: 14px; font-weight: 600; ${isChecked ? 'color: var(--accent);' : ''}">${item.label}</span>
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-btn); gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 12px; flex: 1; cursor: pointer;" onclick="toggleSelfCareItem('${item.key}')">
+              <span style="font-size: 20px;">${item.icon || '✨'}</span>
+              <div>
+                <span style="font-size: 14px; font-weight: 600; ${isChecked ? 'color: var(--accent);' : ''}">${escapeHtml(item.label)}</span>
+                ${item.category ? `<span class="badge" style="font-size: 10px; margin-left: 8px; padding: 2px 6px;">${escapeHtml(item.category)}</span>` : ''}
+              </div>
             </div>
-            <div class="custom-checkbox ${isChecked ? 'checked' : ''}">
-              ${isChecked ? '✓' : ''}
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div class="custom-checkbox ${isChecked ? 'checked' : ''}" onclick="toggleSelfCareItem('${item.key}')">
+                ${isChecked ? '✓' : ''}
+              </div>
+              <button class="btn btn-ghost btn-sm btn-icon-only" title="Delete Check" onclick="deleteSelfCareItem('${item.key}')">&times;</button>
             </div>
           </div>
         `;
@@ -7367,33 +8023,85 @@
     }
 
     // 13. GOALS, PROJECTS & LIFE AREAS (WHEEL OF LIFE RADAR)
+    let currentGoalModalMilestones = [];
+
+    function renderGoalModalMilestones() {
+      const container = document.getElementById('goalMilestonesContainer');
+      if (!container) return;
+      if (currentGoalModalMilestones.length === 0) {
+        container.innerHTML = `<div style="font-size: 12px; color: var(--text-muted); padding: 8px;">No milestones added yet. Click "+ Add Milestone" above.</div>`;
+        return;
+      }
+      container.innerHTML = currentGoalModalMilestones.map((m, idx) => `
+        <div style="display: flex; align-items: center; gap: 8px; background: var(--bg-subtle); padding: 6px 10px; border-radius: 6px;">
+          <input type="checkbox" ${m.completed ? 'checked' : ''} onchange="currentGoalModalMilestones[${idx}].completed = this.checked" />
+          <input type="text" class="form-input" style="flex: 1; padding: 4px 8px; font-size: 13px;" value="${escapeHtml(m.text)}" placeholder="Milestone description..." onchange="currentGoalModalMilestones[${idx}].text = this.value" />
+          <button type="button" class="btn btn-ghost btn-sm" style="color: var(--danger); padding: 2px 6px;" onclick="currentGoalModalMilestones.splice(${idx}, 1); renderGoalModalMilestones();">&times;</button>
+        </div>
+      `).join('');
+    }
+
+    function addGoalMilestoneInputRow() {
+      currentGoalModalMilestones.push({
+        id: 'ms-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4),
+        text: '',
+        completed: false
+      });
+      renderGoalModalMilestones();
+    }
+
     function renderGoalsView() {
       const container = document.getElementById('goalsGridContainer');
       if (!container) return;
-      container.innerHTML = appData.goals.map(g => `
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">🎯 ${escapeHtml(g.title)}</h3>
-            <span class="badge" style="background:var(--accent-soft);color:var(--accent);">${g.area}</span>
+      if (!appData.goals || appData.goals.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state" style="grid-column: 1 / -1; padding: 32px;">
+            <div class="empty-state-icon">🎯</div>
+            <h3 class="empty-state-title">No goals defined yet</h3>
+            <p class="empty-state-desc">Break big dreams into bite-sized ADHD-friendly milestones.</p>
+            <button class="btn btn-primary" onclick="openGoalModal()">+ Create New Goal</button>
           </div>
-          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">"${escapeHtml(g.why || 'Core life intention')}"</p>
+        `;
+        return;
+      }
+      container.innerHTML = appData.goals.map(g => {
+        const milestones = g.milestones || [];
+        const comp = milestones.filter(m => m.completed).length;
+        const pct = milestones.length > 0 ? Math.round((comp / milestones.length) * 100) : (g.progress || 0);
+
+        return `
+        <div class="card">
+          <div class="card-header" style="align-items: flex-start;">
+            <div style="flex: 1; min-width: 0;">
+              <h3 class="card-title">🎯 ${escapeHtml(g.title)}</h3>
+              <span class="badge" style="background:var(--accent-soft);color:var(--accent);margin-top: 4px;">${escapeHtml(g.area || 'General')}</span>
+            </div>
+            <div style="display: flex; gap: 4px; flex-shrink: 0;">
+              <button class="btn btn-ghost btn-sm btn-icon-only" title="Add Milestone" onclick="addMilestoneDirectly('${g.id}')">➕</button>
+              <button class="btn btn-ghost btn-sm btn-icon-only" title="Edit Goal" onclick="editGoal('${g.id}')">✏️</button>
+              <button class="btn btn-ghost btn-sm btn-icon-only" title="Delete Goal" onclick="deleteGoal('${g.id}')">&times;</button>
+            </div>
+          </div>
+          ${g.why ? `<p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">"${escapeHtml(g.why)}"</p>` : ''}
           <div style="margin-bottom: 12px;">
             <div style="display: flex; justify-content: space-between; font-size: 12.5px; font-weight: 700; margin-bottom: 4px;">
-              <span>Progress</span>
-              <span>${g.progress || 0}%</span>
+              <span>Milestones Progress (${comp}/${milestones.length})</span>
+              <span>${pct}%</span>
             </div>
-            <div class="progress-track"><div class="progress-fill" style="width: ${g.progress || 0}%;"></div></div>
+            <div class="progress-track"><div class="progress-fill" style="width: ${pct}%;"></div></div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 6px;">
-            ${(g.milestones || []).map(m => `
-              <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
-                <div class="custom-checkbox ${m.completed ? 'checked' : ''}" onclick="toggleMilestone('${g.id}', '${m.id}')">${m.completed ? '✓' : ''}</div>
-                <span style="${m.completed ? 'text-decoration: line-through; opacity: 0.6;' : ''}">${escapeHtml(m.text)}</span>
+            ${milestones.map(m => `
+              <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 4px 6px; border-radius: 6px; background: var(--bg-subtle);">
+                <div class="custom-checkbox ${m.completed ? 'checked' : ''}" style="width: 16px; height: 16px; font-size: 10px; flex-shrink: 0;" onclick="toggleMilestone('${g.id}', '${m.id}')">${m.completed ? '✓' : ''}</div>
+                <span style="flex: 1; min-width: 0; ${m.completed ? 'text-decoration: line-through; opacity: 0.6;' : ''}">${escapeHtml(m.text)}</span>
               </div>
             `).join('')}
+            <button class="btn btn-ghost btn-sm" style="margin-top: 6px; align-self: flex-start; font-size: 12px;" onclick="addMilestoneDirectly('${g.id}')">+ Add Milestone</button>
           </div>
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
 
     function toggleMilestone(goalId, milestoneId) {
@@ -7414,44 +8122,181 @@
       }
     }
 
-    function openGoalModal() {
-      const title = prompt("Goal Title:");
-      if (!title) return;
-      const area = prompt("Life Area (Health, Work, Finance, Growth):", "Work");
-      appData.goals.push({
-        id: 'goal-' + Date.now(),
-        title,
-        area: area || "General",
-        type: "quarterly",
-        why: "To expand personal fulfillment",
-        progress: 0,
-        milestones: [{ id: 'm1', text: "Define first milestone", completed: false }]
+    function addMilestoneDirectly(goalId) {
+      const text = prompt("Enter new milestone title:");
+      if (!text || !text.trim()) return;
+      const goal = appData.goals.find(g => g.id === goalId);
+      if (!goal) return;
+      if (!goal.milestones) goal.milestones = [];
+      goal.milestones.push({
+        id: 'ms-' + Date.now(),
+        text: text.trim(),
+        completed: false
       });
+      const comp = goal.milestones.filter(m => m.completed).length;
+      goal.progress = Math.round((comp / goal.milestones.length) * 100);
       saveData();
       renderGoalsView();
-      showToast("Goal created", 'success');
+      renderDashboardView();
+      showToast("Milestone added to goal!", 'success');
+    }
+
+    function openGoalModal(initial = {}) {
+      document.getElementById('goalModalTitle').textContent = initial.id ? 'Edit Goal & Milestones' : '🎯 Create New Goal';
+      document.getElementById('goalInputId').value = initial.id || '';
+      document.getElementById('goalInputTitle').value = initial.title || '';
+      document.getElementById('goalInputArea').value = initial.area || 'Career & Work';
+      document.getElementById('goalInputTargetDate').value = initial.targetDate || '';
+      document.getElementById('goalInputCurrentValue').value = initial.currentValue !== undefined ? initial.currentValue : 0;
+      document.getElementById('goalInputTargetValue').value = initial.targetValue !== undefined ? initial.targetValue : 100;
+      document.getElementById('goalInputUnit').value = initial.unit || '%';
+      document.getElementById('goalInputNotes').value = initial.why || initial.notes || '';
+      currentGoalModalMilestones = initial.milestones ? JSON.parse(JSON.stringify(initial.milestones)) : [
+        { id: 'm1', text: 'First key checkpoint', completed: false }
+      ];
+      renderGoalModalMilestones();
+      openModal('modalGoal');
+    }
+
+    function editGoal(id) {
+      const g = appData.goals.find(x => x.id === id);
+      if (g) openGoalModal(g);
+    }
+
+    function saveGoalModal() {
+      const title = document.getElementById('goalInputTitle').value.trim();
+      if (!title) {
+        showToast("Goal title is required", 'warning');
+        return;
+      }
+      const editId = document.getElementById('goalInputId').value;
+      const area = document.getElementById('goalInputArea').value;
+      const targetDate = document.getElementById('goalInputTargetDate').value;
+      const curVal = parseFloat(document.getElementById('goalInputCurrentValue').value) || 0;
+      const targetVal = parseFloat(document.getElementById('goalInputTargetValue').value) || 100;
+      const unit = document.getElementById('goalInputUnit').value.trim() || '%';
+      const notes = document.getElementById('goalInputNotes').value.trim();
+      const milestones = currentGoalModalMilestones.filter(m => m.text && m.text.trim().length > 0);
+
+      const compMilestones = milestones.filter(m => m.completed).length;
+      const progress = milestones.length > 0 
+        ? Math.round((compMilestones / milestones.length) * 100)
+        : (targetVal > 0 ? Math.min(100, Math.round((curVal / targetVal) * 100)) : 0);
+
+      if (editId) {
+        const idx = appData.goals.findIndex(x => x.id === editId);
+        if (idx !== -1) {
+          appData.goals[idx] = Object.assign(appData.goals[idx], {
+            title,
+            area,
+            targetDate,
+            currentValue: curVal,
+            targetValue: targetVal,
+            unit,
+            why: notes,
+            progress,
+            milestones: milestones.length > 0 ? milestones : [{ id: 'm-' + Date.now(), text: 'Primary milestone', completed: false }]
+          });
+          showToast("Goal updated!", 'success');
+        }
+      } else {
+        appData.goals.push({
+          id: 'goal-' + Date.now(),
+          title,
+          area,
+          targetDate,
+          currentValue: curVal,
+          targetValue: targetVal,
+          unit,
+          why: notes,
+          progress,
+          milestones: milestones.length > 0 ? milestones : [{ id: 'm-' + Date.now(), text: 'Primary milestone', completed: false }]
+        });
+        showToast("Goal created!", 'success');
+      }
+
+      saveData();
+      closeModal('modalGoal');
+      renderGoalsView();
+      renderDashboardView();
+    }
+
+    function deleteGoal(id) {
+      openConfirmModal("Delete Goal", "Are you sure you want to permanently delete this goal?", () => {
+        appData.goals = appData.goals.filter(x => x.id !== id);
+        saveData();
+        renderGoalsView();
+        renderDashboardView();
+        showToast("Goal deleted", 'info');
+      });
     }
 
     function renderProjectsView() {
       const container = document.getElementById('projectsGridContainer');
       if (!container) return;
+      if (!appData.projects || appData.projects.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state" style="grid-column: 1 / -1; padding: 32px;">
+            <div class="empty-state-icon">🚀</div>
+            <h3 class="empty-state-title">No projects active yet</h3>
+            <p class="empty-state-desc">Group your tasks into purposeful projects with real-time dynamic progress.</p>
+            <button class="btn btn-primary" onclick="openProjectModal()">+ Create New Project</button>
+          </div>
+        `;
+        return;
+      }
+
       container.innerHTML = appData.projects.map(p => {
         const linkedTasks = appData.tasks.filter(t => t.projectId === p.id);
         const doneTasks = linkedTasks.filter(t => t.status === 'Completed').length;
+        const progress = linkedTasks.length > 0 ? Math.round((doneTasks / linkedTasks.length) * 100) : (p.progress || 0);
+        p.progress = progress;
+
         return `
           <div class="card" style="border-top: 4px solid ${p.color || 'var(--accent)'};">
-            <div class="card-header">
-              <h3 class="card-title">📁 ${escapeHtml(p.name)}</h3>
-              <span class="badge" style="background:var(--bg-subtle);">${p.category || 'Work'}</span>
+            <div class="card-header" style="align-items: flex-start;">
+              <div style="flex: 1; min-width: 0;">
+                <h3 class="card-title">📁 ${escapeHtml(p.name)}</h3>
+                <span class="badge" style="background:var(--bg-subtle);margin-top: 4px;">${escapeHtml(p.category || 'Work')}</span>
+              </div>
+              <div style="display: flex; gap: 4px; flex-shrink: 0;">
+                <button class="btn btn-ghost btn-sm btn-icon-only" title="Edit Project" onclick="editProject('${p.id}')">✏️</button>
+                <button class="btn btn-ghost btn-sm btn-icon-only" title="Delete Project" onclick="deleteProject('${p.id}')">&times;</button>
+              </div>
             </div>
-            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">${escapeHtml(p.description || '')}</p>
+            ${p.description ? `<p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">${escapeHtml(p.description)}</p>` : ''}
             <div style="margin-bottom: 12px;">
               <div style="display: flex; justify-content: space-between; font-size: 12.5px; font-weight: 700; margin-bottom: 4px;">
                 <span>Progress (${doneTasks}/${linkedTasks.length} tasks)</span>
-                <span>${p.progress || 0}%</span>
+                <span>${progress}%</span>
               </div>
-              <div class="progress-track"><div class="progress-fill" style="width: ${p.progress || 0}%;"></div></div>
+              <div class="progress-track"><div class="progress-fill" style="width: ${progress}%;"></div></div>
             </div>
+            
+            <div style="margin-bottom: 12px;">
+              <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Linked Project Tasks</div>
+              ${linkedTasks.length === 0 ? `
+                <div style="font-size: 12px; color: var(--text-muted); padding: 6px 0;">No tasks assigned to this project yet.</div>
+              ` : `
+                <div style="display: flex; flex-direction: column; gap: 6px; max-height: 180px; overflow-y: auto;">
+                  ${linkedTasks.map(t => `
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; background: var(--bg-subtle); border-radius: 6px; font-size: 13px;">
+                      <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0;">
+                        <div class="custom-checkbox ${t.status === 'Completed' ? 'checked' : ''}" style="width: 16px; height: 16px; font-size: 10px; flex-shrink: 0;" onclick="toggleTaskComplete('${t.id}')">
+                          ${t.status === 'Completed' ? '✓' : ''}
+                        </div>
+                        <span style="font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ${t.status === 'Completed' ? 'text-decoration: line-through; opacity: 0.6;' : ''}" onclick="editTask('${t.id}')">${escapeHtml(t.title)}</span>
+                      </div>
+                      <div style="display: flex; gap: 4px; flex-shrink: 0;">
+                        <button class="btn btn-ghost btn-sm btn-icon-only" title="Edit Task" onclick="editTask('${t.id}')">✏️</button>
+                        <button class="btn btn-ghost btn-sm btn-icon-only" title="Delete Task" onclick="deleteTask('${t.id}')">&times;</button>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              `}
+            </div>
+
             <div style="display: flex; justify-content: flex-end; gap: 6px;">
               <button class="btn btn-secondary btn-sm" onclick="openTaskModal({projectId: '${p.id}'})">+ Add Project Task</button>
             </div>
@@ -7460,22 +8305,78 @@
       }).join('');
     }
 
-    function openProjectModal() {
-      const name = prompt("Project Name:");
-      if (!name) return;
-      const desc = prompt("Project Description:", "");
-      appData.projects.push({
-        id: 'proj-' + Date.now(),
-        name,
-        description: desc || "",
-        category: "General",
-        progress: 0,
-        color: "var(--accent)"
-      });
+    function openProjectModal(initial = {}) {
+      document.getElementById('projectModalTitle').textContent = initial.id ? 'Edit Project' : '🚀 Create New Project';
+      document.getElementById('projectInputId').value = initial.id || '';
+      document.getElementById('projectInputTitle').value = initial.name || '';
+      document.getElementById('projectInputArea').value = initial.category || 'Work';
+      document.getElementById('projectInputDueDate').value = initial.deadline || '';
+      document.getElementById('projectInputStatus').value = initial.status || 'Active';
+      document.getElementById('projectInputDescription').value = initial.description || '';
+      openModal('modalProject');
+    }
+
+    function editProject(id) {
+      const p = appData.projects.find(x => x.id === id);
+      if (p) openProjectModal(p);
+    }
+
+    function saveProjectModal() {
+      const title = document.getElementById('projectInputTitle').value.trim();
+      if (!title) {
+        showToast("Project name is required", 'warning');
+        return;
+      }
+      const editId = document.getElementById('projectInputId').value;
+      const area = document.getElementById('projectInputArea').value;
+      const deadline = document.getElementById('projectInputDueDate').value;
+      const status = document.getElementById('projectInputStatus').value;
+      const desc = document.getElementById('projectInputDescription').value.trim();
+
+      if (editId) {
+        const idx = appData.projects.findIndex(x => x.id === editId);
+        if (idx !== -1) {
+          appData.projects[idx] = Object.assign(appData.projects[idx], {
+            name: title,
+            category: area,
+            deadline,
+            status,
+            description: desc
+          });
+          showToast("Project updated!", 'success');
+        }
+      } else {
+        appData.projects.push({
+          id: 'proj-' + Date.now(),
+          name: title,
+          category: area,
+          deadline,
+          status,
+          description: desc,
+          progress: 0,
+          color: "var(--accent)"
+        });
+        showToast("Project created!", 'success');
+      }
+
       saveData();
+      closeModal('modalProject');
       renderProjectsView();
       renderDashboardView();
-      showToast("Project created", 'success');
+    }
+
+    function deleteProject(id) {
+      openConfirmModal("Delete Project", "Are you sure you want to permanently delete this project? Assigned tasks will be unlinked.", () => {
+        appData.projects = appData.projects.filter(x => x.id !== id);
+        appData.tasks.forEach(t => {
+          if (t.projectId === id) t.projectId = '';
+        });
+        saveData();
+        renderProjectsView();
+        renderTasksView();
+        renderDashboardView();
+        showToast("Project removed", 'info');
+      });
     }
 
     // LIFE BALANCE RADAR (Wheel of Life)
