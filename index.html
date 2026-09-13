@@ -1590,23 +1590,86 @@
       color: #FFFFFF;
     }
 
-    /* WATER TRACKER GAUGE */
-    .water-gauge-container {
-      display: flex;
-      align-items: center;
+    /* ==========================================================================
+       MODERN INTERACTIVE WATER & HYDRATION TRACKER SUITE
+       ========================================================================== */
+    .water-layout-grid {
+      display: grid;
+      grid-template-columns: minmax(320px, 420px) 1fr;
       gap: var(--space-xl);
-      flex-wrap: wrap;
+      align-items: start;
     }
 
-    .water-glass-visual {
-      width: 110px;
-      height: 160px;
-      border: 4px solid var(--info);
-      border-top: none;
-      border-radius: 0 0 24px 24px;
+    @media (max-width: 960px) {
+      .water-layout-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .water-bottle-card {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .water-bottle-card::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+      border-radius: 50%;
+    }
+
+    .water-bottle-assembly {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 16px 0 24px 0;
+    }
+
+    .water-bottle-cap {
+      width: 44px;
+      height: 14px;
+      background: linear-gradient(180deg, #94A3B8 0%, #475569 100%);
+      border-radius: 6px 6px 2px 2px;
+      border: 2px solid #334155;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      z-index: 3;
+    }
+
+    .water-bottle-neck {
+      width: 64px;
+      height: 14px;
+      background: rgba(56, 189, 248, 0.08);
+      border: 2px solid rgba(56, 189, 248, 0.35);
+      border-bottom: none;
+      border-radius: 4px 4px 0 0;
+      z-index: 2;
+    }
+
+    .water-bottle-glass {
+      width: 130px;
+      height: 250px;
+      border: 3px solid rgba(56, 189, 248, 0.45);
+      border-radius: 16px 16px 32px 32px;
       position: relative;
       overflow: hidden;
       background: var(--bg-subtle);
+      box-shadow: inset 0 0 20px rgba(56, 189, 248, 0.08), 0 10px 28px rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(4px);
     }
 
     .water-liquid-fill {
@@ -1614,8 +1677,281 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background: linear-gradient(180deg, #38BDF8 0%, #0284C7 100%);
-      transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      background: linear-gradient(180deg, #38BDF8 0%, #0284C7 60%, #0369A1 100%);
+      transition: height 0.6s cubic-bezier(0.34, 1.3, 0.64, 1);
+      z-index: 1;
+    }
+
+    .water-wave-svg {
+      position: absolute;
+      top: -12px;
+      left: 0;
+      width: 200%;
+      height: 16px;
+      fill: #38BDF8;
+      animation: waterWaveMove 3.5s linear infinite;
+    }
+
+    @keyframes waterWaveMove {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .water-level-ticks {
+      position: absolute;
+      right: 8px;
+      top: 15px;
+      bottom: 25px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .water-tick {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 9.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      opacity: 0.85;
+    }
+
+    .water-tick-line {
+      width: 10px;
+      height: 1.5px;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 1px;
+    }
+
+    /* BOTTLE METRICS & MOTIVATION */
+    .water-metrics-display {
+      text-align: center;
+      width: 100%;
+    }
+
+    .water-intake-huge {
+      font-size: 34px;
+      font-weight: 800;
+      color: var(--info);
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+    }
+
+    .water-subtext {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .water-pill-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12.5px;
+      font-weight: 700;
+      margin-top: 12px;
+      background: rgba(56, 189, 248, 0.12);
+      color: #0284C7;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    [data-theme="dark"] .water-pill-status {
+      color: #38BDF8;
+      background: rgba(56, 189, 248, 0.15);
+    }
+
+    /* VESSEL DOCK */
+    .water-vessels-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      width: 100%;
+      margin-top: 20px;
+      margin-bottom: 8px;
+    }
+
+    .water-vessel-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      width: 100%;
+    }
+
+    .water-vessel-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 6px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: none;
+    }
+
+    .water-vessel-btn:hover {
+      border-color: var(--info);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
+      background: rgba(56, 189, 248, 0.05);
+    }
+
+    .water-vessel-btn:active {
+      transform: scale(0.96);
+    }
+
+    .water-vessel-icon {
+      font-size: 22px;
+      margin-bottom: 2px;
+    }
+
+    .water-vessel-name {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-align: center;
+    }
+
+    .water-vessel-vol {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--info);
+    }
+
+    /* TARGET SELECTOR PILLS */
+    .water-target-pills {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .water-target-pill {
+      padding: 4px 10px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid var(--border-color);
+      background: var(--bg-subtle);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .water-target-pill:hover {
+      border-color: var(--info);
+      color: var(--text-primary);
+    }
+
+    .water-target-pill.active {
+      background: var(--info);
+      color: #FFFFFF;
+      border-color: var(--info);
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(56, 189, 248, 0.35);
+    }
+
+    /* TODAY'S SIPS TIMELINE */
+    .water-timeline-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 240px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .water-timeline-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 12px;
+      border-radius: 8px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      transition: background 0.2s ease;
+    }
+
+    .water-timeline-item:hover {
+      background: rgba(56, 189, 248, 0.05);
+      border-color: rgba(56, 189, 248, 0.3);
+    }
+
+    .water-timeline-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .water-timeline-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(56, 189, 248, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .water-timeline-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .water-timeline-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .water-timeline-del {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 16px;
+      padding: 4px 6px;
+      border-radius: 4px;
+      transition: all 0.15s ease;
+    }
+
+    .water-timeline-del:hover {
+      color: var(--danger);
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    /* ADHD SCIENCE TIP CARDS */
+    .water-science-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-top: var(--space-md);
+    }
+
+    .water-science-card {
+      padding: 14px;
+      border-radius: var(--radius-md);
+      background: var(--bg-subtle);
+      border-left: 3.5px solid var(--info);
+      font-size: 12.5px;
+      line-height: 1.5;
+    }
+
+    .water-science-card strong {
+      display: block;
+      color: var(--text-primary);
+      font-size: 13px;
+      margin-bottom: 4px;
     }
 
     /* 4-7-8 CALM BREATHING CIRCLE */
@@ -3261,24 +3597,155 @@
         </section>
 
         <section class="view-container" id="view-water">
-          <div class="view-header">
+          <div class="view-header" style="align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
             <div class="view-title-group">
-              <h1 class="view-title">Water & Hydration Tracker</h1>
-              <p class="view-subtitle">Maintain cognitive stamina and prevent ADHD brain fog with simple visual hydration logging.</p>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <h1 class="view-title">Water & Hydration Tracker</h1>
+                <span id="waterStreakBadge" class="water-pill-status" style="margin-top: 0; padding: 3px 10px; font-size: 11.5px;">🔥 0 Day Streak</span>
+              </div>
+              <p class="view-subtitle">Maintain executive cognitive stamina and prevent ADHD brain fog with frictionless visual hydration logging.</p>
+            </div>
+            <!-- QUICK STATS & TARGET SELECTOR -->
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px;">
+              <span style="font-size: 11.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Daily Target</span>
+              <div class="water-target-pills" id="waterGoalPills">
+                <button class="water-target-pill" data-goal="2000" onclick="setDailyWaterGoal(2000)">2,000 ml</button>
+                <button class="water-target-pill" data-goal="2500" onclick="setDailyWaterGoal(2500)">2,500 ml</button>
+                <button class="water-target-pill" data-goal="3000" onclick="setDailyWaterGoal(3000)">3,000 ml</button>
+                <button class="water-target-pill" id="waterGoalCustomPill" onclick="openCustomWaterGoalModal()">Custom</button>
+              </div>
             </div>
           </div>
-          <div class="card" style="max-width: 600px; margin: 0 auto; text-align: center;">
-            <div class="water-gauge-container" style="justify-content: center;">
-              <div class="water-glass-visual">
-                <div class="water-liquid-fill" id="waterLiquidFill" style="height: 40%;"></div>
+
+          <!-- MAIN 2-COLUMN RESPONSIVE LAYOUT -->
+          <div class="water-layout-grid">
+            <!-- LEFT COLUMN: INTERACTIVE BOTTLE & VESSEL DOCK -->
+            <div class="water-bottle-card">
+              <!-- BOTTLE ASSEMBLY -->
+              <div class="water-bottle-assembly">
+                <div class="water-bottle-cap"></div>
+                <div class="water-bottle-neck"></div>
+                <div class="water-bottle-glass">
+                  <!-- Measurement Ticks -->
+                  <div class="water-level-ticks">
+                    <div class="water-tick"><span id="tickGoalText">2500</span> <div class="water-tick-line"></div></div>
+                    <div class="water-tick"><span id="tick75Text">1875</span> <div class="water-tick-line"></div></div>
+                    <div class="water-tick"><span id="tick50Text">1250</span> <div class="water-tick-line"></div></div>
+                    <div class="water-tick"><span id="tick25Text">625</span> <div class="water-tick-line"></div></div>
+                  </div>
+
+                  <!-- Liquid Fill with SVG Waves -->
+                  <div class="water-liquid-fill" id="waterLiquidFill" style="height: 0%;">
+                    <svg class="water-wave-svg" viewBox="0 0 400 20" preserveAspectRatio="none">
+                      <path d="M 0 10 Q 50 0 100 10 T 200 10 T 300 10 T 400 10 L 400 20 L 0 20 Z"></path>
+                    </svg>
+                  </div>
+                </div>
               </div>
-              <div style="text-align: left;">
-                <div style="font-size: 38px; font-weight: 800; color: var(--info);" id="waterIntakeDisplay">1000 / 2500 ml</div>
-                <div style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px;" id="waterPercentDisplay">40% of Daily Target</div>
-                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                  <button class="btn btn-primary btn-sm" onclick="quickAddWater(250)">+250ml Glass</button>
-                  <button class="btn btn-primary btn-sm" onclick="quickAddWater(500)">+500ml Bottle</button>
-                  <button class="btn btn-secondary btn-sm" onclick="quickAddWater(-250)">-250ml</button>
+
+              <!-- CENTRAL METRICS -->
+              <div class="water-metrics-display">
+                <div class="water-intake-huge" id="waterIntakeDisplay">0 / 2500 ml</div>
+                <div class="water-subtext" id="waterPercentDisplay">0% of Daily Target • 2,500 ml remaining</div>
+                <div class="water-pill-status" id="waterMotivationStatus">
+                  💧 Drink a glass to jumpstart your focus!
+                </div>
+              </div>
+
+              <!-- TACTILE VESSEL DOCK -->
+              <div class="water-vessels-header">
+                <span style="font-size: 13px; font-weight: 700; color: var(--text-secondary);">One-Tap Hydration Log</span>
+                <span style="font-size: 11px; color: var(--text-muted);" id="waterLastSipTime">No sips yet</span>
+              </div>
+              <div class="water-vessel-grid">
+                <div class="water-vessel-btn" onclick="quickAddWater(100, 'Quick Sip')">
+                  <span class="water-vessel-icon">💧</span>
+                  <span class="water-vessel-name">Quick Sip</span>
+                  <span class="water-vessel-vol">+100 ml</span>
+                </div>
+                <div class="water-vessel-btn" onclick="quickAddWater(250, 'Standard Glass')">
+                  <span class="water-vessel-icon">🥛</span>
+                  <span class="water-vessel-name">Glass</span>
+                  <span class="water-vessel-vol">+250 ml</span>
+                </div>
+                <div class="water-vessel-btn" onclick="quickAddWater(350, 'Mug / Tea')">
+                  <span class="water-vessel-icon">☕</span>
+                  <span class="water-vessel-name">Mug / Tea</span>
+                  <span class="water-vessel-vol">+350 ml</span>
+                </div>
+                <div class="water-vessel-btn" onclick="quickAddWater(500, 'Sports Bottle')">
+                  <span class="water-vessel-icon">🏃</span>
+                  <span class="water-vessel-name">Bottle</span>
+                  <span class="water-vessel-vol">+500 ml</span>
+                </div>
+                <div class="water-vessel-btn" onclick="quickAddWater(750, 'Large Flask')">
+                  <span class="water-vessel-icon">🍼</span>
+                  <span class="water-vessel-name">Flask</span>
+                  <span class="water-vessel-vol">+750 ml</span>
+                </div>
+                <div class="water-vessel-btn" onclick="openCustomWaterModal()">
+                  <span class="water-vessel-icon">➕</span>
+                  <span class="water-vessel-name">Custom</span>
+                  <span class="water-vessel-vol">Exact ml</span>
+                </div>
+              </div>
+
+              <!-- CONTROLS FOOTER -->
+              <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border-color);">
+                <button class="btn btn-ghost btn-sm" onclick="quickAddWater(-250, 'Undo')">↩️ Undo (-250ml)</button>
+                <button class="btn btn-ghost btn-sm" style="color: var(--text-muted);" onclick="resetTodayWater()">🔄 Reset Today</button>
+              </div>
+            </div>
+
+            <!-- RIGHT COLUMN: 7-DAY CONSISTENCY & SIPS TIMELINE & ADHD SCIENCE -->
+            <div style="display: flex; flex-direction: column; gap: var(--space-lg);">
+              <!-- CARD 1: 7-DAY HYDRATION CONSISTENCY -->
+              <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: var(--space-sm);">
+                  <div>
+                    <h2 class="card-title">7-Day Hydration Consistency</h2>
+                    <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">Daily intake vs target over the past week</p>
+                  </div>
+                  <div style="text-align: right;">
+                    <span style="font-size: 16px; font-weight: 800; color: var(--info);" id="water7DayAvgDisplay">-- ml/day</span>
+                    <div style="font-size: 11px; color: var(--text-muted);" id="waterGoalsMetRatio">0/7 Goals Met</div>
+                  </div>
+                </div>
+                <div id="chartWater7Day" style="height: 180px; width: 100%; position: relative;">
+                  <!-- Injected via JS -->
+                </div>
+              </div>
+
+              <!-- CARD 2: TODAY'S HYDRATION SIPS LOG -->
+              <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                  <div>
+                    <h2 class="card-title">Today's Sips Timeline</h2>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Log of fluids logged today so your brain never forgets</p>
+                  </div>
+                  <span class="badge badge-info" id="waterTotalSipsBadge">0 Sips Logged</span>
+                </div>
+                <div class="water-timeline-list" id="waterTimelineList">
+                  <!-- Injected via JS -->
+                </div>
+              </div>
+
+              <!-- CARD 3: ADHD COGNITIVE STAMINA TIPS -->
+              <div class="card">
+                <h2 class="card-title">🧠 Hydration & ADHD Brain Function</h2>
+                <div class="water-science-grid">
+                  <div class="water-science-card">
+                    <strong>⚡ Executive Stamina</strong>
+                    The prefrontal cortex requires optimal hydration for working memory. Just 1.5% dehydration triggers sluggish task-switching and cognitive fatigue.
+                  </div>
+                  <div class="water-science-card">
+                    <strong>💊 Medication Balance</strong>
+                    Stimulant ADHD medications increase fluid turnover and dry mouth. Consistent hydration prevents afternoon medication crashes and headaches.
+                  </div>
+                  <div class="water-science-card">
+                    <strong>👀 Visual Priming Rule</strong>
+                    Keep a filled, transparent water bottle directly in your visual periphery. ADHD brains rely on physical visual prompts rather than internal thirst cues.
+                  </div>
                 </div>
               </div>
             </div>
@@ -4435,6 +4902,59 @@
     </div>
   </div>
 
+  <!-- MODAL: LOG CUSTOM WATER -->
+  <div class="modal-backdrop" id="modalCustomWater">
+    <div class="modal-dialog" style="max-width: 380px;">
+      <div class="modal-header">
+        <h2 class="modal-title">💧 Log Custom Hydration</h2>
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('modalCustomWater')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Water Amount (Milliliters)</label>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <input type="number" id="customWaterAmount" class="form-input" min="10" max="3000" step="10" placeholder="e.g. 400" />
+            <span style="font-weight: 700; color: var(--text-muted);">ml</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Vessel / Description (Optional)</label>
+          <input type="text" id="customWaterVessel" class="form-input" placeholder="e.g. Infused water, Large tumbler" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modalCustomWater')">Cancel</button>
+        <button class="btn btn-primary" onclick="submitCustomWater()">+ Log Hydration</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CUSTOM DAILY WATER TARGET -->
+  <div class="modal-backdrop" id="modalWaterGoal">
+    <div class="modal-dialog" style="max-width: 380px;">
+      <div class="modal-header">
+        <h2 class="modal-title">🎯 Set Daily Hydration Target</h2>
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('modalWaterGoal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Daily Target (Milliliters)</label>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <input type="number" id="customWaterGoalInput" class="form-input" min="500" max="5000" step="100" placeholder="e.g. 2500" />
+            <span style="font-weight: 700; color: var(--text-muted);">ml</span>
+          </div>
+          <p style="font-size: 11.5px; color: var(--text-muted); margin-top: 6px;">
+            Recommended baseline for adults is 2,000 – 3,000 ml/day depending on climate and activity.
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modalWaterGoal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveCustomWaterGoal()">Save Target</button>
+      </div>
+    </div>
+  </div>
+
   <!-- FLOATING INTERACTIVE CHART TOOLTIP -->
   <div id="analyticsChartTooltip" class="chart-tooltip"></div>
 
@@ -4678,6 +5198,12 @@
         waterLogs: {
           [TODAY_STR]: 1250
         },
+        waterEntries: [
+          { id: "wtr-1", date: TODAY_STR, time: "08:30 AM", amount: 250, vessel: "Glass" },
+          { id: "wtr-2", date: TODAY_STR, time: "10:15 AM", amount: 500, vessel: "Sports Bottle" },
+          { id: "wtr-3", date: TODAY_STR, time: "01:45 PM", amount: 250, vessel: "Glass" },
+          { id: "wtr-4", date: TODAY_STR, time: "04:20 PM", amount: 250, vessel: "Mug / Tea" }
+        ],
         movementLogs: [
           { id: "mov-1", activity: "Outdoor Brisk Walk", duration: 25, steps: 3200, date: TODAY_STR, notes: "Felt very refreshing, cleared afternoon fog." }
         ],
@@ -5494,6 +6020,13 @@
           [d13]: 2250,
           [d14]: 2000
         },
+        waterEntries: [
+          { id: "wtr-demo-1", date: d0, time: "08:15 AM", amount: 250, vessel: "Glass" },
+          { id: "wtr-demo-2", date: d0, time: "10:30 AM", amount: 500, vessel: "Sports Bottle" },
+          { id: "wtr-demo-3", date: d0, time: "01:15 PM", amount: 250, vessel: "Mug / Tea" },
+          { id: "wtr-demo-4", date: d0, time: "03:45 PM", amount: 500, vessel: "Sports Bottle" },
+          { id: "wtr-demo-5", date: d0, time: "06:20 PM", amount: 500, vessel: "Large Flask" }
+        ],
         movementLogs: [
           { id: "mov-1", activity: "Outdoor Brisk Walk", duration: 30, steps: 4100, date: d0, notes: "Sunny morning walk, boosted early dopamine." },
           { id: "mov-2", activity: "Mobility & Hamstring Stretching", duration: 15, steps: 600, date: d1, notes: "Relieved lower back stiffness from desk work." },
@@ -7936,29 +8469,393 @@
       `).join('');
     }
 
-    // WATER TRACKER
-    function quickAddWater(amt) {
+    // ==========================================================================
+    // MODERN INTERACTIVE WATER & HYDRATION SUITE
+    // ==========================================================================
+
+    function quickAddWater(amt, vesselName) {
+      if (!appData.waterLogs) appData.waterLogs = {};
+      if (!appData.waterEntries) appData.waterEntries = [];
+
       const cur = appData.waterLogs[TODAY_STR] || 0;
-      const updated = Math.max(0, cur + amt);
-      appData.waterLogs[TODAY_STR] = updated;
+      const target = (appData.settings && appData.settings.dailyWaterGoal) || 2500;
+
+      if (amt > 0) {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const newEntry = {
+          id: 'wtr-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+          date: TODAY_STR,
+          time: timeStr,
+          amount: amt,
+          vessel: vesselName || (amt >= 700 ? 'Flask' : amt >= 400 ? 'Bottle' : amt >= 300 ? 'Mug' : amt >= 200 ? 'Glass' : 'Sip')
+        };
+        appData.waterEntries.unshift(newEntry);
+        const updated = cur + amt;
+        appData.waterLogs[TODAY_STR] = updated;
+
+        // Sound effect - pleasant water bubble tone
+        try {
+          playTone(520, 'sine', 0.12);
+          setTimeout(() => playTone(650, 'sine', 0.08), 80);
+        } catch(e) {}
+
+        if (cur < target && updated >= target) {
+          showToast("🎉 Daily Hydration Target Reached! Outstanding ADHD stamina!", "success");
+        } else {
+          showToast(`💧 Logged +${amt}ml (${newEntry.vessel})`, "info");
+        }
+      } else {
+        // Undo / decrement
+        const decAmt = Math.abs(amt);
+        const todayEntries = appData.waterEntries.filter(e => e.date === TODAY_STR);
+        if (todayEntries.length > 0) {
+          const removed = todayEntries[0];
+          appData.waterEntries = appData.waterEntries.filter(e => e.id !== removed.id);
+          appData.waterLogs[TODAY_STR] = Math.max(0, cur - removed.amount);
+          showToast(`↩️ Undid last sip: -${removed.amount}ml (${removed.vessel})`, "info");
+        } else {
+          appData.waterLogs[TODAY_STR] = Math.max(0, cur - decAmt);
+          showToast(`↩️ Decremented ${decAmt}ml`, "info");
+        }
+      }
+
       saveData();
       renderWaterView();
       renderDashboardView();
-      if (amt > 0) playTone(440, 'sine', 0.15);
+    }
+
+    function deleteWaterEntry(entryId) {
+      if (!appData.waterEntries) return;
+      const entry = appData.waterEntries.find(e => e.id === entryId);
+      if (!entry) return;
+
+      const date = entry.date || TODAY_STR;
+      appData.waterEntries = appData.waterEntries.filter(e => e.id !== entryId);
+      if (appData.waterLogs && appData.waterLogs[date]) {
+        appData.waterLogs[date] = Math.max(0, appData.waterLogs[date] - (entry.amount || 0));
+      }
+
+      saveData();
+      renderWaterView();
+      renderDashboardView();
+      showToast("Hydration entry removed", "info");
+    }
+
+    function resetTodayWater() {
+      openConfirmModal(
+        "Reset Today's Hydration?",
+        `This will clear all drinks logged for today (${TODAY_STR}). This action cannot be undone.`,
+        () => {
+          if (!appData.waterLogs) appData.waterLogs = {};
+          appData.waterLogs[TODAY_STR] = 0;
+          if (appData.waterEntries) {
+            appData.waterEntries = appData.waterEntries.filter(e => e.date !== TODAY_STR);
+          }
+          saveData();
+          renderWaterView();
+          renderDashboardView();
+          showToast("Today's water log reset to 0 ml", "info");
+        }
+      );
+    }
+
+    function setDailyWaterGoal(targetMl) {
+      if (!appData.settings) appData.settings = {};
+      const val = parseInt(targetMl, 10);
+      if (isNaN(val) || val < 500) return;
+      appData.settings.dailyWaterGoal = val;
+      saveData();
+      renderWaterView();
+      renderDashboardView();
+      showToast(`Daily water target updated to ${val.toLocaleString()} ml`, "success");
+    }
+
+    function openCustomWaterModal() {
+      const input = document.getElementById('customWaterAmount');
+      const vessel = document.getElementById('customWaterVessel');
+      if (input) input.value = '300';
+      if (vessel) vessel.value = '';
+      openModal('modalCustomWater');
+      setTimeout(() => { if (input) input.focus(); }, 150);
+    }
+
+    function submitCustomWater() {
+      const input = document.getElementById('customWaterAmount');
+      const vessel = document.getElementById('customWaterVessel');
+      const amt = input ? parseInt(input.value, 10) : 0;
+      if (isNaN(amt) || amt <= 0) {
+        showToast("Please enter a valid milliliter amount", "error");
+        return;
+      }
+      const vName = (vessel && vessel.value.trim()) ? vessel.value.trim() : 'Custom Sip';
+      closeModal('modalCustomWater');
+      quickAddWater(amt, vName);
+    }
+
+    function openCustomWaterGoalModal() {
+      const cur = (appData.settings && appData.settings.dailyWaterGoal) || 2500;
+      const input = document.getElementById('customWaterGoalInput');
+      if (input) input.value = cur;
+      openModal('modalWaterGoal');
+      setTimeout(() => { if (input) input.focus(); }, 150);
+    }
+
+    function saveCustomWaterGoal() {
+      const input = document.getElementById('customWaterGoalInput');
+      const val = input ? parseInt(input.value, 10) : 0;
+      if (isNaN(val) || val < 500 || val > 8000) {
+        showToast("Please enter a target between 500 and 8,000 ml", "error");
+        return;
+      }
+      closeModal('modalWaterGoal');
+      setDailyWaterGoal(val);
     }
 
     function renderWaterView() {
+      if (!appData.waterLogs) appData.waterLogs = {};
+      if (!appData.waterEntries) appData.waterEntries = [];
+
       const cur = appData.waterLogs[TODAY_STR] || 0;
-      const target = appData.settings.dailyWaterGoal || 2500;
+      const target = (appData.settings && appData.settings.dailyWaterGoal) || 2500;
+      const remaining = Math.max(0, target - cur);
       const pct = Math.min(100, Math.round((cur / target) * 100));
 
+      // 1. Fluid Bottle Liquid Fill & Ticks
+      const fill = document.getElementById('waterLiquidFill');
+      if (fill) fill.style.height = `${pct}%`;
+
+      const tGoal = document.getElementById('tickGoalText');
+      const t75 = document.getElementById('tick75Text');
+      const t50 = document.getElementById('tick50Text');
+      const t25 = document.getElementById('tick25Text');
+      if (tGoal) tGoal.textContent = target;
+      if (t75) t75.textContent = Math.round(target * 0.75);
+      if (t50) t50.textContent = Math.round(target * 0.50);
+      if (t25) t25.textContent = Math.round(target * 0.25);
+
+      // 2. Metrics & Dynamic Motivational Status
       const display = document.getElementById('waterIntakeDisplay');
       const pctDisplay = document.getElementById('waterPercentDisplay');
-      const fill = document.getElementById('waterLiquidFill');
+      const motivStatus = document.getElementById('waterMotivationStatus');
 
-      if (display) display.textContent = `${cur} / ${target} ml`;
-      if (pctDisplay) pctDisplay.textContent = `${pct}% of Daily Target`;
-      if (fill) fill.style.height = `${pct}%`;
+      if (display) display.textContent = `${cur.toLocaleString()} / ${target.toLocaleString()} ml`;
+      if (pctDisplay) {
+        pctDisplay.textContent = `${pct}% of Daily Target • ${remaining > 0 ? remaining.toLocaleString() + ' ml remaining' : '🎉 Daily goal crushed!'}`;
+      }
+
+      if (motivStatus) {
+        if (pct >= 100) {
+          motivStatus.innerHTML = `🎉 Daily target achieved! Peak cognitive stamina.`;
+          motivStatus.style.borderColor = "var(--success)";
+        } else if (pct >= 75) {
+          motivStatus.innerHTML = `⚡ Almost there! 75%+ completed.`;
+          motivStatus.style.borderColor = "rgba(56, 189, 248, 0.5)";
+        } else if (pct >= 50) {
+          motivStatus.innerHTML = `🚀 Halfway mark reached! Great momentum.`;
+          motivStatus.style.borderColor = "rgba(56, 189, 248, 0.4)";
+        } else if (pct >= 25) {
+          motivStatus.innerHTML = `💧 Solid progress! Keep sipping regularly.`;
+          motivStatus.style.borderColor = "rgba(56, 189, 248, 0.3)";
+        } else {
+          motivStatus.innerHTML = `🌱 Drink a glass to jumpstart your focus!`;
+          motivStatus.style.borderColor = "rgba(56, 189, 248, 0.3)";
+        }
+      }
+
+      // 3. Goal Pills State
+      document.querySelectorAll('.water-target-pill[data-goal]').forEach(btn => {
+        const goalVal = parseInt(btn.getAttribute('data-goal'), 10);
+        if (goalVal === target) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+      const customPill = document.getElementById('waterGoalCustomPill');
+      if (customPill) {
+        if ([2000, 2500, 3000].indexOf(target) === -1) {
+          customPill.classList.add('active');
+          customPill.textContent = `${target.toLocaleString()} ml`;
+        } else {
+          customPill.classList.remove('active');
+          customPill.textContent = 'Custom';
+        }
+      }
+
+      // 4. Today's Sips Timeline
+      const timelineList = document.getElementById('waterTimelineList');
+      const todayEntries = appData.waterEntries.filter(e => e.date === TODAY_STR);
+      const totalSipsBadge = document.getElementById('waterTotalSipsBadge');
+      const lastSipTime = document.getElementById('waterLastSipTime');
+
+      if (totalSipsBadge) totalSipsBadge.textContent = `${todayEntries.length} Sip${todayEntries.length === 1 ? '' : 's'} Logged`;
+      if (lastSipTime) {
+        lastSipTime.textContent = todayEntries.length > 0 ? `Last sip: ${todayEntries[0].time}` : 'No sips yet';
+      }
+
+      if (timelineList) {
+        if (todayEntries.length === 0) {
+          timelineList.innerHTML = `
+            <div class="empty-state" style="padding: 24px 16px;">
+              <span style="font-size: 28px; display: block; margin-bottom: 6px;">💧</span>
+              <p class="empty-state-title" style="font-size: 13.5px;">No hydration logged yet today</p>
+              <p class="empty-state-desc" style="font-size: 12px; margin-top: 2px;">
+                Tap any vessel on the left to start logging your water intake.
+              </p>
+            </div>
+          `;
+        } else {
+          timelineList.innerHTML = todayEntries.map(e => {
+            let icon = '🥛';
+            const vLow = (e.vessel || '').toLowerCase();
+            if (vLow.includes('sip') || vLow.includes('gulp')) icon = '💧';
+            else if (vLow.includes('mug') || vLow.includes('tea') || vLow.includes('coffee')) icon = '☕';
+            else if (vLow.includes('sports') || vLow.includes('bottle') || vLow.includes('shaker')) icon = '🏃';
+            else if (vLow.includes('flask') || vLow.includes('large') || vLow.includes('jug')) icon = '🍼';
+
+            return `
+              <div class="water-timeline-item">
+                <div class="water-timeline-left">
+                  <div class="water-timeline-badge">${icon}</div>
+                  <div>
+                    <div class="water-timeline-title">+${e.amount} ml • ${escapeHtml(e.vessel || 'Water')}</div>
+                    <div class="water-timeline-meta">Logged at ${e.time}</div>
+                  </div>
+                </div>
+                <button class="water-timeline-del" title="Delete entry" onclick="deleteWaterEntry('${e.id}')">&times;</button>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+
+      // 5. Calculate 7-Day Consistency & Streak
+      renderWater7DayChart(target);
+    }
+
+    function renderWater7DayChart(target) {
+      const container = document.getElementById('chartWater7Day');
+      if (!container) return;
+
+      const days = [];
+      let totalWeekAmount = 0;
+      let goalsMetCount = 0;
+      let streak = 0;
+
+      // Check last 7 days
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const dStr = getLocalDateString(d);
+        const dayLabel = i === 0 ? 'Today' : d.toLocaleDateString([], { weekday: 'short' });
+        const amt = (appData.waterLogs && appData.waterLogs[dStr]) || 0;
+        const met = amt >= (target * 0.9);
+        if (met) goalsMetCount++;
+        totalWeekAmount += amt;
+        days.push({ dateStr: dStr, label: dayLabel, amount: amt, met });
+      }
+
+      // Compute current streak (consecutive days met ending today or yesterday)
+      let tempStreak = 0;
+      for (let i = 0; i < 30; i++) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const dStr = getLocalDateString(d);
+        const amt = (appData.waterLogs && appData.waterLogs[dStr]) || 0;
+        if (amt >= (target * 0.8)) {
+          tempStreak++;
+        } else {
+          // If today has not met yet, don't break streak if yesterday did
+          if (i === 0) continue;
+          break;
+        }
+      }
+      streak = tempStreak;
+
+      const streakBadge = document.getElementById('waterStreakBadge');
+      if (streakBadge) {
+        streakBadge.textContent = `🔥 ${streak} Day Streak`;
+      }
+
+      const avgDisplay = document.getElementById('water7DayAvgDisplay');
+      if (avgDisplay) {
+        const avg = Math.round(totalWeekAmount / 7);
+        avgDisplay.textContent = `${avg.toLocaleString()} ml/day`;
+      }
+
+      const goalsMetRatio = document.getElementById('waterGoalsMetRatio');
+      if (goalsMetRatio) {
+        goalsMetRatio.textContent = `${goalsMetCount}/7 Goals Met`;
+      }
+
+      // Render 7-Day SVG Bar Chart
+      const maxVal = Math.max(target * 1.15, ...days.map(d => d.amount), 2500);
+      const width = 460;
+      const height = 180;
+      const padLeft = 36;
+      const padRight = 16;
+      const padTop = 20;
+      const padBottom = 28;
+      const chartW = width - padLeft - padRight;
+      const chartH = height - padTop - padBottom;
+
+      const barWidth = 24;
+      const step = chartW / 7;
+
+      // Target dashed guideline
+      const targetY = padTop + chartH - (target / maxVal) * chartH;
+      const goalLineSvg = `
+        <line x1="${padLeft}" y1="${targetY}" x2="${width - padRight}" y2="${targetY}"
+          stroke="var(--info)" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.75" />
+        <text x="${width - padRight}" y="${targetY - 4}" text-anchor="end" font-size="10" font-weight="700" fill="var(--info)">
+          Target ${target}ml
+        </text>
+      `;
+
+      let barsSvg = '';
+      days.forEach((d, i) => {
+        const x = padLeft + i * step + (step - barWidth) / 2;
+        const barH = Math.max(4, (d.amount / maxVal) * chartH);
+        const y = padTop + chartH - barH;
+        const color = d.met ? 'var(--info)' : 'rgba(56, 189, 248, 0.4)';
+        const isToday = d.label === 'Today';
+
+        const tipId = `tip-wtr-${i}`;
+        analyticsTooltips[tipId] = `
+          <div style="font-weight:700; color:var(--info); margin-bottom:2px;">💧 ${d.label} (${d.dateStr})</div>
+          <div style="font-size:13.5px; font-weight:700;">${d.amount.toLocaleString()} ml</div>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">
+            ${d.met ? '✅ Daily target reached' : Math.round((d.amount / target) * 100) + '% of goal'}
+          </div>
+        `;
+
+        barsSvg += `
+          <g>
+            <rect class="chart-bar" x="${x}" y="${y}" width="${barWidth}" height="${barH}" rx="4"
+              fill="${color}" opacity="${isToday ? '1' : '0.85'}"
+              onmouseenter="showCachedTooltip(event, '${tipId}')"
+              onmousemove="showCachedTooltip(event, '${tipId}')"
+              onmouseleave="hideChartTooltip()" />
+            <text x="${x + barWidth/2}" y="${height - 10}" class="chart-axis-text" font-weight="${isToday ? '700' : '400'}" text-anchor="middle">
+              ${d.label}
+            </text>
+            ${d.amount > 0 ? `
+              <text x="${x + barWidth/2}" y="${y - 4}" font-size="9.5" font-weight="700" fill="var(--text-muted)" text-anchor="middle">
+                ${d.amount >= 1000 ? (d.amount / 1000).toFixed(1) + 'k' : d.amount}
+              </text>
+            ` : ''}
+          </g>
+        `;
+      });
+
+      container.innerHTML = `
+        <svg width="100%" height="100%" viewBox="0 0 ${width} ${height}">
+          <line x1="${padLeft}" y1="${padTop + chartH}" x2="${width - padRight}" y2="${padTop + chartH}" class="chart-grid-line" />
+          ${goalLineSvg}
+          ${barsSvg}
+        </svg>
+      `;
     }
 
     // MOVEMENT TRACKER
@@ -8878,13 +9775,7 @@
     }
 
     // 17. REACTIVE INTERACTIVE NATIVE SVG CHARTS ENGINE
-    function escapeJsString(str) {
-      if (!str) return '';
-      return String(str)
-        .replaceAll('\\', '\\\\')
-        .replaceAll('`', '\\`')
-        .replaceAll('$', '\\$');
-    }
+    let analyticsTooltips = {};
 
     function showChartTooltip(e, htmlContent) {
       const tip = document.getElementById('analyticsChartTooltip');
@@ -8902,12 +9793,19 @@
       tip.style.top = `${finalY}px`;
     }
 
+    function showCachedTooltip(e, tipId) {
+      if (analyticsTooltips && analyticsTooltips[tipId]) {
+        showChartTooltip(e, analyticsTooltips[tipId]);
+      }
+    }
+
     function hideChartTooltip() {
       const tip = document.getElementById('analyticsChartTooltip');
       if (tip) tip.classList.remove('visible');
     }
 
     function renderAnalyticsView() {
+      analyticsTooltips = {};
       const rangeEl = document.getElementById('analyticsDateRange');
       const rangeVal = rangeEl ? rangeEl.value : '14';
       let dayCount = 14;
@@ -9063,12 +9961,16 @@
         const taskListStr = d.tasks.slice(0, 3).map(t => `• ${escapeHtml(t.title)}`).join('<br>');
         const moreStr = d.tasks.length > 3 ? `<br><em style="color:var(--text-muted);">+${d.tasks.length - 3} more...</em>` : '';
         const tipContent = `
-          <div style="font-weight:700; color:var(--accent); margin-bottom:4px;">📅 ${d.label}</div>
-          <div style="font-size:13.5px; font-weight:700; margin-bottom:4px;">✅ ${d.count} Task${d.count === 1 ? '' : 's'} Completed</div>
+          <div style="font-weight:700; color:var(--accent); margin-bottom:4px;">📅 ${d.label || d.monthDay}</div>
+          <div style="font-size:13.5px; font-weight:700; margin-bottom:4px;">
+            ${d.count} Task${d.count === 1 ? '' : 's'} Completed
+          </div>
           <div style="font-size:11.5px; color:var(--text-secondary); border-top:1px solid var(--border-color); padding-top:4px; margin-top:4px; line-height:1.4;">
-            ${taskListStr ? taskListStr + moreStr : 'No tasks logged completed'}
+            ${d.count > 0 ? (taskListStr + moreStr) : 'No tasks logged completed'}
           </div>
         `;
+        const tipId = `tip-task-${i}`;
+        analyticsTooltips[tipId] = tipContent;
 
         const isToday = d.dateStr === TODAY_STR;
         const barFill = 'var(--accent)';
@@ -9079,8 +9981,8 @@
           <g>
             <rect class="chart-bar" x="${x}" y="${d.count > 0 ? y : (padTop + chartH - 4)}" width="${barWidth}" height="${d.count > 0 ? barH : 4}"
               rx="4" fill="${barFill}" opacity="${barOpacity}"
-              onmouseenter="showChartTooltip(event, \`${escapeJsString(tipContent)}\`)"
-              onmousemove="showChartTooltip(event, \`${escapeJsString(tipContent)}\`)"
+              onmouseenter="showCachedTooltip(event, '${tipId}')"
+              onmousemove="showCachedTooltip(event, '${tipId}')"
               onmouseleave="hideChartTooltip()" />
             ${d.count > 0 && barCount <= 14 ? `
               <text x="${x + barWidth/2}" y="${y - 5}" font-size="10" font-weight="700" fill="var(--text-primary)" text-anchor="middle">${d.count}</text>
@@ -9123,6 +10025,12 @@
       }
 
       const total = appData.tasks.length;
+      currentCategoryTotal = total;
+      currentCategoryEntries = entries.map(([cat, count]) => {
+        const pct = Math.round((count / total) * 100);
+        return { cat, count, pctFormatted: pct };
+      });
+
       const colors = ["#B48A3C", "#38BDF8", "#10B981", "#F59E0B", "#8B5CF6", "#EC4899", "#6366F1", "#14B8A6"];
       let acc = 0;
       const radius = 54;
@@ -9142,7 +10050,8 @@
         const pending = count - done;
         const pctFormatted = Math.round(pct * 100);
 
-        const tipContent = `
+        const tipId = `tip-cat-${idx}`;
+        analyticsTooltips[tipId] = `
           <div style="display:flex; align-items:center; gap:6px; font-weight:700; margin-bottom:4px;">
             <span style="display:inline-block; width:10px; height:10px; border-radius:3px; background:${color};"></span>
             <span>${escapeHtml(cat)}</span>
@@ -9159,15 +10068,15 @@
             stroke-dasharray="${strokeLength} ${circumference}"
             stroke-dashoffset="${-offset}"
             transform="rotate(-90 85 85)"
-            onmouseenter="donutHighlightSlice('${idx}', '${escapeHtml(cat)}', '${count}', '${pctFormatted}%', event, \`${escapeJsString(tipContent)}\`)"
-            onmousemove="showChartTooltip(event, \`${escapeJsString(tipContent)}\`)"
-            onmouseleave="donutResetSlice('${total}')" />
+            onmouseenter="donutHighlightSlice(${idx}, event)"
+            onmousemove="showCachedTooltip(event, '${tipId}')"
+            onmouseleave="donutResetSlice()" />
         `;
 
         legendHtml += `
           <div class="legend-item" id="donut-legend-${idx}"
-            onmouseenter="donutHighlightSlice('${idx}', '${escapeHtml(cat)}', '${count}', '${pctFormatted}%', event, \`${escapeJsString(tipContent)}\`)"
-            onmouseleave="donutResetSlice('${total}')">
+            onmouseenter="donutHighlightSlice(${idx}, event)"
+            onmouseleave="donutResetSlice()">
             <div style="width:10px; height:10px; border-radius:3px; background:${color}; flex-shrink:0;"></div>
             <span style="flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><strong>${escapeHtml(cat)}</strong></span>
             <span style="color:var(--text-muted); font-size:11px;">${count} (${pctFormatted}%)</span>
@@ -9192,11 +10101,16 @@
       `;
     }
 
-    function donutHighlightSlice(idx, title, val, pct, e, tipHtml) {
+    let currentCategoryEntries = [];
+    let currentCategoryTotal = 0;
+
+    function donutHighlightSlice(idx, e) {
+      const item = currentCategoryEntries[idx];
+      if (!item) return;
       const valEl = document.getElementById('donutCenterVal');
       const titleEl = document.getElementById('donutCenterTitle');
-      if (valEl) valEl.textContent = val;
-      if (titleEl) titleEl.textContent = `${title} (${pct})`;
+      if (valEl) valEl.textContent = item.count;
+      if (titleEl) titleEl.textContent = `${item.cat} (${item.pctFormatted}%)`;
 
       document.querySelectorAll('.donut-slice').forEach(s => {
         if (s.id === `donut-slice-${idx}`) {
@@ -9205,15 +10119,16 @@
           s.classList.add('dimmed');
         }
       });
-      if (e && tipHtml) {
-        showChartTooltip(e, tipHtml);
+      const tipId = `tip-cat-${idx}`;
+      if (e && analyticsTooltips && analyticsTooltips[tipId]) {
+        showChartTooltip(e, analyticsTooltips[tipId]);
       }
     }
 
-    function donutResetSlice(total) {
+    function donutResetSlice() {
       const valEl = document.getElementById('donutCenterVal');
       const titleEl = document.getElementById('donutCenterTitle');
-      if (valEl) valEl.textContent = total;
+      if (valEl) valEl.textContent = currentCategoryTotal;
       if (titleEl) titleEl.textContent = "Total Tasks";
 
       document.querySelectorAll('.donut-slice').forEach(s => s.classList.remove('dimmed'));
@@ -9288,14 +10203,17 @@
           </div>
         `;
 
+        const tipId = `tip-focus-${i}`;
+        analyticsTooltips[tipId] = tipContent;
+
         const showLabel = barCount <= 14 || (i % 2 === 0);
 
         barsHtml += `
           <g>
             <rect class="chart-bar" x="${x}" y="${d.mins > 0 ? y : (padTop + chartH - 4)}" width="${barWidth}" height="${d.mins > 0 ? barH : 4}"
               rx="4" fill="${barColor}" opacity="${barOpacity}"
-              onmouseenter="showChartTooltip(event, \`${escapeJsString(tipContent)}\`)"
-              onmousemove="showChartTooltip(event, \`${escapeJsString(tipContent)}\`)"
+              onmouseenter="showCachedTooltip(event, '${tipId}')"
+              onmousemove="showCachedTooltip(event, '${tipId}')"
               onmouseleave="hideChartTooltip()" />
             ${d.mins > 0 && barCount <= 14 ? `
               <text x="${x + barWidth/2}" y="${y - 5}" font-size="10" font-weight="700" fill="var(--text-primary)" text-anchor="middle">${d.mins}m</text>
@@ -9402,12 +10320,15 @@
           ${d.notes ? `<div style="font-size:11.5px; color:var(--text-secondary); font-style:italic; border-top:1px solid var(--border-color); padding-top:4px; margin-top:4px;">"${escapeHtml(d.notes)}"</div>` : ''}
         `;
 
+        const tipId = `tip-mood-${i}`;
+        analyticsTooltips[tipId] = tipContent;
+
         if (mood !== null) {
           const y = padTop + chartH - ((mood - 1) / 4) * chartH;
           dotsHtml += `
             <circle class="chart-dot" cx="${x}" cy="${y}" r="4.5" fill="var(--accent)"
-              onmouseenter="showChartTooltip(event, \`${escapeJsString(tipContent)}\`)"
-              onmousemove="showChartTooltip(event, \`${escapeJsString(tipContent)}\`)"
+              onmouseenter="showCachedTooltip(event, '${tipId}')"
+              onmousemove="showCachedTooltip(event, '${tipId}')"
               onmouseleave="hideChartTooltip()" />
           `;
         }
@@ -9415,8 +10336,8 @@
           const y = padTop + chartH - ((energy - 1) / 4) * chartH;
           dotsHtml += `
             <circle class="chart-dot" cx="${x}" cy="${y}" r="4" fill="var(--success)"
-              onmouseenter="showChartTooltip(event, \`${escapeJsString(tipContent)}\`)"
-              onmousemove="showChartTooltip(event, \`${escapeJsString(tipContent)}\`)"
+              onmouseenter="showCachedTooltip(event, '${tipId}')"
+              onmousemove="showCachedTooltip(event, '${tipId}')"
               onmouseleave="hideChartTooltip()" />
           `;
         }
