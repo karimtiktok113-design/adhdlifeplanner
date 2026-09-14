@@ -399,6 +399,13 @@
       padding: 0;
     }
 
+    html {
+      box-sizing: border-box;
+      max-width: 100vw;
+      overflow-x: hidden;
+      -webkit-text-size-adjust: 100%;
+    }
+
     body {
       font-family: var(--font-family-base);
       font-size: var(--font-base-size);
@@ -406,6 +413,7 @@
       background-color: var(--bg-primary);
       color: var(--text-primary);
       min-height: 100vh;
+      max-width: 100vw;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
@@ -417,6 +425,8 @@
       min-height: 100vh;
       background-color: var(--bg-primary);
       position: relative;
+      max-width: 100vw;
+      overflow-x: hidden;
     }
 
     /* SIDEBAR */
@@ -1575,41 +1585,112 @@
       width: 100%;
     }
 
-    /* CALENDAR GRID */
+    /* CALENDAR GRID — RESPONSIVE DESKTOP & FLUID WORKSPACE */
     .calendar-wrapper {
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius-card);
       overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .calendar-stats-ribbon {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .calendar-stat-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--shadow-sm);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .calendar-stat-box:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .calendar-stat-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      background: var(--bg-subtle);
+      flex-shrink: 0;
+    }
+
+    .calendar-stat-info {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .calendar-stat-val {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .calendar-stat-lbl {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .calendar-header-row {
       display: grid;
-      grid-template-columns: repeat(7, 1fr);
+      grid-template-columns: repeat(7, minmax(0, 1fr));
       background: var(--bg-subtle);
       border-bottom: 1px solid var(--border);
       text-align: center;
       font-size: 12px;
       font-weight: 700;
       color: var(--text-muted);
-      padding: 10px 0;
+      letter-spacing: 0.05em;
+      padding: 12px 0;
+      user-select: none;
+    }
+
+    .calendar-header-cell.weekend {
+      color: var(--accent);
+      opacity: 0.9;
     }
 
     .calendar-days-grid {
       display: grid;
-      grid-template-columns: repeat(7, 1fr);
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      grid-auto-rows: minmax(clamp(105px, 13.5vh, 155px), 1fr);
     }
 
     .calendar-day-cell {
-      min-height: 100px;
+      min-height: clamp(105px, 13.5vh, 155px);
       border-right: 1px solid var(--border-subtle);
       border-bottom: 1px solid var(--border-subtle);
-      padding: 8px;
+      padding: 8px 10px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 5px;
       cursor: pointer;
-      transition: background var(--transition-fast);
+      background: var(--bg-card);
+      transition: background var(--transition-fast), border-color var(--transition-fast);
+      position: relative;
+      overflow: hidden;
     }
 
     .calendar-day-cell:nth-child(7n) {
@@ -1621,35 +1702,218 @@
     }
 
     .calendar-day-cell.other-month {
-      opacity: 0.35;
+      opacity: 0.42;
       background: var(--bg-primary);
     }
 
     .calendar-day-cell.today {
       background: var(--accent-soft);
+      box-shadow: inset 0 0 0 1px var(--accent);
+    }
+
+    .calendar-day-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 24px;
+      width: 100%;
     }
 
     .day-number {
       font-size: 13px;
       font-weight: 700;
       color: var(--text-primary);
+      width: 24px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all var(--transition-fast);
     }
 
     .calendar-day-cell.today .day-number {
-      color: var(--accent);
+      background: var(--accent);
+      color: var(--accent-text);
+      font-weight: 800;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    .calendar-day-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .calendar-day-count {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1px 5px;
+      line-height: 1;
+    }
+
+    .calendar-quick-add-btn {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1px dashed var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      line-height: 1;
+      cursor: pointer;
+      opacity: 0;
+      transition: all var(--transition-fast);
+    }
+
+    .calendar-day-cell:hover .calendar-quick-add-btn {
+      opacity: 1;
+    }
+
+    .calendar-quick-add-btn:hover {
+      background: var(--accent);
+      color: var(--accent-text);
+      border-color: var(--accent);
+      transform: scale(1.1);
+    }
+
+    .calendar-day-events {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      overflow: hidden;
+      width: 100%;
+      flex: 1;
     }
 
     .calendar-event-pill {
-      font-size: 11px;
+      font-size: 11.5px;
       font-weight: 600;
-      padding: 2px 6px;
-      border-radius: 4px;
+      padding: 3px 8px;
+      border-radius: 5px;
       background: var(--bg-subtle);
       color: var(--text-primary);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       border-left: 3px solid var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      line-height: 1.3;
+      border-top: 1px solid var(--border-subtle);
+      border-right: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .calendar-event-pill:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+      background: var(--bg-hover);
+    }
+
+    .calendar-event-pill.priority-Critical {
+      border-left-color: var(--danger);
+      background: var(--danger-soft);
+      color: var(--text-primary);
+    }
+
+    .calendar-event-pill.priority-High {
+      border-left-color: var(--warning);
+      background: var(--warning-soft);
+      color: var(--text-primary);
+    }
+
+    .calendar-event-pill.priority-Medium {
+      border-left-color: var(--info);
+      background: var(--info-soft);
+      color: var(--text-primary);
+    }
+
+    .calendar-event-pill.priority-Low {
+      border-left-color: var(--success);
+      background: var(--success-soft);
+      color: var(--text-primary);
+    }
+
+    .calendar-event-pill.completed {
+      opacity: 0.6;
+      text-decoration: line-through;
+      background: var(--bg-subtle);
+      border-left-color: var(--text-muted);
+    }
+
+    .calendar-pill-time {
+      font-size: 9.5px;
+      font-weight: 700;
+      opacity: 0.75;
+      flex-shrink: 0;
+    }
+
+    .calendar-pill-title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .calendar-event-more {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--accent-soft);
+      display: inline-block;
+      align-self: flex-start;
+      margin-top: 1px;
+      transition: background var(--transition-fast), color var(--transition-fast);
+    }
+
+    .calendar-event-more:hover {
+      background: var(--accent);
+      color: var(--accent-text);
+    }
+
+    /* CALENDAR TOOLBAR CONTROLS */
+    .calendar-filter-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--bg-subtle);
+      padding: 3px;
+      border-radius: var(--radius-btn);
+      border: 1px solid var(--border);
+    }
+
+    .calendar-filter-btn {
+      background: transparent;
+      border: none;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-radius: calc(var(--radius-btn) - 2px);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .calendar-filter-btn.active {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
     }
 
     /* HABIT TRACKER GRID */
@@ -2347,11 +2611,18 @@
     }
     .print-only-header { display: none; }
 
-    /* RESPONSIVE MEDIA QUERIES */
+    /* ==========================================================================
+       RESPONSIVE MEDIA QUERIES & MOBILE ENGINE (DOWN TO 320PX)
+       Comprehensive multi-tier responsiveness for all cards, buttons, headers,
+       calendar, modals, and views on small mobile form factors.
+       ========================================================================== */
+
+    /* TABLET & SMALL LAPTOPS (<= 1024PX) */
     @media (max-width: 1024px) {
       .app-sidebar {
         position: fixed;
         left: -320px;
+        max-width: min(280px, 85vw);
         box-shadow: var(--shadow-lg);
       }
       .app-sidebar.mobile-open {
@@ -2369,14 +2640,8 @@
       .grid-3 {
         grid-template-columns: repeat(2, 1fr);
       }
-    }
-
-    @media (max-width: 1024px) {
       .app-header {
         padding: 0 var(--space-md);
-      }
-      .header-center {
-        max-width: 220px;
       }
       .header-right {
         gap: 6px;
@@ -2390,10 +2655,13 @@
       }
     }
 
+    /* MOBILE & TABLET (<= 768PX) */
     @media (max-width: 768px) {
       .workspace-content {
         padding: var(--space-md);
         padding-bottom: calc(var(--mobile-bottom-height) + var(--space-xl));
+        box-sizing: border-box;
+        max-width: 100%;
       }
       .app-header {
         padding: 0 var(--space-sm);
@@ -2436,18 +2704,641 @@
       .mobile-bottom-bar {
         display: flex;
       }
-      .grid-2, .grid-3, .grid-4, .eisenhower-grid {
-        grid-template-columns: 1fr;
+      .grid-1, .grid-2, .grid-3, .grid-4, .eisenhower-grid,
+      .water-layout-grid, .theme-grid, .dashboard-panels-grid,
+      .grid-dashboard-kpis, .water-science-grid {
+        grid-template-columns: 1fr !important;
+      }
+      #widget-quick-capture {
+        padding: 12px 10px !important;
+      }
+      .view-header {
+        margin-bottom: var(--space-md);
+        gap: 10px;
       }
       .view-title {
-        font-size: 22px;
+        font-size: 21px;
+        line-height: 1.25;
+      }
+      .view-subtitle {
+        font-size: 13px;
+      }
+      .view-actions {
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .view-actions .btn {
+        flex: 1 1 auto;
+        min-width: 0;
+        justify-content: center;
+      }
+      .card {
+        padding: var(--space-md);
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+      .kpi-card {
+        padding: 12px var(--space-md);
       }
       .timer-svg {
-        width: 240px;
-        height: 240px;
+        width: 220px;
+        height: 220px;
       }
       .timer-display {
-        font-size: 44px;
+        font-size: 40px;
+      }
+      .calendar-stats-ribbon {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+        margin-bottom: 12px !important;
+      }
+      .calendar-quick-add-btn {
+        display: none !important;
+      }
+      .calendar-filter-group {
+        overflow-x: auto !important;
+        max-width: 100% !important;
+      }
+    }
+
+    /* PHONES & COMPACT MOBILE (<= 640PX) */
+    @media (max-width: 640px) {
+      /* CALENDAR RESPONSIVE SUITE */
+      .calendar-header-row {
+        font-size: 11px;
+        padding: 6px 0;
+      }
+      .calendar-day-cell {
+        min-height: 50px;
+        padding: 4px 2px;
+        border-radius: 4px;
+        gap: 2px;
+      }
+      .calendar-day-header {
+        justify-content: center !important;
+        min-height: auto !important;
+        width: 100% !important;
+      }
+      .calendar-day-count {
+        display: none !important;
+      }
+      .day-number {
+        font-size: 11px;
+        text-align: center;
+        width: 20px !important;
+        height: 20px !important;
+        display: inline-flex !important;
+      }
+      .calendar-day-events {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: center !important;
+        align-items: center !important;
+        flex-wrap: wrap !important;
+        gap: 3px !important;
+        margin-top: 2px !important;
+        width: 100% !important;
+      }
+      .calendar-event-pill {
+        width: 6px !important;
+        height: 6px !important;
+        min-width: 6px !important;
+        max-width: 6px !important;
+        border-radius: 50% !important;
+        padding: 0 !important;
+        font-size: 0 !important;
+        line-height: 0 !important;
+        color: transparent !important;
+        background: var(--accent) !important;
+        border-left: none !important;
+        display: inline-block !important;
+        margin: 1px !important;
+        box-shadow: 0 0 3px var(--accent-soft);
+      }
+      .calendar-event-more {
+        font-size: 9px !important;
+        line-height: 1 !important;
+        color: var(--accent) !important;
+        font-weight: 800 !important;
+        margin-left: 1px !important;
+      }
+      #view-calendar .view-actions {
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 4px !important;
+      }
+      #calendarCurrentMonthYear {
+        font-size: 14px !important;
+        padding: 0 4px !important;
+        text-align: center !important;
+        flex: 1 !important;
+        min-width: 0 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
+
+      /* HABIT TRACKER MOBILE STACK */
+      .habit-row {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+        padding: 12px !important;
+      }
+      .habit-info {
+        min-width: 0 !important;
+        width: 100% !important;
+      }
+      .habit-dots-track {
+        width: 100% !important;
+        justify-content: space-between !important;
+      }
+      .habit-day-dot {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 10.5px !important;
+      }
+
+      /* MODALS & POPUPS MOBILE SHEET */
+      .modal-backdrop {
+        padding: 8px !important;
+        align-items: center !important;
+      }
+      .modal-dialog {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 94vh !important;
+        margin: 0 !important;
+        border-radius: 14px !important;
+      }
+      .modal-header {
+        padding: 12px 14px !important;
+      }
+      .modal-title {
+        font-size: 15px !important;
+        line-height: 1.3 !important;
+      }
+      .modal-body {
+        padding: 12px !important;
+        -webkit-overflow-scrolling: touch;
+      }
+      .modal-footer {
+        padding: 10px 12px !important;
+        flex-direction: column-reverse !important;
+        align-items: stretch !important;
+        gap: 6px !important;
+      }
+      .modal-footer .btn {
+        width: 100% !important;
+        justify-content: center !important;
+      }
+      .form-row {
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+      }
+      .quick-tab-btn {
+        flex-shrink: 0;
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+      #modalQuickAdd .modal-body > div:first-child {
+        overflow-x: auto !important;
+        flex-wrap: nowrap !important;
+        padding-bottom: 4px !important;
+        -webkit-overflow-scrolling: touch;
+      }
+      #modalWidgetCustomizer [style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important;
+      }
+      .widget-toggle-card {
+        padding: 10px 12px;
+        gap: 8px;
+      }
+      #modalStartMyDay .modal-body > div:last-child,
+      #modalOverwhelmed .modal-body > div:last-child {
+        flex-direction: column-reverse !important;
+        width: 100% !important;
+        gap: 8px !important;
+      }
+      #modalStartMyDay .btn,
+      #modalOverwhelmed .btn {
+        width: 100% !important;
+        justify-content: center !important;
+      }
+      .breathing-box {
+        padding: var(--space-md) 0 !important;
+      }
+      .breathing-circle-outer {
+        width: 140px !important;
+        height: 140px !important;
+      }
+      .breathing-circle-outer.inhale,
+      .breathing-circle-outer.hold {
+        transform: scale(1.2) !important;
+      }
+
+      /* DONUT CHART MOBILE STACK */
+      #chartCategoryDonut > div {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 12px !important;
+        height: auto !important;
+      }
+      #chartCategoryDonut .legend-item {
+        justify-content: space-between;
+      }
+    }
+
+    /* SMALL MOBILE DEVICES (<= 480PX) */
+    @media (max-width: 480px) {
+      /* MOBILE HEADER COMPONENT ADJUSTMENTS */
+      .app-header {
+        padding: 0 8px;
+        height: 54px;
+      }
+      #btnStartMyDay {
+        display: none !important;
+      }
+      #btnOverwhelmed {
+        padding: 6px;
+        min-width: 32px;
+        height: 32px;
+      }
+      #btnOverwhelmed span {
+        display: none !important;
+      }
+      .header-xp-pill {
+        padding: 3px 6px;
+        font-size: 10.5px;
+        gap: 3px;
+      }
+      .header-right .btn {
+        min-width: 32px;
+        height: 32px;
+        padding: 6px;
+      }
+      .header-datetime {
+        max-width: 95px;
+      }
+      .header-greeting {
+        font-size: 12px;
+      }
+      .header-clock-date {
+        font-size: 9.5px;
+      }
+
+      /* CALENDAR LABELS ON PHONES */
+      .day-label-full {
+        display: none;
+      }
+      .day-label-short {
+        display: inline-block;
+        font-weight: 800;
+        font-size: 11px;
+      }
+      .calendar-day-cell {
+        min-height: 46px;
+        padding: 3px 1px;
+      }
+
+      /* CARDS & SPACING */
+      .workspace-content {
+        padding: 10px 8px;
+        padding-bottom: calc(var(--mobile-bottom-height) + 20px);
+      }
+      .card {
+        padding: 12px;
+        border-radius: 12px;
+      }
+      .card-header {
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .card-title {
+        font-size: 14.5px;
+      }
+      .kpi-card {
+        padding: 10px 12px;
+        border-radius: 12px;
+      }
+      .kpi-value {
+        font-size: 20px;
+      }
+      .kpi-header {
+        font-size: 11.5px;
+      }
+      .view-header {
+        margin-bottom: 12px;
+        gap: 8px;
+      }
+      .view-title {
+        font-size: 19px;
+        line-height: 1.25;
+      }
+      .view-subtitle {
+        font-size: 12px;
+        line-height: 1.4;
+      }
+      .view-actions {
+        width: 100%;
+        gap: 6px;
+      }
+      .view-actions .btn {
+        font-size: 11.5px;
+        padding: 6px 10px;
+        min-width: 0;
+      }
+
+      /* FOCUS TIMER ON PHONES */
+      .timer-svg {
+        width: 190px;
+        height: 190px;
+      }
+      .timer-display {
+        font-size: 34px;
+      }
+
+      /* WATER TRACKER ON PHONES */
+      .water-bottle-glass {
+        width: 110px;
+        height: 210px;
+      }
+      .water-bottle-card::before {
+        width: 220px;
+        height: 220px;
+      }
+      .water-vessel-grid {
+        gap: 6px;
+      }
+      .water-vessel-btn {
+        padding: 8px 4px;
+      }
+      .water-vessel-icon {
+        font-size: 18px;
+      }
+      .water-vessel-name {
+        font-size: 10.5px;
+      }
+      .water-vessel-vol {
+        font-size: 9.5px;
+      }
+
+      /* TOASTS ON PHONES */
+      .toast-container {
+        left: 10px;
+        right: 10px;
+        bottom: calc(var(--mobile-bottom-height) + 10px);
+      }
+      .toast {
+        min-width: 0;
+        width: 100%;
+        max-width: 100%;
+        font-size: 12px;
+        padding: 8px 12px;
+      }
+    }
+
+    /* ULTRA-COMPACT MOBILE DOWN TO 320PX */
+    @media (max-width: 360px) {
+      /* 320PX MOBILE HEADER ADJUSTMENT */
+      .app-header {
+        padding: 0 6px;
+        height: 50px;
+      }
+      .mobile-menu-btn {
+        width: 30px;
+        height: 30px;
+        padding: 3px;
+      }
+      .mobile-menu-btn svg {
+        width: 18px;
+        height: 18px;
+      }
+      .header-left {
+        gap: 5px;
+        min-width: 0;
+      }
+      .header-datetime {
+        max-width: 80px;
+      }
+      .header-greeting {
+        font-size: 11.5px;
+      }
+      .header-clock-date {
+        display: none !important;
+      }
+      .header-right {
+        gap: 3px;
+      }
+      .header-xp-pill {
+        padding: 2px 4px;
+        font-size: 9.5px;
+        gap: 2px;
+      }
+      .header-right .btn {
+        min-width: 28px;
+        height: 28px;
+        padding: 4px;
+        border-radius: 6px;
+      }
+      .header-right .btn svg {
+        width: 13px;
+        height: 13px;
+      }
+
+      /* 320PX CALENDAR FULL RESPONSIVENESS */
+      .calendar-header-row {
+        font-size: 9px;
+        padding: 4px 0;
+      }
+      .day-label-short {
+        font-size: 10px;
+        font-weight: 800;
+      }
+      .calendar-day-cell {
+        min-height: 40px;
+        padding: 2px 1px;
+        gap: 1px;
+        border-radius: 3px;
+      }
+      .day-number {
+        font-size: 10px;
+      }
+      .calendar-event-pill {
+        width: 4.5px !important;
+        height: 4.5px !important;
+        min-width: 4.5px !important;
+        max-width: 4.5px !important;
+        margin: 1px 1px !important;
+      }
+      .calendar-event-more {
+        font-size: 8px !important;
+      }
+      #calendarCurrentMonthYear {
+        font-size: 13px !important;
+        padding: 0 2px !important;
+      }
+      .calendar-wrapper .btn-sm {
+        padding: 4px 6px;
+        font-size: 10.5px;
+      }
+
+      /* 320PX WORKSPACE, CARDS & BUTTONS */
+      .workspace-content {
+        padding: 6px 5px;
+        padding-bottom: calc(var(--mobile-bottom-height) + 14px);
+      }
+      .card {
+        padding: 10px 8px;
+        border-radius: 10px;
+      }
+      .kpi-card {
+        padding: 8px;
+        border-radius: 10px;
+      }
+      .kpi-value {
+        font-size: 18px;
+      }
+      #rewardsXpTotal {
+        font-size: 38px !important;
+      }
+      #view-water .view-header > div:last-child {
+        align-items: flex-start !important;
+        width: 100% !important;
+      }
+      #view-braindump .card > div, #view-parking .card > div {
+        flex-direction: column !important;
+      }
+      #brainDumpInput, #parkingDedicatedInput, #brainDumpCategory, #parkingDedicatedCategory,
+      #view-braindump .card button, #view-parking .card button {
+        width: 100% !important;
+        min-width: 0 !important;
+      }
+      .view-title {
+        font-size: 17px;
+      }
+      .view-subtitle {
+        font-size: 11px;
+      }
+      .btn {
+        padding: 5px 8px;
+        font-size: 11px;
+        border-radius: 8px;
+      }
+      .btn-sm {
+        padding: 4px 6px;
+        font-size: 10.5px;
+        border-radius: 7px;
+      }
+
+      /* 320PX MOBILE BOTTOM BAR */
+      .mobile-bottom-bar {
+        height: 54px;
+        padding: 0 1px;
+      }
+      .mobile-tab-btn {
+        font-size: 8px;
+        gap: 1px;
+        padding: 2px 0;
+      }
+      .mobile-tab-btn svg {
+        width: 16px;
+        height: 16px;
+      }
+      .mobile-tab-btn span {
+        white-space: nowrap;
+        font-size: 8px;
+      }
+      .mobile-quick-add-btn {
+        width: 36px;
+        height: 36px;
+        margin-top: -10px;
+      }
+      .mobile-quick-add-btn svg {
+        width: 17px;
+        height: 17px;
+      }
+
+      /* 320PX TIMELINE & WATER */
+      .timeline-hour-label {
+        width: 44px;
+        font-size: 9.5px;
+        padding: 6px 2px;
+      }
+      .timeblock-card {
+        padding: 4px 6px;
+        font-size: 11px;
+      }
+      .water-vessel-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4px;
+      }
+      .water-bottle-glass {
+        width: 95px;
+        height: 185px;
+      }
+      .water-intake-huge {
+        font-size: 26px;
+      }
+
+      /* 320PX MODALS & FORMS */
+      .modal-backdrop {
+        padding: 4px;
+      }
+      .modal-dialog {
+        border-radius: 12px;
+      }
+      .modal-header {
+        padding: 8px 10px;
+      }
+      .modal-title {
+        font-size: 14px;
+      }
+      .modal-body {
+        padding: 8px;
+      }
+      .modal-footer {
+        padding: 6px 8px;
+      }
+      .form-group {
+        margin-bottom: 8px;
+        gap: 3px;
+      }
+      .form-label {
+        font-size: 11.5px;
+      }
+      .form-input, .form-select, .form-textarea {
+        padding: 6px 8px;
+        font-size: 12.5px;
+        border-radius: 8px;
+      }
+
+      /* 320PX ABOUT DEVELOPER MODULE */
+      .about-dev-card {
+        padding: 12px 8px;
+        border-radius: 12px;
+      }
+      .about-dev-avatar-wrap {
+        width: 68px;
+        height: 68px;
+        border-radius: 18px;
+      }
+      .about-dev-avatar-fallback {
+        font-size: 28px;
+      }
+      .about-dev-name {
+        font-size: 19px;
+      }
+      .about-dev-bio {
+        font-size: 12.5px;
+        line-height: 1.5;
+      }
+      .about-dev-action-card {
+        padding: 10px 8px;
       }
     }
 
@@ -3540,8 +4431,8 @@
           </div>
           <div class="card" style="margin-bottom: var(--space-lg);">
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-              <input type="text" id="brainDumpInput" class="form-input" style="flex: 1; min-width: 260px;" placeholder="What is on your mind right now? Hit enter to save..." onkeydown="if(event.key==='Enter') addBrainDumpItem()" />
-              <select id="brainDumpCategory" class="form-select" style="width: 160px;">
+              <input type="text" id="brainDumpInput" class="form-input" style="flex: 2; min-width: 140px;" placeholder="What is on your mind right now? Hit enter to save..." onkeydown="if(event.key==='Enter') addBrainDumpItem()" />
+              <select id="brainDumpCategory" class="form-select" style="flex: 1; min-width: 110px;">
                 <option value="Idea">💡 Idea</option>
                 <option value="Task">📋 Task</option>
                 <option value="Reminder">⏰ Reminder</option>
@@ -3743,8 +4634,8 @@
           <!-- QUICK CAPTURE CARD -->
           <div class="card" style="margin-bottom: var(--space-lg); border-left: 4px solid var(--warning);">
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-              <input type="text" id="parkingDedicatedInput" class="form-input" style="flex: 1; min-width: 260px;" placeholder="What intrusive thought or urge just popped up? (Press enter to park)" onkeydown="if(event.key==='Enter') parkDedicatedDistractionItem()" />
-              <select id="parkingDedicatedCategory" class="form-select" style="width: 180px;">
+              <input type="text" id="parkingDedicatedInput" class="form-input" style="flex: 2; min-width: 140px;" placeholder="What intrusive thought or urge just popped up? (Press enter to park)" onkeydown="if(event.key==='Enter') parkDedicatedDistractionItem()" />
+              <select id="parkingDedicatedCategory" class="form-select" style="flex: 1; min-width: 120px;">
                 <option value="Urge">⚡ Sudden Urge</option>
                 <option value="Research">🔍 Look Up / Google</option>
                 <option value="Chore">🧹 Random Chore</option>
@@ -3884,17 +4775,63 @@
               <h1 class="view-title">Monthly Calendar & Agenda</h1>
               <p class="view-subtitle">High-visibility month overview with linked deadlines, tasks, and appointments.</p>
             </div>
-            <div class="view-actions">
-              <button class="btn btn-secondary btn-sm" onclick="shiftCalendarMonth(-1)">&larr; Prev</button>
-              <span id="calendarCurrentMonthYear" style="font-weight: 800; font-size: 16px; padding: 0 10px;">September 2026</span>
-              <button class="btn btn-secondary btn-sm" onclick="shiftCalendarMonth(1)">Next &rarr;</button>
-              <button class="btn btn-secondary btn-sm" onclick="resetCalendarToCurrent()">Today</button>
+            <div class="view-actions" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <div class="calendar-filter-group" id="calendarFilterGroup">
+                <button class="calendar-filter-btn active" id="calFilterAll" onclick="setCalendarFilter('all')">All Tasks</button>
+                <button class="calendar-filter-btn" id="calFilterPending" onclick="setCalendarFilter('pending')">Pending</button>
+                <button class="calendar-filter-btn" id="calFilterHigh" onclick="setCalendarFilter('high')">High Priority</button>
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <button class="btn btn-secondary btn-sm" onclick="shiftCalendarMonth(-1)" title="Previous Month">&larr; Prev</button>
+                <span id="calendarCurrentMonthYear" style="font-weight: 800; font-size: 15px; padding: 0 8px; min-width: 140px; text-align: center;">September 2026</span>
+                <button class="btn btn-secondary btn-sm" onclick="shiftCalendarMonth(1)" title="Next Month">Next &rarr;</button>
+                <button class="btn btn-secondary btn-sm" onclick="resetCalendarToCurrent()" title="Jump to Current Month">Today</button>
+                <button class="btn btn-primary btn-sm" onclick="openTaskModal({dueDate: TODAY_STR})" title="Add task for today">+ Add Task</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Monthly KPI Summary Ribbon for Desktop & Tablet -->
+          <div class="calendar-stats-ribbon" id="calendarStatsRibbon">
+            <div class="calendar-stat-box">
+              <div class="calendar-stat-icon" style="color: var(--accent);">📅</div>
+              <div class="calendar-stat-info">
+                <div class="calendar-stat-val" id="calStatTotal">0</div>
+                <div class="calendar-stat-lbl">Scheduled Tasks</div>
+              </div>
+            </div>
+            <div class="calendar-stat-box">
+              <div class="calendar-stat-icon" style="color: var(--success);">✅</div>
+              <div class="calendar-stat-info">
+                <div class="calendar-stat-val" id="calStatCompleted">0</div>
+                <div class="calendar-stat-lbl">Completed</div>
+              </div>
+            </div>
+            <div class="calendar-stat-box">
+              <div class="calendar-stat-icon" style="color: var(--danger);">🔥</div>
+              <div class="calendar-stat-info">
+                <div class="calendar-stat-val" id="calStatUrgent">0</div>
+                <div class="calendar-stat-lbl">Critical / High</div>
+              </div>
+            </div>
+            <div class="calendar-stat-box">
+              <div class="calendar-stat-icon" style="color: var(--info);">⏱️</div>
+              <div class="calendar-stat-info">
+                <div class="calendar-stat-val" id="calStatTimeblocks">0</div>
+                <div class="calendar-stat-lbl">Focus Blocks</div>
+              </div>
             </div>
           </div>
 
           <div class="calendar-wrapper">
             <div class="calendar-header-row" id="calendarHeaderDays">
-              <div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div><div>SUN</div>
+              <div><span class="day-label-full">MON</span><span class="day-label-short">M</span></div>
+              <div><span class="day-label-full">TUE</span><span class="day-label-short">T</span></div>
+              <div><span class="day-label-full">WED</span><span class="day-label-short">W</span></div>
+              <div><span class="day-label-full">THU</span><span class="day-label-short">T</span></div>
+              <div><span class="day-label-full">FRI</span><span class="day-label-short">F</span></div>
+              <div class="calendar-header-cell weekend"><span class="day-label-full">SAT</span><span class="day-label-short">S</span></div>
+              <div class="calendar-header-cell weekend"><span class="day-label-full">SUN</span><span class="day-label-short">S</span></div>
             </div>
             <div class="calendar-days-grid" id="calendarDaysGrid">
               <!-- Injected via JS -->
@@ -5155,6 +6092,29 @@
       <div class="modal-body">
         <input type="text" id="modalSearchInput" class="form-input" placeholder="Type to search tasks, notes, goals, ideas..." oninput="executeGlobalSearch()" autofocus />
         <div id="globalSearchResults" style="margin-top: var(--space-md); max-height: 360px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5.5 CALENDAR DAY AGENDA QUICK-VIEW MODAL -->
+  <div class="modal-backdrop" id="modalCalendarDay">
+    <div class="modal-dialog" style="max-width: 540px;">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="calendarDayModalTitle">Day Agenda</h3>
+          <p id="calendarDayModalSubtitle" style="font-size: 12px; color: var(--text-muted); margin: 2px 0 0 0;"></p>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('modalCalendarDay')">&times;</button>
+      </div>
+      <div class="modal-body" id="calendarDayModalBody" style="max-height: 60vh; overflow-y: auto;">
+        <!-- Injected via JS -->
+      </div>
+      <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;">
+        <button class="btn btn-secondary btn-sm" id="calendarDayModalGoToPlanner">Open in Daily Planner &rarr;</button>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-secondary btn-sm" onclick="closeModal('modalCalendarDay')">Close</button>
+          <button class="btn btn-primary btn-sm" id="calendarDayModalAddTask">+ Add Task</button>
+        </div>
       </div>
     </div>
   </div>
@@ -9200,6 +10160,36 @@
 
     // 10. CALENDAR VIEW ENGINE
     let currentCalDate = new Date();
+    let currentCalFilter = 'all';
+
+    function setCalendarFilter(filter) {
+      currentCalFilter = filter;
+      document.querySelectorAll('.calendar-filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.id === ('calFilter' + filter.charAt(0).toUpperCase() + filter.slice(1)));
+      });
+      renderCalendarView();
+    }
+
+    function updateCalendarMonthlyStats(year, month, totalDays) {
+      const monthPrefix = `${year}-${String(month + 1).padStart(2, '0')}`;
+      const monthTasks = appData.tasks.filter(t => t.dueDate && t.dueDate.startsWith(monthPrefix));
+      const monthBlocks = appData.timeBlocks ? appData.timeBlocks.filter(b => b.date && b.date.startsWith(monthPrefix)) : [];
+
+      const totalScheduled = monthTasks.length;
+      const completed = monthTasks.filter(t => t.status === 'Completed').length;
+      const criticalOrHigh = monthTasks.filter(t => t.priority === 'Critical' || t.priority === 'High').length;
+      const timeblocksCount = monthBlocks.length;
+
+      const elTotal = document.getElementById('calStatTotal');
+      const elComp = document.getElementById('calStatCompleted');
+      const elUrg = document.getElementById('calStatUrgent');
+      const elTb = document.getElementById('calStatTimeblocks');
+
+      if (elTotal) elTotal.textContent = totalScheduled;
+      if (elComp) elComp.textContent = completed;
+      if (elUrg) elUrg.textContent = criticalOrHigh;
+      if (elTb) elTb.textContent = timeblocksCount;
+    }
 
     function renderCalendarView() {
       const daysGrid = document.getElementById('calendarDaysGrid');
@@ -9208,7 +10198,9 @@
 
       const year = currentCalDate.getFullYear();
       const month = currentCalDate.getMonth();
-      monthYearLabel.textContent = currentCalDate.toLocaleDateString([], { month: 'long', year: 'numeric' });
+      if (monthYearLabel) {
+        monthYearLabel.textContent = currentCalDate.toLocaleDateString([], { month: 'long', year: 'numeric' });
+      }
 
       // First day of month & total days
       const firstDay = new Date(year, month, 1).getDay(); // 0 = Sun
@@ -9217,28 +10209,79 @@
       const totalDays = new Date(year, month + 1, 0).getDate();
       const prevMonthDays = new Date(year, month, 0).getDate();
 
+      // Update the monthly stats ribbon
+      updateCalendarMonthlyStats(year, month, totalDays);
+
       let html = '';
 
       // Leading days from previous month
       for (let i = startOffset - 1; i >= 0; i--) {
-        html += `<div class="calendar-day-cell other-month"><span class="day-number">${prevMonthDays - i}</span></div>`;
+        const pDay = prevMonthDays - i;
+        const prevMonthYear = month === 0 ? year - 1 : year;
+        const prevMonthNum = month === 0 ? 12 : month;
+        const prevDateStr = `${prevMonthYear}-${String(prevMonthNum).padStart(2, '0')}-${String(pDay).padStart(2, '0')}`;
+        const prevDayTasks = appData.tasks.filter(t => t.dueDate === prevDateStr);
+
+        html += `
+          <div class="calendar-day-cell other-month" onclick="openCalendarDayModal('${prevDateStr}')" title="${prevDateStr}">
+            <div class="calendar-day-header">
+              <span class="day-number">${pDay}</span>
+              ${prevDayTasks.length > 0 ? `<span class="calendar-day-count">${prevDayTasks.length}</span>` : ''}
+            </div>
+            <div class="calendar-day-events">
+              ${prevDayTasks.slice(0, 1).map(t => `
+                <div class="calendar-event-pill" style="opacity: 0.55;" onclick="event.stopPropagation(); editTask('${t.id}')">
+                  <span class="calendar-pill-title">${escapeHtml(t.title)}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
       }
 
       // Current month days
       for (let day = 1; day <= totalDays; day++) {
         const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
         const isToday = (dateStr === TODAY_STR);
-        const dayTasks = appData.tasks.filter(t => t.dueDate === dateStr);
-        const dayBlocks = appData.timeBlocks.filter(b => b.date === dateStr);
+        const dayTasksAll = appData.tasks.filter(t => t.dueDate === dateStr);
+        const dayBlocks = appData.timeBlocks ? appData.timeBlocks.filter(b => b.date === dateStr) : [];
+
+        let filteredTasks = dayTasksAll;
+        if (currentCalFilter === 'pending') {
+          filteredTasks = dayTasksAll.filter(t => t.status !== 'Completed');
+        } else if (currentCalFilter === 'high') {
+          filteredTasks = dayTasksAll.filter(t => t.priority === 'Critical' || t.priority === 'High');
+        }
+
+        const maxVisibleTasks = 3;
+        const visibleTasks = filteredTasks.slice(0, maxVisibleTasks);
+        const remainingCount = filteredTasks.length - maxVisibleTasks;
 
         html += `
-          <div class="calendar-day-cell ${isToday ? 'today' : ''}" onclick="selectCalendarDay('${dateStr}')">
-            <span class="day-number">${day}</span>
-            <div style="display: flex; flex-direction: column; gap: 2px; overflow: hidden;">
-              ${dayTasks.slice(0, 3).map(t => `
-                <div class="calendar-event-pill" title="${escapeHtml(t.title)}">${escapeHtml(t.title)}</div>
-              `).join('')}
-              ${dayTasks.length > 3 ? `<span style="font-size: 10px; color: var(--text-muted);">+${dayTasks.length - 3} more</span>` : ''}
+          <div class="calendar-day-cell ${isToday ? 'today' : ''}" onclick="openCalendarDayModal('${dateStr}')">
+            <div class="calendar-day-header">
+              <span class="day-number ${isToday ? 'today-badge' : ''}">${day}</span>
+              <div class="calendar-day-actions">
+                ${filteredTasks.length > 0 ? `<span class="calendar-day-count" title="${filteredTasks.length} task${filteredTasks.length > 1 ? 's' : ''}">${filteredTasks.length}</span>` : ''}
+                <button class="calendar-quick-add-btn" title="Add task for this date" onclick="event.stopPropagation(); openTaskModal({dueDate: '${dateStr}'})">+</button>
+              </div>
+            </div>
+            <div class="calendar-day-events">
+              ${visibleTasks.map(t => {
+                const isDone = (t.status === 'Completed');
+                const priorityClass = t.priority ? `priority-${t.priority}` : '';
+                const timeTag = t.dueTime ? `<span class="calendar-pill-time">${t.dueTime}</span>` : '';
+                return `
+                  <div class="calendar-event-pill ${priorityClass} ${isDone ? 'completed' : ''}" title="${escapeHtml(t.title)}${t.priority ? ' • ' + t.priority : ''}" onclick="event.stopPropagation(); editTask('${t.id}')">
+                    ${isDone ? '<span style="font-size: 10px; margin-right: 2px;">✓</span>' : ''}
+                    ${timeTag}
+                    <span class="calendar-pill-title">${escapeHtml(t.title)}</span>
+                  </div>
+                `;
+              }).join('')}
+              ${remainingCount > 0 ? `
+                <div class="calendar-event-more" onclick="event.stopPropagation(); openCalendarDayModal('${dateStr}')" title="View all ${filteredTasks.length} tasks">+${remainingCount} more</div>
+              ` : ''}
             </div>
           </div>
         `;
@@ -9248,10 +10291,137 @@
       const totalRendered = startOffset + totalDays;
       const trailing = (7 - (totalRendered % 7)) % 7;
       for (let t = 1; t <= trailing; t++) {
-        html += `<div class="calendar-day-cell other-month"><span class="day-number">${t}</span></div>`;
+        const nextMonthYear = month === 11 ? year + 1 : year;
+        const nextMonthNum = month === 11 ? 1 : month + 2;
+        const nextDateStr = `${nextMonthYear}-${String(nextMonthNum).padStart(2, '0')}-${String(t).padStart(2, '0')}`;
+        const nextDayTasks = appData.tasks.filter(t => t.dueDate === nextDateStr);
+
+        html += `
+          <div class="calendar-day-cell other-month" onclick="openCalendarDayModal('${nextDateStr}')" title="${nextDateStr}">
+            <div class="calendar-day-header">
+              <span class="day-number">${t}</span>
+              ${nextDayTasks.length > 0 ? `<span class="calendar-day-count">${nextDayTasks.length}</span>` : ''}
+            </div>
+            <div class="calendar-day-events">
+              ${nextDayTasks.slice(0, 1).map(task => `
+                <div class="calendar-event-pill" style="opacity: 0.55;" onclick="event.stopPropagation(); editTask('${task.id}')">
+                  <span class="calendar-pill-title">${escapeHtml(task.title)}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
       }
 
       daysGrid.innerHTML = html;
+    }
+
+    function openCalendarDayModal(dateStr) {
+      const dateObj = new Date(dateStr + 'T00:00:00');
+      const formattedDate = isNaN(dateObj.getTime()) ? dateStr : dateObj.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+      const isToday = (dateStr === TODAY_STR);
+
+      const titleEl = document.getElementById('calendarDayModalTitle');
+      const subtitleEl = document.getElementById('calendarDayModalSubtitle');
+      if (titleEl) titleEl.textContent = formattedDate;
+      if (subtitleEl) subtitleEl.textContent = isToday ? "⭐ Today's Scheduled Agenda" : "Scheduled Tasks & Focus Blocks";
+
+      const tasks = appData.tasks.filter(t => t.dueDate === dateStr);
+      const blocks = appData.timeBlocks ? appData.timeBlocks.filter(b => b.date === dateStr) : [];
+
+      const body = document.getElementById('calendarDayModalBody');
+      if (!body) return;
+
+      const completedCount = tasks.filter(t => t.status === 'Completed').length;
+      const progressPercent = tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 0;
+
+      let content = `
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: var(--bg-subtle); border-radius: var(--radius-card); margin-bottom: 14px; border: 1px solid var(--border);">
+          <div>
+            <div style="font-size: 13px; font-weight: 700; color: var(--text-primary);">${tasks.length} Task${tasks.length === 1 ? '' : 's'} • ${completedCount} Completed</div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">${blocks.length} Focus Timeblock${blocks.length === 1 ? '' : 's'} scheduled</div>
+          </div>
+          <div style="font-size: 16px; font-weight: 800; color: var(--accent);">${progressPercent}%</div>
+        </div>
+      `;
+
+      if (tasks.length === 0 && blocks.length === 0) {
+        content += `
+          <div style="text-align: center; padding: 32px 16px; color: var(--text-muted);">
+            <div style="font-size: 32px; margin-bottom: 8px;">🌱</div>
+            <div style="font-size: 14px; font-weight: 600; color: var(--text-secondary);">No tasks scheduled for this date</div>
+            <p style="font-size: 12px; margin-top: 4px;">Click the button below to add your first task.</p>
+          </div>
+        `;
+      } else {
+        if (tasks.length > 0) {
+          content += `<h4 style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin: 12px 0 8px;">Tasks (${tasks.length})</h4>`;
+          content += '<div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px;">';
+          tasks.forEach(t => {
+            const isDone = t.status === 'Completed';
+            const prioColor = t.priority === 'Critical' ? 'var(--danger)' : (t.priority === 'High' ? 'var(--warning)' : (t.priority === 'Low' ? 'var(--success)' : 'var(--info)'));
+            content += `
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-btn); gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1;">
+                  <div class="custom-checkbox ${isDone ? 'checked' : ''}" style="width: 18px; height: 18px; font-size: 11px; flex-shrink: 0; cursor: pointer;" onclick="toggleTaskComplete('${t.id}'); openCalendarDayModal('${dateStr}'); renderCalendarView();">
+                    ${isDone ? '✓' : ''}
+                  </div>
+                  <div style="min-width: 0; flex: 1;">
+                    <div style="font-size: 13px; font-weight: 600; color: var(--text-primary); ${isDone ? 'text-decoration: line-through; opacity: 0.6;' : ''} overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                      ${escapeHtml(t.title)}
+                    </div>
+                    <div style="display: flex; gap: 6px; align-items: center; margin-top: 2px;">
+                      <span style="font-size: 10px; font-weight: 700; color: ${prioColor};">${t.priority || 'Medium'}</span>
+                      ${t.dueTime ? `<span style="font-size: 10px; color: var(--text-muted);">${t.dueTime}</span>` : ''}
+                      ${t.category ? `<span style="font-size: 10px; color: var(--text-muted);">• ${escapeHtml(t.category)}</span>` : ''}
+                    </div>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 4px; flex-shrink: 0;">
+                  <button class="btn btn-ghost btn-sm btn-icon-only" title="Edit Task" onclick="closeModal('modalCalendarDay'); editTask('${t.id}');">✏️</button>
+                  <button class="btn btn-ghost btn-sm btn-icon-only" title="Delete Task" onclick="deleteTask('${t.id}'); openCalendarDayModal('${dateStr}'); renderCalendarView();">&times;</button>
+                </div>
+              </div>
+            `;
+          });
+          content += '</div>';
+        }
+
+        if (blocks.length > 0) {
+          content += `<h4 style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin: 12px 0 8px;">Focus Blocks (${blocks.length})</h4>`;
+          content += '<div style="display: flex; flex-direction: column; gap: 6px;">';
+          blocks.forEach(b => {
+            content += `
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--accent-soft); border-left: 3px solid var(--accent); border-radius: var(--radius-btn);">
+                <div style="font-size: 13px; font-weight: 600; color: var(--text-primary);">${escapeHtml(b.title)}</div>
+                <div style="font-size: 11px; font-weight: 700; color: var(--accent);">${b.startHour}:00 - ${b.endHour}:00</div>
+              </div>
+            `;
+          });
+          content += '</div>';
+        }
+      }
+
+      body.innerHTML = content;
+
+      // Setup footer button handlers
+      const addBtn = document.getElementById('calendarDayModalAddTask');
+      if (addBtn) {
+        addBtn.onclick = function() {
+          closeModal('modalCalendarDay');
+          openTaskModal({ dueDate: dateStr });
+        };
+      }
+
+      const plannerBtn = document.getElementById('calendarDayModalGoToPlanner');
+      if (plannerBtn) {
+        plannerBtn.onclick = function() {
+          closeModal('modalCalendarDay');
+          selectCalendarDay(dateStr);
+        };
+      }
+
+      openModal('modalCalendarDay');
     }
 
     function shiftCalendarMonth(offset) {
@@ -9268,6 +10438,20 @@
       selectedTodayDate = dateStr;
       navigateTo('today');
     }
+
+    // Desktop keyboard navigation for Calendar view (ArrowLeft / ArrowRight)
+    window.addEventListener('keydown', function(e) {
+      if (currentView !== 'calendar') return;
+      const activeEl = document.activeElement;
+      if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'SELECT')) return;
+      if (document.querySelector('.modal-backdrop.open, .modal-backdrop.active, .modal-backdrop[style*="display: flex"]')) return;
+
+      if (e.key === 'ArrowLeft') {
+        shiftCalendarMonth(-1);
+      } else if (e.key === 'ArrowRight') {
+        shiftCalendarMonth(1);
+      }
+    });
 
     // 11. HABITS & ROUTINES ENGINE
     function renderHabitsView() {
