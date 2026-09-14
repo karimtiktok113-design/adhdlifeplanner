@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="ivory-gold" data-mode="light" data-font-size="comfortable" data-density="comfortable" data-radius="smooth" data-reduced-motion="false">
 <head>
   <meta charset="UTF-8" />
@@ -1153,6 +1153,128 @@
       background-color: var(--accent);
       border-color: var(--accent);
       color: var(--accent-text);
+    }
+
+    /* DASHBOARD WIDGET CUSTOMIZER & PANELS SYSTEM */
+    .dashboard-panels-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-lg);
+      margin-top: var(--space-lg);
+    }
+    @media (max-width: 900px) {
+      .dashboard-panels-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .widget-toggle-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-card);
+      cursor: pointer;
+      user-select: none;
+      transition: all var(--transition-fast);
+      gap: 12px;
+    }
+    .widget-toggle-card:hover {
+      border-color: var(--accent);
+      background: var(--bg-surface);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+    .widget-toggle-card.is-active {
+      border-color: var(--accent);
+      background: var(--bg-card);
+    }
+    .widget-toggle-card.is-hidden {
+      opacity: 0.55;
+      background: var(--bg-subtle);
+      border-color: var(--border-subtle);
+    }
+    .widget-toggle-card.is-hidden:hover {
+      opacity: 0.85;
+      border-color: var(--text-muted);
+    }
+    .switch-ui {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      background: var(--border);
+      border-radius: 12px;
+      transition: background 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      flex-shrink: 0;
+      pointer-events: none;
+    }
+    .switch-ui::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: #FFFFFF;
+      border-radius: 50%;
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    }
+    .widget-toggle-card.is-active .switch-ui {
+      background: var(--accent);
+    }
+    .widget-toggle-card.is-active .switch-ui::after {
+      transform: translateX(20px);
+    }
+    .widget-reorder-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-btn);
+      padding: 2px 4px;
+      margin-right: 8px;
+    }
+    .widget-reorder-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--text-secondary);
+      padding: 4px 6px;
+      font-size: 11px;
+      border-radius: 4px;
+      line-height: 1;
+      transition: all var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .widget-reorder-btn:hover:not(:disabled) {
+      background: var(--border);
+      color: var(--text-primary);
+    }
+    .widget-reorder-btn:disabled {
+      opacity: 0.25;
+      cursor: not-allowed;
+    }
+    .card-quick-hide-btn {
+      opacity: 0;
+      transition: opacity var(--transition-fast);
+      color: var(--text-muted);
+      padding: 2px 6px;
+      font-size: 12px;
+    }
+    .card-quick-hide-btn:hover {
+      color: var(--danger) !important;
+    }
+    .card:hover .card-quick-hide-btn {
+      opacity: 1;
+    }
+    .widget-toggle-item:hover {
+      border-color: var(--accent) !important;
+      background: var(--bg-subtle) !important;
     }
 
     /* BADGES & CHIPS */
@@ -2438,6 +2560,283 @@
       background: var(--bg-subtle);
       transform: translateX(2px);
     }
+
+    /* ==========================================================================
+       WEBCRAFT GOODS — REUSABLE ABOUT DEVELOPER MODULE STYLES
+       Self-contained, inherits host app CSS variables for theme portability
+       ========================================================================== */
+    .about-dev-container {
+      max-width: 780px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xl);
+    }
+    .about-dev-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: var(--space-2xl) var(--space-xl);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    .about-dev-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-lg);
+      margin-bottom: var(--space-xl);
+    }
+    .about-dev-avatar-wrap {
+      position: relative;
+      width: 92px;
+      height: 92px;
+      flex-shrink: 0;
+      border-radius: 26px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .about-dev-avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+    .about-dev-avatar-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--accent-soft), var(--bg-subtle));
+      color: var(--accent);
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      user-select: none;
+    }
+    .about-dev-info {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+      min-width: 0;
+    }
+    .about-dev-name-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .about-dev-name {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.6px;
+      color: var(--text-primary);
+      margin: 0;
+      line-height: 1.2;
+    }
+    .about-dev-badges {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+    .about-dev-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+    .about-dev-badge-role {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid rgba(180, 138, 60, 0.2);
+    }
+    .about-dev-badge-brand {
+      background: var(--bg-surface);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+    .about-dev-bio {
+      font-size: 14.5px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      margin: 0 0 var(--space-xl) 0;
+      max-width: 680px;
+    }
+    .about-dev-brand-card {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-md) var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      margin-bottom: var(--space-2xl);
+    }
+    .about-dev-brand-logo-wrap {
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+      border-radius: 12px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .about-dev-brand-logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: none;
+    }
+    .about-dev-brand-logo-fallback {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -0.5px;
+    }
+    .about-dev-brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+      min-width: 0;
+    }
+    .about-dev-brand-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .about-dev-brand-desc {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin: 0;
+    }
+    .about-dev-actions-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin-bottom: var(--space-sm);
+      display: block;
+    }
+    .about-dev-actions-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .about-dev-action-card {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 16px;
+      border-radius: var(--radius-md);
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      text-decoration: none;
+      color: var(--text-primary);
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                  border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                  box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                  background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      position: relative;
+    }
+    .about-dev-action-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+      box-shadow: var(--shadow-md);
+      background: var(--bg-hover);
+    }
+    .about-dev-action-card:focus-visible {
+      outline: 2px solid var(--border-focus);
+      outline-offset: 2px;
+    }
+    .about-dev-action-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .about-dev-action-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+    .about-dev-action-card:hover .about-dev-action-icon {
+      background: var(--accent);
+      color: var(--accent-text);
+    }
+    .about-dev-action-arrow {
+      color: var(--text-muted);
+      transition: transform 0.2s ease, color 0.2s ease;
+    }
+    .about-dev-action-card:hover .about-dev-action-arrow {
+      transform: translate(2px, -2px);
+      color: var(--accent);
+    }
+    .about-dev-action-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+    .about-dev-action-sub {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    @media (max-width: 768px) {
+      .about-dev-actions-grid {
+        grid-template-columns: 1fr;
+      }
+      .about-dev-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .about-dev-badges {
+        justify-content: center;
+      }
+      .about-dev-bio {
+        text-align: left;
+      }
+      .about-dev-brand-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+    }
   </style>
 </head>
 
@@ -2667,6 +3066,10 @@
             <span class="nav-item-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
             <span class="nav-item-label">About Planner</span>
           </a>
+          <a class="nav-item" data-view="about-developer" onclick="navigateTo('about-developer')">
+            <span class="nav-item-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+            <span class="nav-item-label">About Developer</span>
+          </a>
         </div>
       </nav>
 
@@ -2757,15 +3160,18 @@
           </div>
 
           <!-- QUICK ACTIONS STRIP -->
-          <div class="card" style="margin-bottom: var(--space-lg); padding: 14px 20px;">
+          <div class="card" id="widget-quick-capture" style="margin-bottom: var(--space-lg); padding: 14px 20px;">
             <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
               <span style="font-size: 13.5px; font-weight: 700; color: var(--text-secondary);">Quick Capture:</span>
-              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
                 <button class="btn btn-secondary btn-sm" onclick="openQuickAddModal('task')">+ Add Task</button>
                 <button class="btn btn-secondary btn-sm" onclick="openQuickAddModal('braindump')">💡 Brain Dump</button>
                 <button class="btn btn-secondary btn-sm" onclick="navigateTo('focus')">⏱️ Start Focus</button>
                 <button class="btn btn-secondary btn-sm" onclick="navigateTo('mood')">✨ Log Mood</button>
                 <button class="btn btn-secondary btn-sm" onclick="quickAddWater(250)">💧 +250ml Water</button>
+                <button class="btn btn-ghost btn-xs btn-icon-only card-quick-hide-btn" title="Hide Quick Capture" onclick="quickHideWidget('quickCapture')">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
               </div>
             </div>
           </div>
@@ -2818,8 +3224,8 @@
             </div>
           </div>
 
-          <!-- DASHBOARD TWO-COLUMN PANELS -->
-          <div class="grid-2">
+          <!-- DASHBOARD INTERACTIVE CONTENT PANELS -->
+          <div class="dashboard-panels-grid" id="dashboardPanelsContainer">
             <!-- LEFT: TOP 3 PRIORITIES & TODAY TASKS -->
             <div class="card" id="widget-top3">
               <div class="card-header">
@@ -2827,7 +3233,12 @@
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                   Today's Top 3 Priorities
                 </h2>
-                <button class="btn btn-ghost btn-sm" onclick="navigateTo('today')">View Today &rarr;</button>
+                <div style="display: flex; align-items: center; gap: 4px;">
+                  <button class="btn btn-ghost btn-xs btn-icon-only card-quick-hide-btn" title="Hide this widget from dashboard" onclick="quickHideWidget('top3')">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </button>
+                  <button class="btn btn-ghost btn-sm" onclick="navigateTo('today')">View Today &rarr;</button>
+                </div>
               </div>
               <p style="font-size: 13px; color: var(--text-muted); margin-bottom: var(--space-md);">Your essential core actions for maximum clarity and zero overwhelm.</p>
               <div id="dashboardTop3Container">
@@ -2842,36 +3253,50 @@
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                   Upcoming Schedule & Blocks
                 </h2>
-                <button class="btn btn-ghost btn-sm" onclick="navigateTo('timeblocking')">Manage &rarr;</button>
+                <div style="display: flex; align-items: center; gap: 4px;">
+                  <button class="btn btn-ghost btn-xs btn-icon-only card-quick-hide-btn" title="Hide this widget from dashboard" onclick="quickHideWidget('schedule')">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </button>
+                  <button class="btn btn-ghost btn-sm" onclick="navigateTo('timeblocking')">Manage &rarr;</button>
+                </div>
               </div>
               <div id="dashboardScheduleContainer">
                 <!-- Injected via JS -->
               </div>
             </div>
-          </div>
 
-          <!-- BOTTOM SECTION: HABITS QUICK TRACK & GOAL PROGRESS -->
-          <div class="grid-2" style="margin-top: var(--space-lg);">
+            <!-- BOTTOM LEFT: HABITS QUICK TRACK -->
             <div class="card" id="widget-habits-summary">
               <div class="card-header">
                 <h2 class="card-title">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83"/></svg>
                   Daily Habits Momentum
                 </h2>
-                <button class="btn btn-ghost btn-sm" onclick="navigateTo('habits')">All Habits &rarr;</button>
+                <div style="display: flex; align-items: center; gap: 4px;">
+                  <button class="btn btn-ghost btn-xs btn-icon-only card-quick-hide-btn" title="Hide this widget from dashboard" onclick="quickHideWidget('habits')">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </button>
+                  <button class="btn btn-ghost btn-sm" onclick="navigateTo('habits')">All Habits &rarr;</button>
+                </div>
               </div>
               <div id="dashboardHabitsContainer">
                 <!-- Injected via JS -->
               </div>
             </div>
 
+            <!-- BOTTOM RIGHT: GOALS PROGRESS -->
             <div class="card" id="widget-goals-summary">
               <div class="card-header">
                 <h2 class="card-title">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="12 8 8 12 12 16 16 12 12 8"/></svg>
                   Active Projects & Goals
                 </h2>
-                <button class="btn btn-ghost btn-sm" onclick="navigateTo('goals')">View Goals &rarr;</button>
+                <div style="display: flex; align-items: center; gap: 4px;">
+                  <button class="btn btn-ghost btn-xs btn-icon-only card-quick-hide-btn" title="Hide this widget from dashboard" onclick="quickHideWidget('goals')">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </button>
+                  <button class="btn btn-ghost btn-sm" onclick="navigateTo('goals')">View Goals &rarr;</button>
+                </div>
               </div>
               <div id="dashboardGoalsContainer">
                 <!-- Injected via JS -->
@@ -2914,6 +3339,31 @@
               <span style="font-size: 12px; color: var(--text-muted);">Lock in your 3 essential tasks</span>
             </div>
             <div id="todayTop3SlotsContainer" style="display: flex; flex-direction: column; gap: 8px;">
+              <!-- Injected via JS -->
+            </div>
+          </div>
+
+          <!-- TODAY'S FULL SCHEDULED TASKS -->
+          <div class="card" style="margin-bottom: var(--space-lg);">
+            <div class="card-header" style="flex-wrap: wrap; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <h2 class="card-title">📋 Today's Scheduled Tasks & Actions</h2>
+                <span class="badge badge-info" id="todayAllTasksBadge">0 Tasks</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <div class="tab-group" id="todayTaskFilterTabs">
+                  <button class="tab-btn active" id="todayFilterTab-all" onclick="setTodayTaskFilter('all')">All</button>
+                  <button class="tab-btn" id="todayFilterTab-pending" onclick="setTodayTaskFilter('pending')">To Do</button>
+                  <button class="tab-btn" id="todayFilterTab-completed" onclick="setTodayTaskFilter('completed')">Done</button>
+                  <button class="tab-btn" id="todayFilterTab-overdue" style="display: none; color: var(--danger);" onclick="setTodayTaskFilter('overdue')">⚠️ Overdue (0)</button>
+                </div>
+                <button class="btn btn-primary btn-sm" onclick="openTaskModal({dueDate: selectedTodayDate})">+ Add Task</button>
+              </div>
+            </div>
+            <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: var(--space-md);">
+              All tasks planned for this day, including your priorities, focus sprints, and daily actions.
+            </p>
+            <div id="todayAllTasksListContainer" style="display: flex; flex-direction: column; gap: 8px;">
               <!-- Injected via JS -->
             </div>
           </div>
@@ -4217,6 +4667,20 @@
               <button class="btn btn-primary btn-sm" onclick="exportAllCSV()">Export All CSVs</button>
             </div>
           </div>
+
+          <div class="card" style="margin-top: var(--space-lg); border: 1px solid rgba(185, 28, 28, 0.25); background: rgba(185, 28, 28, 0.02);">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+              <div>
+                <h2 class="card-title" style="color: var(--danger); margin-bottom: 4px;">Delete All Planner Data</h2>
+                <p style="font-size: 13px; color: var(--text-muted); margin: 0; line-height: 1.4;">
+                  Permanently wipe all stored tasks, habits, projects, notes, and records from this browser to start fresh.
+                </p>
+              </div>
+              <button class="btn btn-danger btn-sm" onclick="openResetConfirmModal('empty')">
+                🗑️ Delete All Data (Clean Slate)
+              </button>
+            </div>
+          </div>
         </section>
 
         <section class="view-container" id="view-settings">
@@ -4229,7 +4693,7 @@
           <div class="card" style="max-width: 760px; margin: 0 auto;">
             <div class="form-group">
               <label class="form-label">Your Preferred Display Name</label>
-              <input type="text" id="settingsUserName" class="form-input" value="Alex" onchange="saveSettings()" />
+              <input type="text" id="settingsUserName" class="form-input" placeholder="e.g. Alex or My Space" onchange="saveSettings()" />
             </div>
             <div class="form-row">
               <div class="form-group">
@@ -4280,8 +4744,11 @@
 
             <div style="border-top: 1px solid var(--danger-soft); padding-top: var(--space-md); margin-top: var(--space-lg);">
               <h3 style="color: var(--danger); font-size: 15px; font-weight: 700; margin-bottom: 6px;">Danger Zone</h3>
-              <p style="font-size: 13px; color: var(--text-muted); margin-bottom: var(--space-md);">Permanently reset all saved planner data from this browser.</p>
-              <button class="btn btn-danger btn-sm" onclick="openResetConfirmModal()">Reset All Data</button>
+              <p style="font-size: 13px; color: var(--text-muted); margin-bottom: var(--space-md);">Permanently delete all planner data to start from a 100% blank clean slate, or re-load the starter sample template.</p>
+              <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn btn-danger btn-sm" onclick="openResetConfirmModal('empty')">🗑️ Delete All Data (Clean Slate)</button>
+                <button class="btn btn-secondary btn-sm" onclick="openResetConfirmModal('seed')">🔄 Reset to Sample Template</button>
+              </div>
             </div>
           </div>
         </section>
@@ -4344,6 +4811,111 @@
               <button class="btn btn-secondary btn-sm" onclick="navigateTo('help')">User Guide</button>
               <button class="btn btn-secondary btn-sm" onclick="navigateTo('backup')">Create Backup</button>
               <button class="btn btn-primary btn-sm" onclick="navigateTo('dashboard')">Open Dashboard</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================================================
+             WEBCRAFT GOODS — REUSABLE ABOUT DEVELOPER MODULE SCREEN
+             Can be reused across all Webcraft Goods digital products
+             ========================================================================== -->
+        <section class="view-container" id="view-about-developer">
+          <div class="view-header">
+            <div class="view-title-group">
+              <h1 class="view-title">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent);"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <span>About Developer</span>
+              </h1>
+              <p class="view-subtitle">Meet the creator behind Webcraft Goods and connect via official support and store channels.</p>
+            </div>
+          </div>
+
+          <div class="about-dev-container">
+            <div class="about-dev-card">
+              <!-- Developer Profile Header -->
+              <div class="about-dev-header">
+                <div class="about-dev-avatar-wrap">
+                  <img id="devProfileImg" class="about-dev-avatar-img" src="" alt="Developer Profile" onerror="handleDevAvatarError()" />
+                  <div id="devAvatarFallback" class="about-dev-avatar-fallback">K</div>
+                </div>
+                <div class="about-dev-info">
+                  <div class="about-dev-name-row">
+                    <h2 class="about-dev-name" id="devProfileName">Karim</h2>
+                  </div>
+                  <div class="about-dev-badges">
+                    <span class="about-dev-badge about-dev-badge-role">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                      <span id="devProfileRole">Creator & Developer</span>
+                    </span>
+                    <span class="about-dev-badge about-dev-badge-brand">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                      <span id="devBrandBadge">Webcraft Goods</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Developer Description / Bio -->
+              <p class="about-dev-bio" id="devBioText">
+                Hi, I'm Karim, the creator behind Webcraft Goods. I design premium digital planners, productivity tools, dashboards, trackers, and web-based templates designed to make everyday organization and productivity easier. My goal is to create beautiful, practical, and easy-to-use digital products with modern interfaces, thoughtful features, and a smooth user experience.
+              </p>
+
+              <!-- Webcraft Goods Brand Section -->
+              <div class="about-dev-brand-card">
+                <div class="about-dev-brand-logo-wrap">
+                  <img id="devBrandLogoImg" class="about-dev-brand-logo-img" src="" alt="Webcraft Goods Logo" onerror="handleDevBrandLogoError()" />
+                  <div id="devBrandLogoFallback" class="about-dev-brand-logo-fallback">WG</div>
+                </div>
+                <div class="about-dev-brand-text">
+                  <div class="about-dev-brand-title">
+                    <span id="devBrandName">Webcraft Goods</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent);"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  </div>
+                  <p class="about-dev-brand-desc" id="devBrandDesc">
+                    Premium digital tools designed to simplify planning, productivity, organization, and everyday workflows.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Primary Action Area -->
+              <span class="about-dev-actions-label">Official Channels & Support</span>
+              <div class="about-dev-actions-grid">
+                <!-- Action 1: Contact Support -->
+                <a id="devSupportBtn" href="mailto:webcraftgoods@gmail.com?subject=Webcraft%20Goods%20%E2%80%94%20Product%20Support" class="about-dev-action-card" aria-label="Contact Support via email">
+                  <div class="about-dev-action-top">
+                    <div class="about-dev-action-icon">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </div>
+                    <svg class="about-dev-action-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                  </div>
+                  <span class="about-dev-action-title">Contact Support</span>
+                  <span class="about-dev-action-sub" id="devSupportEmailSub">webcraftgoods@gmail.com</span>
+                </a>
+
+                <!-- Action 2: Follow on Instagram -->
+                <a id="devInstagramBtn" href="https://www.instagram.com/webcraftgoods/" target="_blank" rel="noopener noreferrer" class="about-dev-action-card" aria-label="Follow Webcraft Goods on Instagram">
+                  <div class="about-dev-action-top">
+                    <div class="about-dev-action-icon">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                    </div>
+                    <svg class="about-dev-action-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                  </div>
+                  <span class="about-dev-action-title">Follow on Instagram</span>
+                  <span class="about-dev-action-sub" id="devInstagramSub">@webcraftgoods</span>
+                </a>
+
+                <!-- Action 3: Visit Etsy Store -->
+                <a id="devEtsyBtn" href="https://www.etsy.com/shop/WebCraftGoods" target="_blank" rel="noopener noreferrer" class="about-dev-action-card" aria-label="Visit Webcraft Goods Etsy Store">
+                  <div class="about-dev-action-top">
+                    <div class="about-dev-action-icon">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                    </div>
+                    <svg class="about-dev-action-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                  </div>
+                  <span class="about-dev-action-title">Visit Etsy Store</span>
+                  <span class="about-dev-action-sub" id="devEtsySub">Official Webcraft Goods Store</span>
+                </a>
+              </div>
             </div>
           </div>
         </section>
@@ -4955,6 +5527,153 @@
     </div>
   </div>
 
+  <!-- MODAL: CUSTOMIZE DASHBOARD WIDGETS -->
+  <div class="modal-backdrop" id="modalWidgetCustomizer">
+    <div class="modal-dialog modal-lg" style="max-width: 720px;">
+      <div class="modal-header" style="align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <h3 class="modal-title" style="margin: 0;">🧩 Customize Executive Dashboard</h3>
+          <span id="customizerActiveCountBadge" class="badge badge-primary">10 of 10 Active</span>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('modalWidgetCustomizer')">&times;</button>
+      </div>
+      <div class="modal-body" style="max-height: 72vh; overflow-y: auto; padding: var(--space-lg);">
+        <p style="font-size: 13.5px; color: var(--text-secondary); margin-bottom: var(--space-md); line-height: 1.5;">
+          Tailor your dashboard to eliminate visual clutter and prevent ADHD overwhelm. Toggle components on or off, reorder content panels to prioritize what matters today, or select an instant layout preset.
+        </p>
+
+        <!-- Quick Presets -->
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: var(--space-lg); padding: 12px 14px; background: var(--bg-subtle); border-radius: var(--radius-card); border: 1px solid var(--border); align-items: center;">
+          <span style="font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-right: 4px;">PRESETS:</span>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="applyWidgetPreset('all')">🌟 Show All</button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="applyWidgetPreset('minimal')">🧘 Minimal Calm</button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="applyWidgetPreset('focus')">🎯 Focus & Tasks</button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="applyWidgetPreset('wellness')">🌿 Habits & Wellness</button>
+        </div>
+
+        <!-- Section 1: Quick Actions Strip -->
+        <div style="margin-bottom: var(--space-lg);">
+          <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); margin-bottom: 10px;">
+            Quick Actions & Shortcuts
+          </div>
+          <div class="widget-toggle-card is-active" id="widgetCard-quickCapture" onclick="toggleDashboardWidget('quickCapture')">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span style="font-size: 22px;">⚡</span>
+              <div>
+                <div style="font-weight: 700; font-size: 14px;">Quick Capture Strip</div>
+                <div style="font-size: 12px; color: var(--text-muted);">Quick-add task, brain dump, focus timer, mood log & water shortcuts</div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="badge badge-success" id="widgetBadge-quickCapture">Visible</span>
+              <div class="switch-ui" id="widgetSwitch-quickCapture"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: KPI Metric Stat Cards -->
+        <div style="margin-bottom: var(--space-lg);">
+          <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); margin-bottom: 10px;">
+            KPI Metric Stat Cards (Top Strip)
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px;">
+            <!-- KPI Tasks -->
+            <div class="widget-toggle-card is-active" id="widgetCard-kpiTasks" onclick="toggleDashboardWidget('kpiTasks')">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 20px;">📋</span>
+                <div>
+                  <div style="font-weight: 700; font-size: 13.5px;">Tasks Today KPI</div>
+                  <div style="font-size: 12px; color: var(--text-muted);">Completed vs pending count & overdue alert</div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="badge badge-success" id="widgetBadge-kpiTasks">Visible</span>
+                <div class="switch-ui" id="widgetSwitch-kpiTasks"></div>
+              </div>
+            </div>
+
+            <!-- KPI Focus -->
+            <div class="widget-toggle-card is-active" id="widgetCard-kpiFocus" onclick="toggleDashboardWidget('kpiFocus')">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 20px;">⏱️</span>
+                <div>
+                  <div style="font-weight: 700; font-size: 13.5px;">Focus Minutes KPI</div>
+                  <div style="font-size: 12px; color: var(--text-muted);">Sprint minutes logged today vs daily target</div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="badge badge-success" id="widgetBadge-kpiFocus">Visible</span>
+                <div class="switch-ui" id="widgetSwitch-kpiFocus"></div>
+              </div>
+            </div>
+
+            <!-- KPI Habits -->
+            <div class="widget-toggle-card is-active" id="widgetCard-kpiHabits" onclick="toggleDashboardWidget('kpiHabits')">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 20px;">✨</span>
+                <div>
+                  <div style="font-weight: 700; font-size: 13.5px;">Habits Done KPI</div>
+                  <div style="font-size: 12px; color: var(--text-muted);">Habit completion percentage & streak count</div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="badge badge-success" id="widgetBadge-kpiHabits">Visible</span>
+                <div class="switch-ui" id="widgetSwitch-kpiHabits"></div>
+              </div>
+            </div>
+
+            <!-- KPI Water -->
+            <div class="widget-toggle-card is-active" id="widgetCard-kpiWater" onclick="toggleDashboardWidget('kpiWater')">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 20px;">💧</span>
+                <div>
+                  <div style="font-weight: 700; font-size: 13.5px;">Water Hydration KPI</div>
+                  <div style="font-size: 12px; color: var(--text-muted);">Current intake progress towards daily goal</div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="badge badge-success" id="widgetBadge-kpiWater">Visible</span>
+                <div class="switch-ui" id="widgetSwitch-kpiWater"></div>
+              </div>
+            </div>
+
+            <!-- KPI Mood -->
+            <div class="widget-toggle-card is-active" id="widgetCard-kpiMood" onclick="toggleDashboardWidget('kpiMood')">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 20px;">😊</span>
+                <div>
+                  <div style="font-weight: 700; font-size: 13.5px;">Mood & Energy KPI</div>
+                  <div style="font-size: 12px; color: var(--text-muted);">Emotional state score & physical energy gauge</div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="badge badge-success" id="widgetBadge-kpiMood">Visible</span>
+                <div class="switch-ui" id="widgetSwitch-kpiMood"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3: Interactive Dashboard Panels & Layout Order -->
+        <div>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+            <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted);">
+              Content Panels (Reorderable)
+            </div>
+            <span style="font-size: 11.5px; color: var(--text-muted);">Use ▲ / ▼ to rearrange panel order on dashboard</span>
+          </div>
+          <div id="customizerPanelsList" style="display: flex; flex-direction: column; gap: 8px;">
+            <!-- Dynamically rendered / updated via updateCustomizerModalUI() -->
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content: space-between;">
+        <button type="button" class="btn btn-secondary" onclick="applyWidgetPreset('all')">Reset to Default</button>
+        <button type="button" class="btn btn-primary" onclick="closeModal('modalWidgetCustomizer'); showToast('Dashboard layout saved!', 'success');">Done</button>
+      </div>
+    </div>
+  </div>
+
   <!-- FLOATING INTERACTIVE CHART TOOLTIP -->
   <div id="analyticsChartTooltip" class="chart-tooltip"></div>
 
@@ -4984,6 +5703,108 @@
     }
 
     const TODAY_STR = getLocalDateString();
+
+    // Clean Slate / Empty Data Template (Zero tasks, clean profile, blank lists)
+    function getEmptyData() {
+      return {
+        version: SCHEMA_VERSION,
+        profile: {
+          name: "My Space",
+          avatar: "M",
+          xp: 0,
+          level: 1,
+          levelName: "Fresh Start"
+        },
+        settings: {
+          theme: "ivory-gold",
+          mode: "light",
+          fontSize: "comfortable",
+          density: "comfortable",
+          radius: "smooth",
+          reducedMotion: false,
+          weekStart: "monday",
+          defaultFocusTime: 25,
+          dailyFocusGoal: 60,
+          dailyWaterGoal: 2500,
+          gamification: true,
+          soundEnabled: true
+        },
+        todayPlanner: {
+          date: TODAY_STR,
+          mainIntention: "",
+          notes: ""
+        },
+        dashboardWidgets: {
+          quickCapture: true,
+          top3: true,
+          schedule: true,
+          habits: true,
+          goals: true,
+          kpiTasks: true,
+          kpiFocus: true,
+          kpiHabits: true,
+          kpiWater: true,
+          kpiMood: true,
+          panelOrder: ['top3', 'schedule', 'habits', 'goals']
+        },
+        tasks: [],
+        timeBlocks: [],
+        brainDump: [],
+        distractions: [],
+        focusSessions: [],
+        habits: [],
+        routines: [],
+        selfCare: {},
+        selfCareItems: [
+          { key: "water", label: "Hydration (Drink water regularly)", category: "Physical", icon: "💧" },
+          { key: "sleep", label: "Adequate Restful Sleep (7+ hrs)", category: "Rest", icon: "💤" },
+          { key: "meals", label: "Balanced Nutritious Meals", category: "Physical", icon: "🥗" },
+          { key: "meds", label: "Prescribed ADHD Medication / Supplements", category: "Physical", icon: "💊" },
+          { key: "vitamins", label: "Morning Vitamins & Minerals", category: "Physical", icon: "☀️" },
+          { key: "movement", label: "Gentle Body Movement / Stretching", category: "Physical", icon: "🚶" },
+          { key: "outdoors", label: "Sunlight & Fresh Air Exposure", category: "Sensory", icon: "🌿" },
+          { key: "relaxation", label: "Unstructured Rest / Nervous System Reset", category: "Rest", icon: "🧘" },
+          { key: "screenbreak", label: "Screen Break & Sensory Low-Stim", category: "Sensory", icon: "📵" },
+          { key: "social", label: "Warm Social Connection / Check-in", category: "Social", icon: "💬" }
+        ],
+        sleepLogs: {},
+        moodLogs: {},
+        waterLogs: {},
+        waterEntries: [],
+        movementLogs: [],
+        meals: {},
+        projects: [],
+        goals: [],
+        lifeAreas: [
+          { id: "la-work", name: "Career & Work", score: 5 },
+          { id: "la-health", name: "Physical Health", score: 5 },
+          { id: "la-mind", name: "Mental Wellbeing", score: 5 },
+          { id: "la-finance", name: "Financial Security", score: 5 },
+          { id: "la-relationships", name: "Relationships & Love", score: 5 },
+          { id: "la-home", name: "Home Environment", score: 5 },
+          { id: "la-growth", name: "Personal Growth", score: 5 },
+          { id: "la-fun", name: "Play & Creativity", score: 5 }
+        ],
+        notes: [],
+        finance: {
+          monthlyBudget: 0,
+          expenses: []
+        },
+        shopping: [],
+        waitingFor: [],
+        someday: [],
+        decisionHelper: {
+          question: "",
+          options: []
+        },
+        rewardsShop: [],
+        reviews: {
+          daily: {},
+          weekly: {},
+          monthly: {}
+        }
+      };
+    }
 
     // Default Seed Data
     function getDefaultData() {
@@ -5016,6 +5837,7 @@
           notes: "Focus on single-tasking before noon. Drink water every hour."
         },
         dashboardWidgets: {
+          quickCapture: true,
           top3: true,
           schedule: true,
           habits: true,
@@ -5024,7 +5846,8 @@
           kpiFocus: true,
           kpiHabits: true,
           kpiWater: true,
-          kpiMood: true
+          kpiMood: true,
+          panelOrder: ['top3', 'schedule', 'habits', 'goals']
         },
         tasks: [
           {
@@ -6193,9 +7016,29 @@
         if (saved) {
           const parsed = JSON.parse(saved);
           if (parsed && typeof parsed === 'object') {
-            appData = Object.assign(getDefaultData(), parsed);
+            appData = Object.assign(getEmptyData(), parsed);
             if (!appData.selfCareItems || !Array.isArray(appData.selfCareItems) || appData.selfCareItems.length === 0) {
-              appData.selfCareItems = getDefaultData().selfCareItems;
+              appData.selfCareItems = getEmptyData().selfCareItems;
+            }
+            if (!appData.lifeAreas || !Array.isArray(appData.lifeAreas) || appData.lifeAreas.length === 0) {
+              appData.lifeAreas = getEmptyData().lifeAreas;
+            }
+            if (!appData.dashboardWidgets || typeof appData.dashboardWidgets !== 'object') {
+              appData.dashboardWidgets = getEmptyData().dashboardWidgets;
+            } else {
+              appData.dashboardWidgets = Object.assign(getEmptyData().dashboardWidgets, appData.dashboardWidgets);
+              if (typeof appData.dashboardWidgets.quickCapture !== 'boolean') {
+                appData.dashboardWidgets.quickCapture = true;
+              }
+              if (!Array.isArray(appData.dashboardWidgets.panelOrder) || appData.dashboardWidgets.panelOrder.length === 0) {
+                appData.dashboardWidgets.panelOrder = ['top3', 'schedule', 'habits', 'goals'];
+              } else {
+                ['top3', 'schedule', 'habits', 'goals'].forEach(p => {
+                  if (!appData.dashboardWidgets.panelOrder.includes(p)) {
+                    appData.dashboardWidgets.panelOrder.push(p);
+                  }
+                });
+              }
             }
             return;
           }
@@ -6423,6 +7266,7 @@
         case 'rewards': renderRewardsView(); break;
         case 'themes': renderThemesView(); break;
         case 'settings': renderSettingsView(); break;
+        case 'about-developer': renderAboutDeveloper(); break;
       }
     }
 
@@ -6558,10 +7402,15 @@
       document.getElementById('kpiWaterTarget').textContent = `Target: ${appData.settings.dailyWaterGoal} ml`;
 
       // Mood & Energy KPI
-      const moodToday = appData.moodLogs[today];
+      const moodToday = appData.moodLogs && appData.moodLogs[today];
+      const moodScoreEl = document.getElementById('kpiMoodScore');
+      const energyScoreEl = document.getElementById('kpiEnergyScore');
       if (moodToday) {
-        document.getElementById('kpiMoodScore').textContent = `${moodToday.mood || 4}.0 / 5`;
-        document.getElementById('kpiEnergyScore').textContent = `Energy: ${moodToday.energy || 3}.5 / 5`;
+        if (moodScoreEl) moodScoreEl.textContent = `${moodToday.mood || 4}.0 / 5`;
+        if (energyScoreEl) energyScoreEl.textContent = `Energy: ${moodToday.energy || 3}.5 / 5`;
+      } else {
+        if (moodScoreEl) moodScoreEl.textContent = `-- / 5`;
+        if (energyScoreEl) energyScoreEl.textContent = `Energy: -- / 5`;
       }
 
       // Sidebar badges
@@ -6585,6 +7434,9 @@
 
       // Goals summary
       renderDashboardGoals();
+
+      // Apply dashboard widget customization
+      applyDashboardWidgetsVisibility();
     }
 
     function renderDashboardTop3() {
@@ -6637,6 +7489,15 @@
       const container = document.getElementById('dashboardHabitsContainer');
       if (!container) return;
       const today = TODAY_STR;
+      if (!appData.habits || appData.habits.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state" style="padding: 20px;">
+            <p class="empty-state-desc">No daily habits tracked yet.</p>
+            <button class="btn btn-secondary btn-sm" onclick="navigateTo('habits')">+ Add Habit</button>
+          </div>
+        `;
+        return;
+      }
       container.innerHTML = appData.habits.slice(0, 4).map(h => {
         const isDone = !!(h.history && h.history[today]);
         return `
@@ -6659,6 +7520,15 @@
     function renderDashboardGoals() {
       const container = document.getElementById('dashboardGoalsContainer');
       if (!container) return;
+      if (!appData.projects || appData.projects.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state" style="padding: 20px;">
+            <p class="empty-state-desc">No active projects or goals yet.</p>
+            <button class="btn btn-secondary btn-sm" onclick="navigateTo('projects')">+ Create Project</button>
+          </div>
+        `;
+        return;
+      }
       container.innerHTML = appData.projects.slice(0, 3).map(p => `
         <div style="margin-bottom: 14px;">
           <div style="display: flex; justify-content: space-between; font-size: 13.5px; font-weight: 600; margin-bottom: 4px;">
@@ -6670,8 +7540,308 @@
       `).join('');
     }
 
+    // DASHBOARD WIDGET CUSTOMIZER ENGINE
+    const DASHBOARD_PANEL_META = {
+      top3: {
+        title: "Today's Top 3 Priorities",
+        icon: "⭐",
+        desc: "Essential core actions for maximum clarity and zero overwhelm"
+      },
+      schedule: {
+        title: "Upcoming Schedule & Blocks",
+        icon: "📅",
+        desc: "Timeline of active time blocks and scheduled focus events"
+      },
+      habits: {
+        title: "Daily Habits Momentum",
+        icon: "✨",
+        desc: "One-click habit check-in list with streak counters"
+      },
+      goals: {
+        title: "Active Projects & Goals",
+        icon: "🎯",
+        desc: "Dynamic progress tracks for active high-level projects"
+      }
+    };
+
+    function ensureDashboardWidgetsConfig() {
+      if (!appData) return null;
+      if (!appData.dashboardWidgets || typeof appData.dashboardWidgets !== 'object') {
+        appData.dashboardWidgets = getDefaultData().dashboardWidgets;
+      }
+      const w = appData.dashboardWidgets;
+      if (typeof w.quickCapture !== 'boolean') w.quickCapture = true;
+      if (typeof w.top3 !== 'boolean') w.top3 = true;
+      if (typeof w.schedule !== 'boolean') w.schedule = true;
+      if (typeof w.habits !== 'boolean') w.habits = true;
+      if (typeof w.goals !== 'boolean') w.goals = true;
+      if (typeof w.kpiTasks !== 'boolean') w.kpiTasks = true;
+      if (typeof w.kpiFocus !== 'boolean') w.kpiFocus = true;
+      if (typeof w.kpiHabits !== 'boolean') w.kpiHabits = true;
+      if (typeof w.kpiWater !== 'boolean') w.kpiWater = true;
+      if (typeof w.kpiMood !== 'boolean') w.kpiMood = true;
+      if (!Array.isArray(w.panelOrder) || w.panelOrder.length === 0) {
+        w.panelOrder = ['top3', 'schedule', 'habits', 'goals'];
+      } else {
+        ['top3', 'schedule', 'habits', 'goals'].forEach(p => {
+          if (!w.panelOrder.includes(p)) w.panelOrder.push(p);
+        });
+      }
+      return w;
+    }
+
+    function applyDashboardWidgetsVisibility() {
+      const w = ensureDashboardWidgetsConfig();
+      if (!w) return;
+
+      // 1. Quick Capture Strip
+      const qcEl = document.getElementById('widget-quick-capture');
+      if (qcEl) {
+        qcEl.style.display = (w.quickCapture !== false) ? '' : 'none';
+      }
+
+      // 2. KPI Stat Cards
+      const kpiMap = {
+        kpiTasks: 'widget-tasks-kpi',
+        kpiFocus: 'widget-focus-kpi',
+        kpiHabits: 'widget-habits-kpi',
+        kpiWater: 'widget-water-kpi',
+        kpiMood: 'widget-mood-kpi'
+      };
+
+      let anyKpiVisible = false;
+      for (const [key, elId] of Object.entries(kpiMap)) {
+        const el = document.getElementById(elId);
+        if (el) {
+          const isVis = (w[key] !== false);
+          el.style.display = isVis ? '' : 'none';
+          if (isVis) anyKpiVisible = true;
+        }
+      }
+      const kpiGrid = document.getElementById('dashboardKpiGrid');
+      if (kpiGrid) {
+        kpiGrid.style.display = anyKpiVisible ? '' : 'none';
+      }
+
+      // 3. Interactive Content Panels & Order
+      const panelElMap = {
+        top3: 'widget-top3',
+        schedule: 'widget-schedule',
+        habits: 'widget-habits-summary',
+        goals: 'widget-goals-summary'
+      };
+
+      const visiblePanels = [];
+      w.panelOrder.forEach((key, idx) => {
+        const elId = panelElMap[key];
+        const el = elId ? document.getElementById(elId) : null;
+        if (el) {
+          const isVis = (w[key] !== false);
+          el.style.order = (idx + 1).toString();
+          el.style.display = isVis ? '' : 'none';
+          el.style.gridColumn = '';
+          if (isVis) visiblePanels.push(el);
+        }
+      });
+
+      // Responsive span adjustment: if exactly 1 panel visible, expand full width.
+      // If 3 panels visible, expand the 3rd panel full width for symmetry.
+      if (visiblePanels.length === 1) {
+        visiblePanels[0].style.gridColumn = '1 / -1';
+      } else if (visiblePanels.length === 3) {
+        visiblePanels[2].style.gridColumn = '1 / -1';
+      }
+
+      const panelsContainer = document.getElementById('dashboardPanelsContainer');
+      if (panelsContainer) {
+        panelsContainer.style.display = (visiblePanels.length === 0) ? 'none' : '';
+      }
+
+      // 4. Zen Mode Notice when all 4 panels are hidden
+      let emptyNotice = document.getElementById('dashboardAllWidgetsHiddenNotice');
+      if (visiblePanels.length === 0) {
+        if (!emptyNotice) {
+          emptyNotice = document.createElement('div');
+          emptyNotice.id = 'dashboardAllWidgetsHiddenNotice';
+          emptyNotice.className = 'card empty-state';
+          emptyNotice.style.cssText = 'padding: 40px 20px; text-align: center; margin-top: var(--space-lg);';
+          emptyNotice.innerHTML = `
+            <div class="empty-state-icon" style="font-size: 36px; margin-bottom: 12px;">🧘</div>
+            <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 6px;">Zen Mode: All Dashboard Panels Hidden</h3>
+            <p style="font-size: 13.5px; color: var(--text-secondary); max-width: 460px; margin: 0 auto 16px auto;">
+              You have hidden all dashboard content panels for minimal cognitive load. You can re-enable your favorite panels or presets at any time.
+            </p>
+            <button class="btn btn-primary btn-sm" onclick="openWidgetCustomizerModal()">🧩 Customize Widgets</button>
+          `;
+          const dashSection = document.getElementById('view-dashboard');
+          if (dashSection) dashSection.appendChild(emptyNotice);
+        } else {
+          emptyNotice.style.display = '';
+        }
+      } else {
+        if (emptyNotice) emptyNotice.style.display = 'none';
+      }
+    }
+
+    function updateCustomizerModalUI() {
+      const w = ensureDashboardWidgetsConfig();
+      if (!w) return;
+
+      // 1. Calculate active total count
+      const allKeys = ['quickCapture', 'kpiTasks', 'kpiFocus', 'kpiHabits', 'kpiWater', 'kpiMood', 'top3', 'schedule', 'habits', 'goals'];
+      const activeCount = allKeys.reduce((acc, k) => acc + (w[k] !== false ? 1 : 0), 0);
+      const countBadge = document.getElementById('customizerActiveCountBadge');
+      if (countBadge) {
+        countBadge.textContent = `${activeCount} of 10 Active`;
+      }
+
+      // 2. Quick capture card state
+      const qcCard = document.getElementById('widgetCard-quickCapture');
+      const qcBadge = document.getElementById('widgetBadge-quickCapture');
+      const qcVis = (w.quickCapture !== false);
+      if (qcCard) {
+        qcCard.className = `widget-toggle-card ${qcVis ? 'is-active' : 'is-hidden'}`;
+      }
+      if (qcBadge) {
+        qcBadge.textContent = qcVis ? 'Visible' : 'Hidden';
+        qcBadge.className = `badge ${qcVis ? 'badge-success' : 'badge-secondary'}`;
+      }
+
+      // 3. KPI cards state
+      const kpis = ['kpiTasks', 'kpiFocus', 'kpiHabits', 'kpiWater', 'kpiMood'];
+      kpis.forEach(k => {
+        const card = document.getElementById(`widgetCard-${k}`);
+        const badge = document.getElementById(`widgetBadge-${k}`);
+        const isVis = (w[k] !== false);
+        if (card) {
+          card.className = `widget-toggle-card ${isVis ? 'is-active' : 'is-hidden'}`;
+        }
+        if (badge) {
+          badge.textContent = isVis ? 'Visible' : 'Hidden';
+          badge.className = `badge ${isVis ? 'badge-success' : 'badge-secondary'}`;
+        }
+      });
+
+      // 4. Reorderable Content Panels List
+      const panelsList = document.getElementById('customizerPanelsList');
+      if (panelsList) {
+        panelsList.innerHTML = w.panelOrder.map((key, idx) => {
+          const meta = DASHBOARD_PANEL_META[key] || { title: key, icon: "📋", desc: "" };
+          const isVis = (w[key] !== false);
+          return `
+            <div class="widget-toggle-card ${isVis ? 'is-active' : 'is-hidden'}" id="widgetCard-${key}" onclick="toggleDashboardWidget('${key}')">
+              <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;">
+                <span style="font-size: 20px;">${meta.icon}</span>
+                <div style="flex: 1; min-width: 0;">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-weight: 700; font-size: 13.5px;">${meta.title}</span>
+                    <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Position #${idx + 1}</span>
+                  </div>
+                  <div style="font-size: 12px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${meta.desc}</div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;" onclick="event.stopPropagation()">
+                <div class="widget-reorder-group" title="Reorder panel position">
+                  <button type="button" class="widget-reorder-btn" title="Move Up" ${idx === 0 ? 'disabled' : ''} onclick="moveDashboardPanel('${key}', -1)">▲</button>
+                  <button type="button" class="widget-reorder-btn" title="Move Down" ${idx === w.panelOrder.length - 1 ? 'disabled' : ''} onclick="moveDashboardPanel('${key}', 1)">▼</button>
+                </div>
+                <span class="badge ${isVis ? 'badge-success' : 'badge-secondary'}" id="widgetBadge-${key}">${isVis ? 'Visible' : 'Hidden'}</span>
+                <div class="switch-ui" onclick="toggleDashboardWidget('${key}')" style="cursor: pointer; pointer-events: auto;"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    function openWidgetCustomizerModal() {
+      updateCustomizerModalUI();
+      openModal('modalWidgetCustomizer');
+    }
+
+    function toggleDashboardWidget(key, forcedVal) {
+      const w = ensureDashboardWidgetsConfig();
+      if (!w) return;
+
+      if (typeof forcedVal === 'boolean') {
+        w[key] = forcedVal;
+      } else {
+        w[key] = !(w[key] !== false);
+      }
+
+      saveData();
+      applyDashboardWidgetsVisibility();
+      updateCustomizerModalUI();
+    }
+
+    function moveDashboardPanel(key, dir) {
+      const w = ensureDashboardWidgetsConfig();
+      if (!w) return;
+
+      const idx = w.panelOrder.indexOf(key);
+      if (idx === -1) return;
+      const targetIdx = idx + dir;
+      if (targetIdx < 0 || targetIdx >= w.panelOrder.length) return;
+
+      const item = w.panelOrder.splice(idx, 1)[0];
+      w.panelOrder.splice(targetIdx, 0, item);
+
+      saveData();
+      applyDashboardWidgetsVisibility();
+      updateCustomizerModalUI();
+    }
+
+    function quickHideWidget(key) {
+      const w = ensureDashboardWidgetsConfig();
+      if (!w) return;
+
+      w[key] = false;
+      saveData();
+      applyDashboardWidgetsVisibility();
+      updateCustomizerModalUI();
+      showToast("Widget hidden from dashboard. Re-enable in Customize Widgets.", "info");
+    }
+
+    function applyWidgetPreset(preset) {
+      const w = ensureDashboardWidgetsConfig();
+      if (!w) return;
+
+      if (preset === 'all') {
+        w.quickCapture = true;
+        w.kpiTasks = true; w.kpiFocus = true; w.kpiHabits = true; w.kpiWater = true; w.kpiMood = true;
+        w.top3 = true; w.schedule = true; w.habits = true; w.goals = true;
+        w.panelOrder = ['top3', 'schedule', 'habits', 'goals'];
+        showToast("🌟 All widgets enabled", "info");
+      } else if (preset === 'minimal') {
+        w.quickCapture = false;
+        w.kpiTasks = true; w.kpiFocus = false; w.kpiHabits = false; w.kpiWater = false; w.kpiMood = false;
+        w.top3 = true; w.schedule = false; w.habits = false; w.goals = false;
+        showToast("🧘 Minimalist calm preset enabled", "info");
+      } else if (preset === 'focus') {
+        w.quickCapture = true;
+        w.kpiTasks = true; w.kpiFocus = true; w.kpiHabits = false; w.kpiWater = false; w.kpiMood = false;
+        w.top3 = true; w.schedule = true; w.habits = false; w.goals = false;
+        showToast("🎯 Focus & Tasks preset enabled", "info");
+      } else if (preset === 'wellness') {
+        w.quickCapture = true;
+        w.kpiTasks = false; w.kpiFocus = false; w.kpiHabits = true; w.kpiWater = true; w.kpiMood = true;
+        w.top3 = true; w.schedule = false; w.habits = true; w.goals = false;
+        showToast("🌿 Habits & Wellness preset enabled", "info");
+      }
+
+      saveData();
+      applyDashboardWidgetsVisibility();
+      updateCustomizerModalUI();
+    }
+
     // 2. TODAY PLANNER ENGINE
     let selectedTodayDate = TODAY_STR;
+    let currentTodayTaskFilter = 'all';
+
+    function setTodayTaskFilter(filter) {
+      currentTodayTaskFilter = filter;
+      renderTodayView();
+    }
 
     function renderTodayView() {
       if (!appData) return;
@@ -6686,9 +7856,16 @@
       const notes = (d === TODAY_STR && appData.todayPlanner.notes) ? appData.todayPlanner.notes : (appData.todayPlanner[d]?.notes || "");
       document.getElementById('todayDailyNotesInput').value = notes;
 
+      // 1. All tasks for this specific date (or created on date if no explicit dueDate)
+      const dateTasks = appData.tasks.filter(t => t.dueDate === d || (!t.dueDate && t.createdAt === d));
+
+      // 2. Overdue tasks (tasks with past dueDate that are incomplete, active when viewing Today)
+      const overdueTasks = (d === TODAY_STR)
+        ? appData.tasks.filter(t => t.dueDate && t.dueDate < d && t.status !== 'Completed')
+        : [];
+
       // Top 3 Priorities
       const top3Container = document.getElementById('todayTop3SlotsContainer');
-      const dateTasks = appData.tasks.filter(t => t.dueDate === d);
       const top3 = dateTasks.filter(t => t.isTop3);
 
       if (top3.length === 0) {
@@ -6704,11 +7881,98 @@
 
       // Quick Wins (<15 mins)
       const quickContainer = document.getElementById('todayQuickWinsContainer');
-      const quickTasks = dateTasks.filter(t => !t.isTop3 && (t.duration <= 15 || t.energy === 'Very Low'));
+      const quickTasks = dateTasks.filter(t => (t.duration <= 15 || t.energy === 'Very Low'));
       if (quickTasks.length === 0) {
         quickContainer.innerHTML = `<div class="empty-state" style="padding: 16px;"><p class="empty-state-desc">No quick wins scheduled.</p></div>`;
       } else {
         quickContainer.innerHTML = quickTasks.map(t => renderTaskItemHtml(t)).join('');
+      }
+
+      // 3. Today's Full Scheduled Tasks List Container
+      const allTasksContainer = document.getElementById('todayAllTasksListContainer');
+      const allTasksBadge = document.getElementById('todayAllTasksBadge');
+      const overdueTab = document.getElementById('todayFilterTab-overdue');
+
+      // Update Overdue Tab in header
+      if (overdueTab) {
+        if (d === TODAY_STR && overdueTasks.length > 0) {
+          overdueTab.style.display = 'inline-block';
+          overdueTab.textContent = `⚠️ Overdue (${overdueTasks.length})`;
+        } else {
+          overdueTab.style.display = 'none';
+          if (currentTodayTaskFilter === 'overdue') {
+            currentTodayTaskFilter = 'all';
+          }
+        }
+      }
+
+      // Update Filter Tabs active state
+      ['all', 'pending', 'completed', 'overdue'].forEach(f => {
+        const btn = document.getElementById(`todayFilterTab-${f}`);
+        if (btn) {
+          if (f === currentTodayTaskFilter) btn.classList.add('active');
+          else btn.classList.remove('active');
+        }
+      });
+
+      const totalPool = [...overdueTasks, ...dateTasks];
+      // Deduplicate by ID
+      const uniqueTasksMap = new Map();
+      totalPool.forEach(t => { if (!uniqueTasksMap.has(t.id)) uniqueTasksMap.set(t.id, t); });
+      const uniquePool = Array.from(uniqueTasksMap.values());
+
+      const pendingCount = uniquePool.filter(t => t.status !== 'Completed').length;
+      if (allTasksBadge) {
+        allTasksBadge.textContent = `${uniquePool.length} Task${uniquePool.length === 1 ? '' : 's'} (${pendingCount} to go)`;
+      }
+
+      // Filter tasks to display
+      let tasksToShow = [];
+      if (currentTodayTaskFilter === 'pending') {
+        tasksToShow = uniquePool.filter(t => t.status !== 'Completed');
+      } else if (currentTodayTaskFilter === 'completed') {
+        tasksToShow = uniquePool.filter(t => t.status === 'Completed');
+      } else if (currentTodayTaskFilter === 'overdue') {
+        tasksToShow = overdueTasks;
+      } else {
+        tasksToShow = uniquePool;
+      }
+
+      // Sort: Overdue first, then Top 3 first, then by priority ('Critical', 'High', 'Medium', 'Low'), then by status
+      const pWeights = { 'Critical': 4, 'High': 3, 'Medium': 2, 'Low': 1 };
+      tasksToShow.sort((a, b) => {
+        const aOver = a.dueDate && a.dueDate < d && a.status !== 'Completed' ? 1 : 0;
+        const bOver = b.dueDate && b.dueDate < d && b.status !== 'Completed' ? 1 : 0;
+        if (aOver !== bOver) return bOver - aOver;
+
+        const aTop = a.isTop3 ? 1 : 0;
+        const bTop = b.isTop3 ? 1 : 0;
+        if (aTop !== bTop) return bTop - aTop;
+
+        const aDone = a.status === 'Completed' ? 1 : 0;
+        const bDone = b.status === 'Completed' ? 1 : 0;
+        if (aDone !== bDone) return aDone - bDone;
+
+        const pA = pWeights[a.priority] || 2;
+        const pB = pWeights[b.priority] || 2;
+        return pB - pA;
+      });
+
+      if (allTasksContainer) {
+        if (tasksToShow.length === 0) {
+          allTasksContainer.innerHTML = `
+            <div class="empty-state" style="padding: 24px 16px;">
+              <span style="font-size: 28px; display: block; margin-bottom: 6px;">📋</span>
+              <p class="empty-state-title" style="font-size: 13.5px;">No tasks match this view</p>
+              <p class="empty-state-desc" style="font-size: 12px; margin-top: 2px;">
+                ${currentTodayTaskFilter === 'all' ? 'No tasks are currently scheduled for this day.' : 'No tasks in this category.'}
+              </p>
+              <button class="btn btn-secondary btn-sm" style="margin-top: 8px;" onclick="openTaskModal({dueDate: selectedTodayDate})">+ Add Task for Date</button>
+            </div>
+          `;
+        } else {
+          allTasksContainer.innerHTML = tasksToShow.map(t => renderTaskItemHtml(t)).join('');
+        }
       }
 
       // Time Blocks for date
@@ -6735,8 +7999,8 @@
       }
 
       // Progress bars
-      const totalTasks = dateTasks.length;
-      const compTasks = dateTasks.filter(t => t.status === 'Completed').length;
+      const totalTasks = uniquePool.length;
+      const compTasks = uniquePool.filter(t => t.status === 'Completed').length;
       const compPct = totalTasks > 0 ? Math.round((compTasks / totalTasks) * 100) : 0;
       document.getElementById('todayTaskCompPercent').textContent = `${compPct}% (${compTasks}/${totalTasks})`;
       document.getElementById('todayTaskCompBar').style.width = `${compPct}%`;
@@ -6871,6 +8135,7 @@
 
     function renderTaskItemHtml(t) {
       const isDone = t.status === 'Completed';
+      const isOverdue = t.dueDate && t.dueDate < TODAY_STR && !isDone;
       const pClass = `badge-priority-${(t.priority || 'Medium').toLowerCase()}`;
       const eClass = `badge-energy-${(t.energy || 'Medium').toLowerCase().replace(' ', '')}`;
       const subtaskDone = (t.subtasks || []).filter(s => s.completed).length;
@@ -6885,6 +8150,7 @@
             <div class="task-title-row">
               <span class="task-title" onclick="editTask('${t.id}')">${escapeHtml(t.title)}</span>
               ${t.isTop3 ? '<span class="badge" style="background:var(--accent-soft);color:var(--accent);font-weight:700;">TOP 3</span>' : ''}
+              ${isOverdue ? '<span class="badge" style="background:rgba(239,68,68,0.15);color:var(--danger);font-weight:700;border:1px solid rgba(239,68,68,0.3);">⚠️ OVERDUE</span>' : ''}
             </div>
             <div class="task-meta-row">
               <span class="badge ${pClass}">${t.priority || 'Medium'}</span>
@@ -6932,7 +8198,8 @@
       saveData();
       renderTasksView();
       renderDashboardView();
-      if (currentView === 'today') renderTodayView();
+      renderTodayView();
+      renderCurrentView(currentView);
     }
 
     function handleTaskRecurrence(task) {
@@ -7034,7 +8301,9 @@
       if (editId) {
         const idx = appData.tasks.findIndex(t => t.id === editId);
         if (idx !== -1) {
+          const oldPId = appData.tasks[idx].projectId;
           appData.tasks[idx] = Object.assign(appData.tasks[idx], taskData);
+          if (oldPId && oldPId !== taskData.projectId) updateProjectProgress(oldPId);
           if (taskData.projectId) updateProjectProgress(taskData.projectId);
           showToast("Task updated", 'success');
         }
@@ -7096,7 +8365,11 @@
       const proj = appData.projects.find(p => p.id === projectId);
       if (!proj) return;
       const linked = appData.tasks.filter(t => t.projectId === projectId);
-      if (linked.length === 0) return;
+      if (linked.length === 0) {
+        proj.progress = 0;
+        saveData();
+        return;
+      }
       const done = linked.filter(t => t.status === 'Completed').length;
       proj.progress = Math.round((done / linked.length) * 100);
       saveData();
@@ -9179,10 +10452,10 @@
                   ${linkedTasks.map(t => `
                     <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; background: var(--bg-subtle); border-radius: 6px; font-size: 13px;">
                       <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0;">
-                        <div class="custom-checkbox ${t.status === 'Completed' ? 'checked' : ''}" style="width: 16px; height: 16px; font-size: 10px; flex-shrink: 0;" onclick="toggleTaskComplete('${t.id}')">
+                        <div class="custom-checkbox ${t.status === 'Completed' ? 'checked' : ''}" style="width: 18px; height: 18px; font-size: 11px; cursor: pointer; flex-shrink: 0;" onclick="event.stopPropagation(); toggleTaskComplete('${t.id}')">
                           ${t.status === 'Completed' ? '✓' : ''}
                         </div>
-                        <span style="font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ${t.status === 'Completed' ? 'text-decoration: line-through; opacity: 0.6;' : ''}" onclick="editTask('${t.id}')">${escapeHtml(t.title)}</span>
+                        <span style="font-weight: 500; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ${t.status === 'Completed' ? 'text-decoration: line-through; opacity: 0.6;' : ''}" onclick="editTask('${t.id}')">${escapeHtml(t.title)}</span>
                       </div>
                       <div style="display: flex; gap: 4px; flex-shrink: 0;">
                         <button class="btn btn-ghost btn-sm btn-icon-only" title="Edit Task" onclick="editTask('${t.id}')">✏️</button>
@@ -10820,7 +12093,7 @@
 
     // SETTINGS VIEW
     function renderSettingsView() {
-      document.getElementById('settingsUserName').value = appData.profile.name || "Alex";
+      document.getElementById('settingsUserName').value = appData.profile.name || "";
       document.getElementById('settingsWeekStart').value = appData.settings.weekStart || "monday";
       document.getElementById('settingsFocusDuration').value = appData.settings.defaultFocusTime || 25;
       document.getElementById('settingsFocusGoal').value = appData.settings.dailyFocusGoal || 60;
@@ -10830,7 +12103,8 @@
     }
 
     function saveSettings() {
-      appData.profile.name = document.getElementById('settingsUserName').value.trim() || "Alex";
+      appData.profile.name = document.getElementById('settingsUserName').value.trim() || "My Space";
+      appData.profile.avatar = (appData.profile.name[0] || 'M').toUpperCase();
       appData.settings.weekStart = document.getElementById('settingsWeekStart').value;
       appData.settings.defaultFocusTime = parseInt(document.getElementById('settingsFocusDuration').value) || 25;
       appData.settings.dailyFocusGoal = parseInt(document.getElementById('settingsFocusGoal').value) || 60;
@@ -10859,19 +12133,145 @@
       showToast("✨ ADHD Demo Dataset loaded! 28 tasks, 22 focus sessions & 14 days of trends active.", "success");
     }
 
-    function openResetConfirmModal() {
-      openConfirmModal(
-        "Reset All Data",
-        "This will permanently erase all tasks, habits, journals, and local settings from this browser. Download a backup first if you wish to keep your data.",
-        () => {
-          localStorage.removeItem(STORAGE_KEY);
-          appData = getDefaultData();
-          saveData();
-          applyThemeSettings();
-          navigateTo('dashboard');
-          showToast("Application data reset to clean slate", 'info');
+    function openResetConfirmModal(mode = 'empty') {
+      if (mode === 'seed') {
+        openConfirmModal(
+          "Reset to Sample Template",
+          "This will replace all current planner data with the starter sample template (starter tasks, habits, and notes). Continue?",
+          () => {
+            localStorage.removeItem(STORAGE_KEY);
+            appData = getDefaultData();
+            saveData();
+            applyThemeSettings();
+            renderSettingsView();
+            navigateTo('dashboard');
+            showToast("Application reset to sample template", 'info');
+          }
+        );
+      } else {
+        openConfirmModal(
+          "Delete All Data (Clean Slate)",
+          "This will permanently erase ALL tasks, habits, projects, journals, notes, time blocks, and local records from this browser. You will start fresh with a 100% clean, blank slate. Download a backup first if you wish to keep your data.",
+          () => {
+            localStorage.removeItem(STORAGE_KEY);
+            appData = getEmptyData();
+            saveData();
+            applyThemeSettings();
+            renderSettingsView();
+            navigateTo('dashboard');
+            showToast("All data permanently deleted. Blank slate ready.", 'info');
+          }
+        );
+      }
+    }
+
+    /* ==========================================================================
+       WEBCRAFT GOODS — REUSABLE ABOUT DEVELOPER MODULE CONFIG & LOGIC
+       Centralized configuration for all developer and brand information
+       ========================================================================== */
+    const developerConfig = {
+      name: "Karim",
+      role: "Creator & Developer",
+      brand: "Webcraft Goods",
+      bio: "Hi, I'm Karim, the creator behind Webcraft Goods. I design premium digital planners, productivity tools, dashboards, trackers, and web-based templates designed to make everyday organization and productivity easier. My goal is to create beautiful, practical, and easy-to-use digital products with modern interfaces, thoughtful features, and a smooth user experience.",
+      brandDescription: "Premium digital tools designed to simplify planning, productivity, organization, and everyday workflows.",
+      profileImage: "",
+      brandLogo: "",
+      supportEmail: "webcraftgoods@gmail.com",
+      supportSubject: "Webcraft Goods — Product Support",
+      instagramUsername: "@webcraftgoods",
+      instagramUrl: "https://www.instagram.com/webcraftgoods/",
+      etsyUrl: "https://www.etsy.com/shop/WebCraftGoods"
+    };
+
+    function handleDevAvatarError() {
+      const img = document.getElementById('devProfileImg');
+      const fallback = document.getElementById('devAvatarFallback');
+      if (img) img.style.display = 'none';
+      if (fallback) fallback.style.display = 'flex';
+    }
+
+    function handleDevBrandLogoError() {
+      const img = document.getElementById('devBrandLogoImg');
+      const fallback = document.getElementById('devBrandLogoFallback');
+      if (img) img.style.display = 'none';
+      if (fallback) fallback.style.display = 'flex';
+    }
+
+    function renderAboutDeveloper() {
+      // 1. Text bindings from developerConfig
+      const nameEl = document.getElementById('devProfileName');
+      if (nameEl) nameEl.textContent = developerConfig.name;
+
+      const roleEl = document.getElementById('devProfileRole');
+      if (roleEl) roleEl.textContent = developerConfig.role;
+
+      const brandBadge = document.getElementById('devBrandBadge');
+      if (brandBadge) brandBadge.textContent = developerConfig.brand;
+
+      const bioEl = document.getElementById('devBioText');
+      if (bioEl) bioEl.textContent = developerConfig.bio;
+
+      const brandNameEl = document.getElementById('devBrandName');
+      if (brandNameEl) brandNameEl.textContent = developerConfig.brand;
+
+      const brandDescEl = document.getElementById('devBrandDesc');
+      if (brandDescEl) brandDescEl.textContent = developerConfig.brandDescription;
+
+      // 2. Profile image vs. fallback
+      const avatarImg = document.getElementById('devProfileImg');
+      const avatarFallback = document.getElementById('devAvatarFallback');
+      if (developerConfig.profileImage && developerConfig.profileImage.trim() !== '') {
+        if (avatarImg) {
+          avatarImg.src = developerConfig.profileImage.trim();
+          avatarImg.style.display = 'block';
         }
-      );
+        if (avatarFallback) avatarFallback.style.display = 'none';
+      } else {
+        if (avatarImg) avatarImg.style.display = 'none';
+        if (avatarFallback) {
+          avatarFallback.style.display = 'flex';
+          avatarFallback.textContent = (developerConfig.name && developerConfig.name[0]) ? developerConfig.name[0].toUpperCase() : 'K';
+        }
+      }
+
+      // 3. Brand logo vs. fallback
+      const brandLogoImg = document.getElementById('devBrandLogoImg');
+      const brandLogoFallback = document.getElementById('devBrandLogoFallback');
+      if (developerConfig.brandLogo && developerConfig.brandLogo.trim() !== '') {
+        if (brandLogoImg) {
+          brandLogoImg.src = developerConfig.brandLogo.trim();
+          brandLogoImg.style.display = 'block';
+        }
+        if (brandLogoFallback) brandLogoFallback.style.display = 'none';
+      } else {
+        if (brandLogoImg) brandLogoImg.style.display = 'none';
+        if (brandLogoFallback) {
+          brandLogoFallback.style.display = 'flex';
+          const words = (developerConfig.brand || "Webcraft Goods").trim().split(/\s+/);
+          const initials = words.map(w => w[0]).join('').slice(0, 2).toUpperCase();
+          brandLogoFallback.textContent = initials || "WG";
+        }
+      }
+
+      // 4. Action buttons bindings
+      const supportBtn = document.getElementById('devSupportBtn');
+      const supportSub = document.getElementById('devSupportEmailSub');
+      if (supportBtn) {
+        const mailtoUrl = `mailto:${developerConfig.supportEmail}?subject=${encodeURIComponent(developerConfig.supportSubject)}`;
+        supportBtn.href = mailtoUrl;
+      }
+      if (supportSub) supportSub.textContent = developerConfig.supportEmail;
+
+      const instaBtn = document.getElementById('devInstagramBtn');
+      const instaSub = document.getElementById('devInstagramSub');
+      if (instaBtn) instaBtn.href = developerConfig.instagramUrl;
+      if (instaSub) instaSub.textContent = developerConfig.instagramUsername;
+
+      const etsyBtn = document.getElementById('devEtsyBtn');
+      const etsySub = document.getElementById('devEtsySub');
+      if (etsyBtn) etsyBtn.href = developerConfig.etsyUrl;
+      if (etsySub) etsySub.textContent = `Official ${developerConfig.brand} Store`;
     }
 
     // INITIALIZATION
@@ -10879,6 +12279,7 @@
       loadData();
       applyThemeSettings();
       updateLiveClock();
+      renderAboutDeveloper();
       navigateTo('dashboard');
       showToast("ADHD Life Planner Pro ready. All systems synced.", 'success');
     });
