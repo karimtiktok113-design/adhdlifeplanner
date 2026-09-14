@@ -462,11 +462,18 @@
 
     .sidebar-header {
       height: var(--header-height);
+      min-height: var(--header-height);
+      max-height: var(--header-height);
+      flex-shrink: 0;
+      box-sizing: border-box;
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 var(--space-md);
-      border-bottom: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border);
+      background-color: var(--bg-surface);
+      position: relative;
+      z-index: 50;
     }
 
     .app-brand {
@@ -477,11 +484,14 @@
       color: var(--text-primary);
       overflow: hidden;
       white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .brand-icon {
       width: 40px;
       height: 40px;
+      min-width: 40px;
+      min-height: 40px;
       border-radius: 12px;
       background: var(--accent);
       color: var(--accent-text);
@@ -543,6 +553,9 @@
     }
 
     .app-sidebar.collapsed .sidebar-header {
+      height: var(--header-height);
+      min-height: var(--header-height);
+      max-height: var(--header-height);
       padding: 0 var(--space-xs);
       justify-content: center;
     }
@@ -722,7 +735,10 @@
 
     .app-header {
       height: var(--header-height);
+      min-height: var(--header-height);
+      max-height: var(--header-height);
       flex-shrink: 0;
+      box-sizing: border-box;
       background-color: var(--bg-surface);
       border-bottom: 1px solid var(--border);
       display: flex;
@@ -2735,9 +2751,24 @@
         box-sizing: border-box;
         max-width: 100%;
       }
+      .app-header, .sidebar-header {
+        height: 56px !important;
+        min-height: 56px !important;
+        max-height: 56px !important;
+      }
       .app-header {
         padding: 0 var(--space-sm);
-        height: 56px;
+      }
+      .sidebar-header {
+        padding: 0 var(--space-sm);
+      }
+      .sidebar-header .brand-icon {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        min-height: 36px;
+        border-radius: 10px;
+        font-size: 16px;
       }
       .header-left {
         gap: 8px;
@@ -3028,9 +3059,24 @@
     /* SMALL MOBILE DEVICES (<= 480PX) */
     @media (max-width: 480px) {
       /* MOBILE HEADER COMPONENT ADJUSTMENTS */
+      .app-header, .sidebar-header {
+        height: 54px !important;
+        min-height: 54px !important;
+        max-height: 54px !important;
+      }
       .app-header {
         padding: 0 8px;
-        height: 54px;
+      }
+      .sidebar-header {
+        padding: 0 10px;
+      }
+      .sidebar-header .brand-icon {
+        width: 34px;
+        height: 34px;
+        min-width: 34px;
+        min-height: 34px;
+        border-radius: 10px;
+        font-size: 15px;
       }
       #btnStartMyDay {
         display: none !important;
@@ -3177,9 +3223,24 @@
     /* ULTRA-COMPACT MOBILE DOWN TO 320PX */
     @media (max-width: 360px) {
       /* 320PX MOBILE HEADER ADJUSTMENT */
+      .app-header, .sidebar-header {
+        height: 50px !important;
+        min-height: 50px !important;
+        max-height: 50px !important;
+      }
       .app-header {
         padding: 0 6px;
-        height: 50px;
+      }
+      .sidebar-header {
+        padding: 0 8px;
+      }
+      .sidebar-header .brand-icon {
+        width: 30px;
+        height: 30px;
+        min-width: 30px;
+        min-height: 30px;
+        border-radius: 8px;
+        font-size: 13px;
       }
       .mobile-menu-btn {
         width: 30px;
